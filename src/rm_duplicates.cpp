@@ -2,7 +2,6 @@
 #include <filesystem>
 #include <list>
 #include <string>
-#include <vector>
 #include <unordered_map>
 #include <fstream>
 
@@ -12,58 +11,47 @@
 #include <Poco/LocalDateTime.h>
 #include <Poco/DateTimeFormatter.h>
 
+#include "cmdline.hpp"
 #include "chksum.hpp"
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
 
-	namespace fs = std::filesystem;
+	std::optional<CommandLineOptions> cmdLineParams;
 
-	fs::path prog_name{argv[0]};
-
-	if (argc != 5) {
-		std::cerr << "Not enough arguments. Usage " << prog_name.filename()
-				  << " --input <directory path> --output <directory path>"
-				  << std::endl;
-		return 0;
+	try 
+	{
+		cmdLineParams = ParseCommandLine(argc, argv);
 	}
-
-	std::string src;
-	std::string dst;
-
-	const std::vector<std::string> opts{argv + 1, argv + argc};
-
-	for (auto it = opts.begin(); it != opts.end(); it++) {
-		if (*it == "--input") {
-			src = *++it;
-		} else if (*it == "--output") {
-			dst = *++it;
-		}
+	catch(std::exception& e) 
+	{
+		PrintUsage(argv[0]);
 	}
-
-	if (!fs::exists(src) || !fs::is_directory(src)) {
-		std::cerr << "Argument '--input' must point to an existing directory."
-				  << std::endl;
-		std::exit(1);
-	}
-
-	if (!fs::exists(dst)) {
-		std::cerr << "Directory " << dst << " did not exist. Creating..."
-				  << std::endl;
-		fs::create_directory(dst);
-	}
-
-	fs::path source{src};
-	fs::path dest{dst};
-
-	std::list<fs::path> dirs{source};
 	
-	std::unordered_map<unsigned, std::list<fs::path>> checksumFiles;
+	if (!cmdLineParams.has_value()) 
+	{
+		std::cerr << "Target directory path is missing.\n";
+		PrintUsage(argv[0]);
+	} 
+	else if(std::filesystem::path& path = cmdLineParams.value().TargetPath; !std::filesystem::is_directory(path)) 
+	{
+		std::cerr << "Argument `" << path << "` must be a directory.\n";
+		PrintUsage(argv[0]);
+	}
+
+	std::filesystem::path targetDirectory{std::move(cmdLineParams.value().TargetPath)};
+
+	std::list<std::filesystem::path> dirs{targetDirectory};
+	
+	std::unordered_map<unsigned, std::list<std::filesystem::path>> checksumFiles;
+	
+	namespace fs = std::filesystem;
 	
 	for ( ; !dirs.empty() ; dirs.pop_front()) {
 		
 		auto& dir = dirs.front();
 		
-		for (const auto &ent : fs::directory_iterator{dir}) {
+		for (const auto &ent : std::filesystem::directory_iterator{dir}) {
 	
 			std::cout << "Processing: " << ent << "...";
 
