@@ -9,5 +9,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(find_duplicates)
 target_link_libraries(find_duplicates PRIVATE -lPocoFoundation)
 
-target_sources(find_duplicates PRIVATE src/find_duplicates.cpp)
-target_sources(find_duplicates PRIVATE src/chksum.cpp)
+target_sources(find_duplicates PRIVATE  src/find_duplicates.cpp
+                                        src/chksum.cpp)
