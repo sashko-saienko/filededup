@@ -21,7 +21,7 @@ unsigned calculateStreamChecksum( std::istream& is) {
 
 ChecksumPathsMap calculate_checksums_in(const fs::path& target_directory) 
 {
-    std::list<std::filesystem::path> dirs{target_directory};
+    std::list<fs::path> dirs{target_directory};
 	
 	ChecksumPathsMap checksum_paths;
 	
@@ -29,7 +29,7 @@ ChecksumPathsMap calculate_checksums_in(const fs::path& target_directory)
 		
 		fs::path& dir = dirs.front();
 		
-		for (const auto &ent : std::filesystem::directory_iterator{dir}) {
+		for (const auto &ent : fs::directory_iterator{dir}) {
 	
 			std::cout << "Processing: " << ent;
 
