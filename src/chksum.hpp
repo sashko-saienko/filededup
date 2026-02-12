@@ -10,7 +10,7 @@
 
 namespace fs = std::filesystem;
 
-unsigned calculateStreamChecksum(std::istream& is);
+unsigned calculate_checksum(std::istream& is);
 
 using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<fs::path>>;
 

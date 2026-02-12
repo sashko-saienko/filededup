@@ -5,9 +5,10 @@
 #include "cmdline.hpp"
 
 
-std::optional<CommandLineOptions> ParseCommandLine(int argc, char** argv) {
+std::optional<CommandLineOptions> parse_command_line(int argc, char** argv) 
+{
     if (argc == 0 || argv == nullptr) {
-        throw std::runtime_error("ParseCommandLine called with empty argc/argv");
+        throw std::runtime_error("parse_command_line called with empty argc/argv");
     }
 
     if (argc != 2) {
@@ -18,7 +19,8 @@ std::optional<CommandLineOptions> ParseCommandLine(int argc, char** argv) {
 }
 
 
-void PrintUsage(const std::string& name) {
-    std::cerr << "Usage: " << name << " <target directory> \n";
+void print_usage(const std::string& name) 
+{
+    std::cerr << "Usage: " << name << " <target directory>\n";
     std::exit(1);
 }

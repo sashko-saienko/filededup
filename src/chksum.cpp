@@ -7,10 +7,14 @@
 
 #include "chksum.hpp"
 
+using std::string;
+using std::list;
+using std::cout;
 namespace fs = std::filesystem;
 
-unsigned calculateStreamChecksum( std::istream& is) {
-    std::string buffer(512, '\0');
+unsigned calculate_checksum(std::istream& is) 
+{
+    string buffer(512, '\0');
     Poco::Checksum chksum{Poco::Checksum::Type::TYPE_ADLER32};
     while(is) {
         is.read(&buffer[0], buffer.capacity());
@@ -21,7 +25,7 @@ unsigned calculateStreamChecksum( std::istream& is) {
 
 ChecksumPathsMap calculate_checksums_in(const fs::path& target_directory) 
 {
-    std::list<fs::path> dirs{target_directory};
+    list<fs::path> dirs{target_directory};
 	
 	ChecksumPathsMap checksum_paths;
 	
@@ -47,7 +51,7 @@ ChecksumPathsMap calculate_checksums_in(const fs::path& target_directory)
 			}
 
 			std::ifstream entFile{p.string(), std::ios::binary};
-			unsigned chksum = calculateStreamChecksum(entFile);
+			unsigned chksum = calculate_checksum(entFile);
 		
 			if (checksum_paths.find(chksum) == checksum_paths.end()) {
 				checksum_paths[chksum] = {};

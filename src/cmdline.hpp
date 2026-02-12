@@ -10,8 +10,8 @@ struct CommandLineOptions {
     CommandLineOptions(std::filesystem::path&& path): TargetPath{path} {}
 };
 
-void PrintUsage(const std::string& name);
+void print_usage(const std::string& name);
 
-std::optional<CommandLineOptions> ParseCommandLine(int argc, char** argv);
+std::optional<CommandLineOptions> parse_command_line(int argc, char** argv);
 
 #endif
