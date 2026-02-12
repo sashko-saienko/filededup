@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		const fs::path& toDelete = pair.second.back();
+		const std::filesystem::path& toDelete = pair.second.back();
 
 		std::cout << "Deleting " << toDelete.string();
 

@@ -8,12 +8,10 @@
 #include <string>
 #include <unordered_map>
 
-namespace fs = std::filesystem;
-
 unsigned calculate_checksum(std::istream& is);
 
-using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<fs::path>>;
+using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<std::filesystem::path>>;
 
-ChecksumPathsMap calculate_checksums_in(const fs::path& target_directory);
+ChecksumPathsMap calculate_checksums_in(const std::filesystem::path& target_directory);
 
 #endif
