@@ -1,8 +1,5 @@
 #include <iostream>
-#include <filesystem>
-#include <list>
-#include <string>
-#include <unordered_map>
+#include <stdexcept>
 #include <fstream>
 
 #include <Poco/File.h>
@@ -14,36 +11,20 @@
 #include "cmdline.hpp"
 #include "chksum.hpp"
 
-namespace fs = std::filesystem;
 
 int main(int argc, char **argv) 
 {
-	std::optional<CommandLineOptions> cmdLineParams;
+	CommandLineParameters cmdLineParams;
 
-	try 
-	{
-		cmdLineParams = parse_command_line(argc, argv);
-	}
-	catch(const std::exception& e) 
-	{
+	try {
+		cmdLineParams = CommandLineParameters::parse_command_line(argc, argv);
+	} catch(const std::exception& e) {
+		std::cerr << "EXCEPTION: " << e.what() << '\n';
 		print_usage(argv[0]);
-	}
-	
-	if (!cmdLineParams.has_value()) 
-	{
-		std::cerr << "Target directory path is missing.\n";
-		print_usage(argv[0]);
-	} 
-
-	CommandLineOptions& cmd_line_opts{cmdLineParams.value()};
-
-	if(fs::path& target = cmd_line_opts.TargetPath; !std::filesystem::is_directory(target)) 
-	{
-		std::cerr << "Argument `" << target << "` must be a directory.\n";
-		print_usage(argv[0]);
+		std::exit(1);
 	}
 
-	ChecksumPathsMap checksum_paths = calculate_checksums_in(cmdLineParams.value().TargetPath);
+	ChecksumPathsMap checksum_paths = calculate_checksums_in(cmdLineParams.TargetPath);
 
 	for(const auto& pair: checksum_paths) {
 		

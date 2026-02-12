@@ -1,17 +1,17 @@
 #ifndef CMDLINE_HPP__
 #define CMDLINE_HPP__
 
-#include <optional>
 #include <filesystem>
 
-struct CommandLineOptions {
+struct CommandLineParameters {
     std::filesystem::path TargetPath;
 
-    CommandLineOptions(std::filesystem::path&& path): TargetPath{path} {}
+    CommandLineParameters() = default;
+    CommandLineParameters(std::filesystem::path&& path): TargetPath{path} {}
+    
+    static CommandLineParameters parse_command_line(int argc, char** argv);
 };
 
 void print_usage(const std::string& name);
-
-std::optional<CommandLineOptions> parse_command_line(int argc, char** argv);
 
 #endif
