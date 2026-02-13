@@ -17,8 +17,8 @@ unsigned calculate_checksum(std::istream &is);
 
 ChecksumPathsMap calculate_checksums_in(const std::filesystem::path &target_directory);
 
-uint32_t list_duplicates(ChecksumPathsMap &checksum_paths_map);
+uint32_t list_duplicates(const ChecksumPathsMap &checksum_paths_map);
 
-uint32_t remove_duplicates(ChecksumPathsMap &checksum_paths_map);
+uint32_t remove_duplicates(const ChecksumPathsMap &checksum_paths_map);
 
 #endif

@@ -13,7 +13,7 @@ namespace
 	using ChecksumPathFunc = void (*)(ChecksumPathsMap::const_reference pair);
 }
 
-static uint32_t call_on_duplicated_paths(ChecksumPathsMap &checksum_paths_map, ChecksumPathFunc func)
+static uint32_t call_on_duplicated_paths(const ChecksumPathsMap &checksum_paths_map, ChecksumPathFunc func)
 {
 	uint32_t called_times = 0;
 	auto HasDuplicatedPaths = [](ChecksumPathsMap::const_reference& pair) -> bool
@@ -55,12 +55,12 @@ static void duplicates_list(ChecksumPathsMap::const_reference pair)
 				  { std::cout << '\t' << path.string(); });
 }
 
-uint32_t list_duplicates(ChecksumPathsMap &checksum_paths_map)
+uint32_t list_duplicates(const ChecksumPathsMap &checksum_paths_map)
 {
 	return call_on_duplicated_paths(checksum_paths_map, duplicates_list);
 }
 
-uint32_t remove_duplicates(ChecksumPathsMap &checksum_paths_map)
+uint32_t remove_duplicates(const ChecksumPathsMap &checksum_paths_map)
 {
 	return call_on_duplicated_paths(checksum_paths_map, duplicates_remove);
 }
