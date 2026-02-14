@@ -48,11 +48,10 @@ static void duplicates_remove(ChecksumPathsMap::const_reference pair)
 
 static void duplicates_list(ChecksumPathsMap::const_reference pair)
 {
-
 	std::cout << "Checksum: " << pair.first << '\n';
 
 	std::for_each(pair.second.cbegin(), pair.second.cend(), [](const std::filesystem::path &path)
-				  { std::cout << '\t' << path.string(); });
+				  { std::cout << '\t' << path.string() << '\n'; });
 }
 
 uint32_t list_duplicates(const ChecksumPathsMap &checksum_paths_map)
