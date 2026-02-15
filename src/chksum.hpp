@@ -9,9 +9,12 @@
 
 #include <Poco/File.h>
 
-class FileDedup {
+class FileDedup
+{
   public:
-    FileDedup(std::filesystem::path& p) : path{p} {}
+    FileDedup(std::filesystem::path& p) : path{p}
+    {
+    }
 
     unsigned list();
     unsigned remove();

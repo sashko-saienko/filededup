@@ -8,7 +8,8 @@
 
 namespace fs = std::filesystem;
 
-CommandLineParameters CommandLineParameters::parse_command_line(int argc, char** argv) {
+CommandLineParameters CommandLineParameters::parse_command_line(int argc, char** argv)
+{
     if (argc == 0 || argv == nullptr)
         throw std::runtime_error{"parse_command_line: called with empty argc/argv"};
 
@@ -23,4 +24,7 @@ CommandLineParameters CommandLineParameters::parse_command_line(int argc, char**
     return CommandLineParameters{std::move(target)};
 }
 
-void print_usage(const std::string& name) { std::cerr << "Usage: " << name << " <target directory>\n"; }
+void print_usage(const std::string& name)
+{
+    std::cerr << "Usage: " << name << " <target directory>\n";
+}
