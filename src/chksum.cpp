@@ -1,73 +1,67 @@
 #include <algorithm>
+#include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <list>
-#include <string>
 
 #include <Poco/Checksum.h>
 
 #include "chksum.hpp"
 
-namespace {
-using ChecksumPathFunc = void (*)(ChecksumPathsMap::const_reference pair);
+unsigned FileDedup::list() {
+	return process_checksum_paths(duplicates_list);
 }
 
-static uint32_t call_on_duplicated_paths(const ChecksumPathsMap& checksum_paths_map, ChecksumPathFunc func) {
-    uint32_t called_times = 0;
-    auto HasDuplicatedPaths = [](ChecksumPathsMap::const_reference& pair) -> bool { return pair.second.size() > 1; };
-    ChecksumPathsMap::const_iterator it = checksum_paths_map.cbegin();
-
-    do {
-        it = std::find_if(it, checksum_paths_map.cend(), HasDuplicatedPaths);
-        if (it == checksum_paths_map.cend())
-            break;
-        func(*it++);
-        called_times++;
-    } while (true);
-
-    return called_times;
+unsigned FileDedup::remove() {
+	return process_checksum_paths(duplicates_remove);
 }
 
-static void duplicates_remove(ChecksumPathsMap::const_reference pair) {
-    std::for_each(++pair.second.cbegin(), pair.second.cend(), [](const std::filesystem::path& path) {
-        std::cout << "Deleting " << path.string();
+unsigned FileDedup::process_checksum_paths(ChecksumPathFunc func) {
+    if (!checksum_paths_map)
+        calculate_checksums();
 
-        Poco::File file{path};
-        file.remove();
+    const ChecksumPathsMap& paths = checksum_paths_map.value();
+	unsigned paths_processed = 0;
+	auto HasDuplicatedPaths = [](ChecksumPathsMap::const_reference& pair) -> bool { return pair.second.size() > 1; };
+	
+    ChecksumPathsMap::const_iterator it = paths.cbegin();
+	do {
+		it = std::find_if(it, paths.cend(), HasDuplicatedPaths);
+		if (it == paths.cend())
+			break;
+        paths_processed += func(*it++);
+	} while (true);
 
-        std::cout << " Done\n";
-    });
+	return paths_processed;
 }
 
-static void duplicates_list(ChecksumPathsMap::const_reference pair) {
-    std::cout << "Checksum: " << pair.first << '\n';
+unsigned FileDedup::duplicates_remove(ChecksumPathsMap::const_reference pair) {
+	std::for_each(++pair.second.cbegin(), pair.second.cend(), [](const std::filesystem::path& path) {
+		std::cout << "Deleting " << path.string();
 
-    std::for_each(pair.second.cbegin(), pair.second.cend(),
-                  [](const std::filesystem::path& path) { std::cout << '\t' << path.string() << '\n'; });
+		Poco::File file{path};
+		file.remove();
+
+		std::cout << " Done\n";
+	});
+    return pair.second.size() - 1;
 }
 
-uint32_t list_duplicates(const ChecksumPathsMap& checksum_paths_map) {
-    return call_on_duplicated_paths(checksum_paths_map, duplicates_list);
+unsigned FileDedup::duplicates_list(ChecksumPathsMap::const_reference pair) {
+	std::cout << "Checksum: " << pair.first << '\n';
+
+	std::for_each(pair.second.cbegin(), pair.second.cend(),
+				  [](const std::filesystem::path& path) { std::cout << '\t' << path.string() << '\n'; });
+    return pair.second.size();
 }
 
-uint32_t remove_duplicates(const ChecksumPathsMap& checksum_paths_map) {
-    return call_on_duplicated_paths(checksum_paths_map, duplicates_remove);
-}
+FileDedup::ChecksumPathsMap& FileDedup::calculate_checksums() {
+	if (checksum_paths_map.has_value())
+		return checksum_paths_map.value();
 
-unsigned calculate_checksum(std::istream& is) {
-    std::string buffer(512, '\0');
-    Poco::Checksum chksum{Poco::Checksum::Type::TYPE_ADLER32};
-    while (is) {
-        is.read(&buffer[0], buffer.capacity());
-        chksum.update(buffer.c_str(), is.gcount());
-    }
-    return static_cast<unsigned>(chksum.checksum());
-}
+    std::list<std::filesystem::path> dirs{path};
 
-ChecksumPathsMap calculate_checksums_in(const std::filesystem::path& target_directory) {
-    std::list<std::filesystem::path> dirs{target_directory};
-
-    ChecksumPathsMap checksum_paths;
+    ChecksumPathsMap paths;
 
     for (; !dirs.empty(); dirs.pop_front()) {
 
@@ -93,14 +87,24 @@ ChecksumPathsMap calculate_checksums_in(const std::filesystem::path& target_dire
             std::ifstream entFile{p.string(), std::ios::binary};
             unsigned chksum = calculate_checksum(entFile);
 
-            if (checksum_paths.find(chksum) == checksum_paths.end()) {
-                checksum_paths[chksum] = {};
+            if (paths.find(chksum) == paths.end()) {
+                paths[chksum] = {};
             }
 
-            checksum_paths[chksum].push_back(p);
+            paths[chksum].push_back(p);
             std::cout << " DONE\n";
         }
     }
+    checksum_paths_map = paths;
+    return checksum_paths_map.value();
+}
 
-    return checksum_paths;
+unsigned FileDedup::calculate_checksum(std::istream& is) {
+    std::string buffer(512, '\0');
+    Poco::Checksum chksum{Poco::Checksum::Type::TYPE_ADLER32};
+    while (is) {
+        is.read(&buffer[0], buffer.capacity());
+        chksum.update(buffer.c_str(), is.gcount());
+    }
+    return static_cast<unsigned>(chksum.checksum());
 }

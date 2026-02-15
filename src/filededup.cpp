@@ -21,9 +21,9 @@ int main(int argc, char** argv) {
         std::exit(1);
     }
 
-    ChecksumPathsMap checksum_paths = calculate_checksums_in(cmdLineParams.TargetPath);
+    FileDedup file_dedup{cmdLineParams.TargetPath};
 
-    list_duplicates(checksum_paths);
+    file_dedup.list();
 
     return 0;
 }
