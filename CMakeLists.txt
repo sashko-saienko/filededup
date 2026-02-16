@@ -6,11 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Poco REQUIRED COMPONENTS Foundation)
+find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_executable(filededup)
-target_link_libraries(filededup PRIVATE Poco::Foundation)
+target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
 target_sources(filededup PRIVATE    src/filededup.cpp
+                                    src/directory_scanner.cpp
                                     src/chksum.cpp
                                     src/cmdline.cpp)
