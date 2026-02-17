@@ -2,11 +2,6 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <Poco/DateTime.h>
-#include <Poco/DateTimeFormatter.h>
-#include <Poco/LocalDateTime.h>
-#include <Poco/Timestamp.h>
-
 #include "chksum.hpp"
 #include "cmdline.hpp"
 
