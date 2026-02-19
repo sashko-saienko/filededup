@@ -13,5 +13,4 @@ target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
 target_sources(filededup PRIVATE    src/filededup.cpp
                                     src/directory_scanner.cpp
-                                    src/chksum.cpp
-                                    src/cmdline.cpp)
+                                    src/chksum.cpp)

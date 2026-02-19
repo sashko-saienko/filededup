@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
@@ -9,7 +10,6 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
 
-#include "cmdline.hpp"
 #include "directory_scanner.hpp"
 
 using Poco::Util::Application;
@@ -51,6 +51,7 @@ class FileDedup : public Application
             Option("target-dir", "t", "target directory to look for duplicates")
             .required(true)
             .repeatable(false)
+            .argument("<target-dir>")
             .callback(OptionCallback<FileDedup>(this, &FileDedup::handleTargetDirectory)));
     }
 
