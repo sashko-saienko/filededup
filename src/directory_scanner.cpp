@@ -42,8 +42,6 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
 {
     std::list<std::filesystem::path> dirs{path};
 
-    ChecksumPathsMap paths;
-
     for (; !dirs.empty(); dirs.pop_front())
     {
         std::filesystem::path& dir = dirs.front();
@@ -70,15 +68,15 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
             std::ifstream entFile{p.string(), std::ios::binary};
             unsigned chksum = calculate_checksum(entFile);
 
-            if (paths.find(chksum) == paths.end())
+            if (checksum_paths_map.find(chksum) == checksum_paths_map.end())
             {
-                paths[chksum] = {};
+                checksum_paths_map[chksum] = {};
             }
 
-            paths[chksum].push_back(p);
+            checksum_paths_map[chksum].push_back(p);
             std::cout << " DONE\n";
         }
     }
-    checksum_paths_map = paths;
+    
     return checksum_paths_map;
 }
