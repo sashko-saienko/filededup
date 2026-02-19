@@ -74,11 +74,19 @@ class FileDedup : public Application
     int main(const ArgVec& argv) override
     {
         if (_help_mode)
-            return Application::EXIT_USAGE;
+            return Application::EXIT_OK;
 
         DirectoryScanner directory_scanner{_targetDirectory};
-
-        directory_scanner.list();
+        
+        try 
+        {
+            directory_scanner.list();
+        } 
+        catch (std::exception& e)
+        {
+            logger().error(e.what());
+            return Application::EXIT_USAGE;
+        }
 
         return Application::EXIT_OK;
     }
