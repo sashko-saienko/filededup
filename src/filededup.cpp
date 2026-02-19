@@ -80,7 +80,7 @@ class FileDedup : public Application
         
         try 
         {
-            directory_scanner.list();
+            directory_scanner.scan();
         } 
         catch (std::exception& e)
         {

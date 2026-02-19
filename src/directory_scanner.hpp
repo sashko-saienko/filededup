@@ -3,28 +3,27 @@
 
 #include <filesystem>
 #include <list>
-#include <optional>
 #include <unordered_map>
 
 class DirectoryScanner
 {
+  private:
+    using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<std::filesystem::path>>;
+    using PathsFunc = unsigned (*)(std::list<std::filesystem::path> paths);
+  
   public:
     DirectoryScanner(std::filesystem::path& p) : path{p}
     {
     }
     
-    unsigned list();
-    unsigned remove();
+    unsigned scan(PathsFunc pathsActor = nullptr);
 
   private:
-    using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<std::filesystem::path>>;
-    using ChecksumPathFunc = unsigned (*)(ChecksumPathsMap::const_reference pair);
-
     std::filesystem::path path;
-    std::optional<ChecksumPathsMap> checksum_paths_map;
+    ChecksumPathsMap checksum_paths_map;
 
-    unsigned process_checksum_paths(ChecksumPathFunc func);
-    static unsigned duplicates_list(ChecksumPathsMap::const_reference pair);
+    unsigned process_checksum_paths(PathsFunc func);
+    static void list(const unsigned&, const std::list<std::filesystem::path>&);
     static unsigned duplicates_remove(ChecksumPathsMap::const_reference pair);
 
     ChecksumPathsMap& calculate_checksums();

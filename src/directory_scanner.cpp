@@ -1,70 +1,45 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
+#include <list>
+#include <ranges>
 
 #include <Poco/File.h>
 
 #include "chksum.hpp"
 #include "directory_scanner.hpp"
 
-unsigned DirectoryScanner::list()
+unsigned DirectoryScanner::scan(PathsFunc pathsActor)
 {
-    return process_checksum_paths(duplicates_list);
-}
-
-unsigned DirectoryScanner::remove()
-{
-    return process_checksum_paths(duplicates_remove);
-}
-
-unsigned DirectoryScanner::process_checksum_paths(ChecksumPathFunc func)
-{
-    if (!checksum_paths_map)
-        calculate_checksums();
-
-    const ChecksumPathsMap& paths = checksum_paths_map.value();
+    calculate_checksums();
+    
     unsigned paths_processed = 0;
-    auto HasDuplicatedPaths = [](ChecksumPathsMap::const_reference& pair) -> bool { return pair.second.size() > 1; };
-
-    ChecksumPathsMap::const_iterator it = paths.cbegin();
-    do
+    auto nonEmptyPathsPred = [](ChecksumPathsMap::const_reference p) { return p.second.size() > 1; };
+    auto nonEmptyPathsView = checksum_paths_map | std::ranges::views::filter(nonEmptyPathsPred);
+    for (const auto& [checksum, paths]: nonEmptyPathsView)
     {
-        it = std::find_if(it, paths.cend(), HasDuplicatedPaths);
-        if (it == paths.cend())
-            break;
-        paths_processed += func(*it++);
-    } while (true);
-
+        list(checksum, paths);
+        if (pathsActor != nullptr)
+        {
+            paths_processed += pathsActor(paths);
+        }
+    }
     return paths_processed;
 }
 
-unsigned DirectoryScanner::duplicates_remove(ChecksumPathsMap::const_reference pair)
+void DirectoryScanner::list(const unsigned& checksum, const std::list<std::filesystem::path>& paths)
 {
-    std::for_each(++pair.second.cbegin(), pair.second.cend(), [](const std::filesystem::path& path) {
-        std::cout << "Deleting " << path.string();
+    std::cout << "[Checksum: " << checksum << "]\n";
 
-        Poco::File file{path};
-        file.remove();
-
-        std::cout << " Done\n";
-    });
-    return pair.second.size() - 1;
-}
-
-unsigned DirectoryScanner::duplicates_list(ChecksumPathsMap::const_reference pair)
-{
-    std::cout << "Checksum: " << pair.first << '\n';
-
-    std::for_each(pair.second.cbegin(), pair.second.cend(),
-                  [](const std::filesystem::path& path) { std::cout << '\t' << path.string() << '\n'; });
-    return pair.second.size();
+    for(const std::filesystem::path& p: paths)
+    {
+        std::cout << '\t' << p.string() << '\n';
+    }
 }
 
 DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
 {
-    if (checksum_paths_map.has_value())
-        return checksum_paths_map.value();
-
     std::list<std::filesystem::path> dirs{path};
 
     ChecksumPathsMap paths;
@@ -105,5 +80,5 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
         }
     }
     checksum_paths_map = paths;
-    return checksum_paths_map.value();
+    return checksum_paths_map;
 }
