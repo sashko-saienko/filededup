@@ -4,12 +4,19 @@
 #include <filesystem>
 #include <list>
 #include <unordered_map>
+#include <utility>
+
+#include <Poco/File.h>
 
 class DirectoryScanner
 {
   private:
-    using ChecksumPathsMap = std::unordered_map<std::uint32_t, std::list<std::filesystem::path>>;
-    using PathsFunc = unsigned (*)(std::list<std::filesystem::path> paths);
+    using Key = unsigned;
+    using Value = std::list<Poco::File>;
+    using ChecksumPathsMap = std::unordered_map<Key, Value>;
+    using PathsFunc = unsigned (*)(const Value& paths);
+
+    static const std::string DT_FORMAT;
   
   public:
     DirectoryScanner(std::filesystem::path& p) : path{p}
@@ -23,7 +30,7 @@ class DirectoryScanner
     ChecksumPathsMap checksum_paths_map;
 
     unsigned process_checksum_paths(PathsFunc func);
-    static void list(const unsigned&, const std::list<std::filesystem::path>&);
+    static void list(const Key&, const Value&);
 
     ChecksumPathsMap& calculate_checksums();
 };

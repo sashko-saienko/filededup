@@ -6,6 +6,9 @@
 #include <ranges>
 
 #include <Poco/File.h>
+#include <Poco/DateTimeFormatter.h>
+#include <Poco/LocalDateTime.h>
+#include <Poco/Timezone.h>
 
 #include "chksum.hpp"
 #include "directory_scanner.hpp"
@@ -15,6 +18,13 @@ namespace fs = std::filesystem;
 using std::cout;
 using std::cerr;
 using std::filesystem::path;
+
+using Poco::File;
+using Poco::DateTimeFormatter;
+using Poco::LocalDateTime;
+using Poco::Timezone;
+
+const std::string DirectoryScanner::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
 unsigned DirectoryScanner::scan(PathsFunc pathsActor)
 {
@@ -34,13 +44,14 @@ unsigned DirectoryScanner::scan(PathsFunc pathsActor)
     return paths_processed;
 }
 
-void DirectoryScanner::list(const unsigned& checksum, const std::list<fs::path>& paths)
+void DirectoryScanner::list(const unsigned& checksum, const Value& paths)
 {
     std::cout << "[Checksum: " << checksum << "]\n";
 
-    for(const fs::path& p: paths)
+    for(const Poco::File& f: paths)
     {
-        std::cout << '\t' << p.string() << '\n';
+        const auto formattedCreatedTimestamp = DateTimeFormatter::format(LocalDateTime(f.created()), DT_FORMAT);
+        std::cout << '\t' << "[" << formattedCreatedTimestamp << "] " << f.path() << '\n';
     }
 }
 
@@ -63,23 +74,17 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
                 continue;
             }
 
-            const std::filesystem::path& p = ent.path();
+            const Poco::File f(ent.path());
 
-            if (!p.has_filename())
-            {
-                std::cerr << "skipping \"" << ent << "\" due to missing filename\n";
-                continue;
-            }
-
-            std::ifstream entFile{p.string(), std::ios::binary};
-            unsigned chksum = calculate_checksum(entFile);
+            std::ifstream inpFileStream{f.path(), std::ios::binary};
+            unsigned chksum = calculate_checksum(inpFileStream);
 
             if (checksum_paths_map.find(chksum) == checksum_paths_map.end())
             {
                 checksum_paths_map[chksum] = {};
             }
 
-            checksum_paths_map[chksum].push_back(p);
+            checksum_paths_map[chksum].push_back(std::move(f));
             cout << " DONE\n";
         }
     }
