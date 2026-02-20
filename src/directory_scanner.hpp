@@ -7,6 +7,7 @@
 #include <utility>
 
 #include <Poco/File.h>
+#include <Poco/Timestamp.h>
 
 class DirectoryScanner
 {
@@ -29,10 +30,10 @@ class DirectoryScanner
     std::filesystem::path path;
     ChecksumPathsMap checksum_paths_map;
 
-    unsigned process_checksum_paths(PathsFunc func);
-    static void list(const Key&, const Value&);
-
     ChecksumPathsMap& calculate_checksums();
+
+    static void list(const Key&, const Value&);
+    static std::string format_timestamp(const Poco::Timestamp&);
 };
 
 #endif

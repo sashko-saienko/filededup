@@ -44,15 +44,19 @@ unsigned DirectoryScanner::scan(PathsFunc pathsActor)
     return paths_processed;
 }
 
-void DirectoryScanner::list(const unsigned& checksum, const Value& paths)
+void DirectoryScanner::list(const unsigned& checksum, const Value& files)
 {
     std::cout << "[Checksum: " << checksum << "]\n";
 
-    for(const Poco::File& f: paths)
+    for(const Poco::File& f: files)
     {
-        const auto formattedCreatedTimestamp = DateTimeFormatter::format(LocalDateTime(f.created()), DT_FORMAT);
-        std::cout << '\t' << "[" << formattedCreatedTimestamp << "] " << f.path() << '\n';
+        std::cout << '\t' << "[" << format_timestamp(f.created()) << "] " << f.path() << '\n';
     }
+}
+
+std::string DirectoryScanner::format_timestamp(const Poco::Timestamp& ts)
+{
+    return DateTimeFormatter::format(LocalDateTime(ts), DT_FORMAT);
 }
 
 DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
