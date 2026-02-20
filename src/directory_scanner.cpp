@@ -10,6 +10,12 @@
 #include "chksum.hpp"
 #include "directory_scanner.hpp"
 
+namespace fs = std::filesystem;
+
+using std::cout;
+using std::cerr;
+using std::filesystem::path;
+
 unsigned DirectoryScanner::scan(PathsFunc pathsActor)
 {
     calculate_checksums();
@@ -28,11 +34,11 @@ unsigned DirectoryScanner::scan(PathsFunc pathsActor)
     return paths_processed;
 }
 
-void DirectoryScanner::list(const unsigned& checksum, const std::list<std::filesystem::path>& paths)
+void DirectoryScanner::list(const unsigned& checksum, const std::list<fs::path>& paths)
 {
     std::cout << "[Checksum: " << checksum << "]\n";
 
-    for(const std::filesystem::path& p: paths)
+    for(const fs::path& p: paths)
     {
         std::cout << '\t' << p.string() << '\n';
     }
@@ -40,20 +46,20 @@ void DirectoryScanner::list(const unsigned& checksum, const std::list<std::files
 
 DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
 {
-    std::list<std::filesystem::path> dirs{path};
+    std::list<fs::path> dirs{path};
 
     for (; !dirs.empty(); dirs.pop_front())
     {
-        std::filesystem::path& dir = dirs.front();
+        fs::path& dir = dirs.front();
 
-        for (const auto& ent : std::filesystem::directory_iterator{dir})
+        for (const auto& ent : fs::directory_iterator{dir})
         {
-            std::cout << "Processing: " << ent;
+            cout << "Processing: " << ent;
 
-            if (std::filesystem::is_directory(ent))
+            if (fs::is_directory(ent))
             {
                 dirs.push_back(ent);
-                std::cerr << " SKIP (directory)\n";
+                cerr << " SKIP (directory)\n";
                 continue;
             }
 
@@ -61,7 +67,7 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
 
             if (!p.has_filename())
             {
-                std::cerr << "skipping \"" << ent << "\" due to missing filename" << std::endl;
+                std::cerr << "skipping \"" << ent << "\" due to missing filename\n";
                 continue;
             }
 
@@ -74,7 +80,7 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
             }
 
             checksum_paths_map[chksum].push_back(p);
-            std::cout << " DONE\n";
+            cout << " DONE\n";
         }
     }
     
