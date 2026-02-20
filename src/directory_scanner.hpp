@@ -24,7 +24,6 @@ class DirectoryScanner
 
     unsigned process_checksum_paths(PathsFunc func);
     static void list(const unsigned&, const std::list<std::filesystem::path>&);
-    static unsigned duplicates_remove(ChecksumPathsMap::const_reference pair);
 
     ChecksumPathsMap& calculate_checksums();
 };
