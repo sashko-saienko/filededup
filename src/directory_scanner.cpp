@@ -3,6 +3,7 @@
 #include <fstream>
 #include <filesystem>
 #include <list>
+#include <vector>
 #include <ranges>
 
 #include <Poco/File.h>
@@ -48,9 +49,24 @@ void DirectoryScanner::list(const unsigned& checksum, const Value& files)
 {
     std::cout << "[Checksum: " << checksum << "]\n";
 
-    for(const Poco::File& f: files)
+    std::vector<const Poco::File*> filePointers;
+    filePointers.reserve(files.size());
+    std::for_each(files.cbegin(), files.cend(), 
+                        [&filePointers](const Poco::File& f) 
+                        {
+                            filePointers.push_back(&f);
+                        }
+    );
+    std::sort(filePointers.begin(), filePointers.end(), 
+                        [](const Poco::File* a, const Poco::File* b) 
+                        {
+                            return a->created() < b->created();
+                        }
+    );
+
+    for(const Poco::File* f: filePointers)
     {
-        std::cout << '\t' << "[" << format_timestamp(f.created()) << "] " << f.path() << '\n';
+        std::cout << '\t' << "[" << format_timestamp(f->created()) << "] " << f->path() << '\n';
     }
 }
 
