@@ -85,7 +85,7 @@ DirectoryScanner::FilesMap& DirectoryScanner::buildFilesMap()
                 continue;
             }
 
-            const Poco::File f(ent.path());
+            const Poco::File f = ent.path().string();
 
             std::ifstream inpFileStream{f.path(), std::ios::binary};
             unsigned chksum = calculateChecksum(inpFileStream);
