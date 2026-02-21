@@ -85,9 +85,9 @@ DirectoryScanner::FilesMap& DirectoryScanner::buildFilesMap()
                 continue;
             }
 
-            const Poco::File f = ent.path().string();
+            const fs::path& p = ent;
 
-            std::ifstream inpFileStream{f.path(), std::ios::binary};
+            std::ifstream inpFileStream{p, std::ios::binary};
             unsigned chksum = calculateChecksum(inpFileStream);
 
             if (FilesMap_.find(chksum) == FilesMap_.end())
@@ -95,7 +95,7 @@ DirectoryScanner::FilesMap& DirectoryScanner::buildFilesMap()
                 FilesMap_[chksum] = {};
             }
 
-            FilesMap_[chksum].push_back(std::move(f));
+            FilesMap_[chksum].emplace_back(p);
             cout << " DONE\n";
         }
     }
