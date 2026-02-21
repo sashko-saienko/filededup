@@ -1,13 +1,13 @@
 #include <algorithm>
-#include <iostream>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <list>
-#include <vector>
 #include <ranges>
+#include <vector>
 
-#include <Poco/File.h>
 #include <Poco/DateTimeFormatter.h>
+#include <Poco/File.h>
 #include <Poco/LocalDateTime.h>
 #include <Poco/Timezone.h>
 
@@ -16,57 +16,48 @@
 
 namespace fs = std::filesystem;
 
-using std::cout;
 using std::cerr;
+using std::cout;
 using std::filesystem::path;
 
-using Poco::File;
 using Poco::DateTimeFormatter;
+using Poco::File;
 using Poco::LocalDateTime;
 using Poco::Timezone;
 
 const std::string DirectoryScanner::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
-unsigned DirectoryScanner::scan(PathsFunc pathsActor)
+unsigned DirectoryScanner::scan(PathsElemFunc pathsActor)
 {
     calculate_checksums();
-    
+
     unsigned paths_processed = 0;
-    auto nonEmptyPathsPred = [](ChecksumPathsMap::const_reference p) { return p.second.size() > 1; };
+    auto nonEmptyPathsPred = [](PathsMap::const_reference p) { return p.second.size() > 1; };
     auto nonEmptyPathsView = checksum_paths_map | std::ranges::views::filter(nonEmptyPathsPred);
-    for (const auto& [checksum, paths]: nonEmptyPathsView)
+    
+    for (auto& elem : nonEmptyPathsView)
     {
-        list(checksum, paths);
+        auto& [_, files] = elem;
+        files.sort([] (const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() > rhs.created(); });
+        list(elem);
         if (pathsActor != nullptr)
         {
-            paths_processed += pathsActor(paths);
+            paths_processed += pathsActor(elem);
         }
     }
+    
     return paths_processed;
 }
 
-void DirectoryScanner::list(const unsigned& checksum, const Value& files)
+void DirectoryScanner::list(PathsMap::const_reference elem)
 {
+    const auto& [checksum, files] = elem;
+
     std::cout << "[Checksum: " << checksum << "]\n";
 
-    std::vector<const Poco::File*> filePointers;
-    filePointers.reserve(files.size());
-    std::for_each(files.cbegin(), files.cend(), 
-                        [&filePointers](const Poco::File& f) 
-                        {
-                            filePointers.push_back(&f);
-                        }
-    );
-    std::sort(filePointers.begin(), filePointers.end(), 
-                        [](const Poco::File* a, const Poco::File* b) 
-                        {
-                            return a->created() < b->created();
-                        }
-    );
-
-    for(const Poco::File* f: filePointers)
+    for (const auto& file : files)
     {
-        std::cout << '\t' << "[" << format_timestamp(f->created()) << "] " << f->path() << '\n';
+        std::cout << '\t' << "[" << format_timestamp(file.created()) << "] " << file.path() << '\n';
     }
 }
 
@@ -75,7 +66,7 @@ std::string DirectoryScanner::format_timestamp(const Poco::Timestamp& ts)
     return DateTimeFormatter::format(LocalDateTime(ts), DT_FORMAT);
 }
 
-DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
+DirectoryScanner::PathsMap& DirectoryScanner::calculate_checksums()
 {
     std::list<fs::path> dirs{path};
 
@@ -108,6 +99,6 @@ DirectoryScanner::ChecksumPathsMap& DirectoryScanner::calculate_checksums()
             cout << " DONE\n";
         }
     }
-    
+
     return checksum_paths_map;
 }

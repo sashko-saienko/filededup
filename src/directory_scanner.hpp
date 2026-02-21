@@ -12,10 +12,9 @@
 class DirectoryScanner
 {
   private:
-    using Key = unsigned;
-    using Value = std::list<Poco::File>;
-    using ChecksumPathsMap = std::unordered_map<Key, Value>;
-    using PathsFunc = unsigned (*)(const Value& paths);
+    using PathsMap = std::unordered_map<unsigned, std::list<Poco::File>>;
+    using PathsElemFunc = unsigned (*)(PathsMap::reference elem);
+    using PathsElemReadonlyFunc = unsigned (*)(PathsMap::const_reference elem);
 
     static const std::string DT_FORMAT;
   
@@ -24,15 +23,15 @@ class DirectoryScanner
     {
     }
     
-    unsigned scan(PathsFunc pathsActor = nullptr);
+    unsigned scan(PathsElemFunc pathsActor = nullptr);
 
   private:
     std::filesystem::path path;
-    ChecksumPathsMap checksum_paths_map;
+    PathsMap checksum_paths_map;
 
-    ChecksumPathsMap& calculate_checksums();
+    PathsMap& calculate_checksums();
 
-    static void list(const Key&, const Value&);
+    static void list(PathsMap::const_reference);
     static std::string format_timestamp(const Poco::Timestamp&);
 };
 
