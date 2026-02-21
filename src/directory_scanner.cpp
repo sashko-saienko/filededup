@@ -38,7 +38,7 @@ unsigned DirectoryScanner::scan(FilesMapElemFunc pathsActor)
     for (auto& elem : nonEmptyPathsView)
     {
         auto& [_, files] = elem;
-        files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() > rhs.created(); });
+        files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
         list(elem);
         if (pathsActor != nullptr)
         {
