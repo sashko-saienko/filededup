@@ -2,7 +2,7 @@
 
 #include "chksum.hpp"
 
-unsigned calculate_checksum(std::istream& is)
+unsigned calculateChecksum(std::istream& is)
 {
     std::string buffer(512, '\0');
     Poco::Checksum chksum{Poco::Checksum::Type::TYPE_ADLER32};

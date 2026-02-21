@@ -1,33 +1,33 @@
-#include <iostream>
 #include <filesystem>
+#include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
 
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
-#include <Poco/Util/OptionSet.h>
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
+#include <Poco/Util/OptionSet.h>
 
 #include "directory_scanner.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
-using Poco::Util::OptionSet;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
+using Poco::Util::OptionSet;
 
 class FileDedup : public Application
 {
   protected:
-    void initialize(Application& self) 
+    void initialize(Application& self)
     {
         loadConfiguration();
         Application::initialize(self);
     }
 
-    void uninitialize() 
+    void uninitialize()
     {
         Application::uninitialize();
     }
@@ -41,23 +41,21 @@ class FileDedup : public Application
     {
         Application::defineOptions(options);
 
-        options.addOption(
-            Option("help", "h", "display help information")
-            .required(false)
-            .repeatable(false)
-            .callback(OptionCallback<FileDedup>(this, &FileDedup::handleHelp)));
+        options.addOption(Option("help", "h", "display help information")
+                              .required(false)
+                              .repeatable(false)
+                              .callback(OptionCallback<FileDedup>(this, &FileDedup::handleHelp)));
 
-        options.addOption(
-            Option("target-dir", "t", "target directory to look for duplicates")
-            .required(true)
-            .repeatable(false)
-            .argument("<target-dir>")
-            .callback(OptionCallback<FileDedup>(this, &FileDedup::handleTargetDirectory)));
+        options.addOption(Option("target-dir", "t", "target directory to look for duplicates")
+                              .required(true)
+                              .repeatable(false)
+                              .argument("<target-dir>")
+                              .callback(OptionCallback<FileDedup>(this, &FileDedup::handleTargetDirectory)));
     }
 
     void handleHelp(const std::string& name, const std::string& value)
     {
-        _help_mode = true;
+        helpMode_ = true;
         HelpFormatter helpFormatter(options());
         helpFormatter.setCommand(commandName());
         helpFormatter.setUsage("OPTIONS");
@@ -68,20 +66,20 @@ class FileDedup : public Application
 
     void handleTargetDirectory(const std::string& name, const std::string& value)
     {
-        _targetDirectory = value;
+        targetDirectory_ = value;
     }
 
     int main(const ArgVec& argv) override
     {
-        if (_help_mode)
+        if (helpMode_)
             return Application::EXIT_OK;
 
-        DirectoryScanner directory_scanner{_targetDirectory};
-        
-        try 
+        DirectoryScanner directoryScanner{targetDirectory_};
+
+        try
         {
-            directory_scanner.scan();
-        } 
+            directoryScanner.scan();
+        }
         catch (std::exception& e)
         {
             logger().error(e.what());
@@ -91,9 +89,9 @@ class FileDedup : public Application
         return Application::EXIT_OK;
     }
 
-    private:
-        bool _help_mode{false};
-        std::filesystem::path _targetDirectory;
+  private:
+    bool helpMode_{false};
+    std::filesystem::path targetDirectory_;
 };
 
 POCO_APP_MAIN(FileDedup)
