@@ -1,21 +1,11 @@
 #ifndef DIRECTORY_SCANNER_HPP__
 #define DIRECTORY_SCANNER_HPP__
 
-#include <filesystem>
-#include <list>
-#include <unordered_map>
-#include <utility>
-
-#include <Poco/File.h>
-#include <Poco/Timestamp.h>
+#include "files_map.hpp"
 
 class DirectoryScanner
 {
   private:
-    using FilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
-    using FilesMapElemFunc = unsigned (*)(FilesMap::reference elem);
-    using FilesMapReadonlyFunc = unsigned (*)(FilesMap::const_reference elem);
-
     static const std::string DT_FORMAT;
 
   public:
@@ -23,7 +13,7 @@ class DirectoryScanner
     {
     }
 
-    unsigned scan(FilesMapElemFunc filesActor = nullptr);
+    unsigned scan();
 
   private:
     std::filesystem::path path_;

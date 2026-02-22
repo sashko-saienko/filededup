@@ -11,8 +11,10 @@
 #include <Poco/LocalDateTime.h>
 #include <Poco/Timezone.h>
 
+#include "files_map.hpp"
 #include "chksum.hpp"
 #include "directory_scanner.hpp"
+#include "dup_deleter.hpp"
 
 namespace fs = std::filesystem;
 
@@ -27,7 +29,7 @@ using Poco::Timezone;
 
 const std::string DirectoryScanner::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
-unsigned DirectoryScanner::scan(FilesMapElemFunc pathsActor)
+unsigned DirectoryScanner::scan()
 {
     buildFilesMap();
 
@@ -40,10 +42,7 @@ unsigned DirectoryScanner::scan(FilesMapElemFunc pathsActor)
         auto& [_, files] = elem;
         files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
         list(elem);
-        if (pathsActor != nullptr)
-        {
-            filesAffected += pathsActor(elem);
-        }
+        deleteDuplicatedFiles(files, static_cast<size_t>(0));
     }
 
     return filesAffected;
@@ -66,7 +65,7 @@ std::string DirectoryScanner::formatTimestamp(const Poco::Timestamp& ts)
     return DateTimeFormatter::format(LocalDateTime(ts), DT_FORMAT);
 }
 
-DirectoryScanner::FilesMap& DirectoryScanner::buildFilesMap()
+FilesMap& DirectoryScanner::buildFilesMap()
 {
     std::list<fs::path> dirs{path_};
 
