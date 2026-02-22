@@ -1,8 +1,8 @@
 #include <ranges>
 
-#include "files_map.hpp"
+#include "duplicates_deleter.hpp"
 
-void deleteDuplicatedFiles(FilesMap::mapped_type& files, size_t keepIdx)
+void DuplicatesDeleter::deleteDuplicates(FilesMap::mapped_type& files, size_t keepIdx)
 {
     if (keepIdx > files.size() - 1)
     {

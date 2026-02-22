@@ -13,8 +13,8 @@
 
 #include "files_map.hpp"
 #include "chksum.hpp"
-#include "directory_scanner.hpp"
-#include "dup_deleter.hpp"
+#include "duplicates_finder.hpp"
+#include "duplicates_deleter.hpp"
 
 namespace fs = std::filesystem;
 
@@ -27,9 +27,9 @@ using Poco::File;
 using Poco::LocalDateTime;
 using Poco::Timezone;
 
-const std::string DirectoryScanner::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
+const std::string DuplicatesFinder::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
-unsigned DirectoryScanner::scan()
+unsigned DuplicatesFinder::scan()
 {
     buildFilesMap();
 
@@ -42,13 +42,13 @@ unsigned DirectoryScanner::scan()
         auto& [_, files] = elem;
         files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
         list(elem);
-        deleteDuplicatedFiles(files, static_cast<size_t>(0));
+        DuplicatesDeleter::deleteDuplicates(files, static_cast<size_t>(0));
     }
 
     return filesAffected;
 }
 
-void DirectoryScanner::list(FilesMap::const_reference elem)
+void DuplicatesFinder::list(FilesMap::const_reference elem)
 {
     const auto& [checksum, files] = elem;
 
@@ -60,12 +60,12 @@ void DirectoryScanner::list(FilesMap::const_reference elem)
     }
 }
 
-std::string DirectoryScanner::formatTimestamp(const Poco::Timestamp& ts)
+std::string DuplicatesFinder::formatTimestamp(const Poco::Timestamp& ts)
 {
     return DateTimeFormatter::format(LocalDateTime(ts), DT_FORMAT);
 }
 
-FilesMap& DirectoryScanner::buildFilesMap()
+FilesMap& DuplicatesFinder::buildFilesMap()
 {
     std::list<fs::path> dirs{path_};
 

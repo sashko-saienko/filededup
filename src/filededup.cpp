@@ -10,7 +10,7 @@
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
 
-#include "directory_scanner.hpp"
+#include "duplicates_finder.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -74,7 +74,7 @@ class FileDedup : public Application
         if (helpMode_)
             return Application::EXIT_OK;
 
-        DirectoryScanner directoryScanner{targetDirectory_};
+        DuplicatesFinder directoryScanner{targetDirectory_};
 
         try
         {

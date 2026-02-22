@@ -1,15 +1,17 @@
-#ifndef DIRECTORY_SCANNER_HPP__
-#define DIRECTORY_SCANNER_HPP__
+#ifndef DUPLICATES_FINDER_HPP__
+#define DUPLICATES_FINDER_HPP__
+
+#include <filesystem>
 
 #include "files_map.hpp"
 
-class DirectoryScanner
+class DuplicatesFinder
 {
   private:
     static const std::string DT_FORMAT;
 
   public:
-    DirectoryScanner(std::filesystem::path& p) : path_{p}
+    DuplicatesFinder(std::filesystem::path& p) : path_{p}
     {
     }
 
@@ -25,4 +27,4 @@ class DirectoryScanner
     static std::string formatTimestamp(const Poco::Timestamp&);
 };
 
-#endif
+#endif // DUPLICATES_FINDER_HPP__

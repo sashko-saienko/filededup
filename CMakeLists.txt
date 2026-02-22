@@ -12,7 +12,7 @@ add_executable(filededup)
 target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
 target_sources(filededup PRIVATE    src/filededup.cpp
-                                    src/directory_scanner.cpp
-                                    src/dup_deleter.cpp
+                                    src/duplicates_finder.cpp
+                                    src/duplicates_deleter.cpp
                                     src/chksum.cpp
                                     )
