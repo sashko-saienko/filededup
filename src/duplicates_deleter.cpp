@@ -9,7 +9,7 @@ using Poco::File;
 
 void DuplicatesDeleter::remove()
 {
-    for(auto& elem: filesMap_)
+    for (auto& elem : filesMap_)
     {
         orderByCreatedTsAsc(elem);
         listDuplicates(elem);
@@ -44,8 +44,8 @@ void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem, size_t keepId
     {
         return;
     }
-    
-    for(const auto& [idx, file]: std::views::enumerate(files))
+
+    for (const auto& [idx, file] : std::views::enumerate(files))
     {
         if (idx == keepIdx)
         {

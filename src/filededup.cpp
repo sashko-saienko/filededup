@@ -10,8 +10,8 @@
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
 
-#include "duplicates_finder.hpp"
 #include "duplicates_deleter.hpp"
+#include "duplicates_finder.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
