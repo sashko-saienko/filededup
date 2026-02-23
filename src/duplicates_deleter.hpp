@@ -7,9 +7,6 @@
 
 class DuplicatesDeleter
 {
-  private:
-    static const std::string DT_FORMAT;
-
   public:
     DuplicatesDeleter(FilesMap&& filesMap) : filesMap_{filesMap}
     {
@@ -23,7 +20,6 @@ class DuplicatesDeleter
     void orderByCreatedTsAsc(FilesMap::reference);
     void listDuplicates(FilesMap::const_reference elem) const;
     void removeDuplicates(FilesMap::reference elem, size_t keepIdx);
-    static std::string formatTimestamp(const Poco::Timestamp& ts);
 };
 
 #endif // DUPLICATES_DELETER_HPP__

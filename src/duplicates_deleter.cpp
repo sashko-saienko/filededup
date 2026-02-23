@@ -1,18 +1,11 @@
 #include <ranges>
 
-#include <Poco/DateTimeFormatter.h>
 #include <Poco/File.h>
-#include <Poco/LocalDateTime.h>
-#include <Poco/Timezone.h>
 
 #include "duplicates_deleter.hpp"
+#include "time_helpers.hpp"
 
-using Poco::DateTimeFormatter;
 using Poco::File;
-using Poco::LocalDateTime;
-using Poco::Timezone;
-
-const std::string DuplicatesDeleter::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
 void DuplicatesDeleter::remove()
 {
@@ -60,9 +53,4 @@ void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem, size_t keepId
         }
         file.remove();
     }
-}
-
-std::string DuplicatesDeleter::formatTimestamp(const Poco::Timestamp& ts)
-{
-    return DateTimeFormatter::format(LocalDateTime(ts), DT_FORMAT);
 }
