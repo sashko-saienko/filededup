@@ -54,7 +54,7 @@ FilesMap DuplicatesFinder::scan()
     return removeNonDuplicates(filesMap);
 }
 
-FilesMap DuplicatesFinder::removeNonDuplicates(FilesMap& filesMap)
+FilesMap DuplicatesFinder::removeNonDuplicates(const FilesMap& filesMap)
 {
     auto doesContainDuplicates = [](FilesMap::const_reference p) { return p.second.size() > 1; };
     auto duplicatesView = filesMap | std::ranges::views::filter(doesContainDuplicates); 

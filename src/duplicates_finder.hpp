@@ -17,7 +17,7 @@ class DuplicatesFinder
   private:
     std::filesystem::path path_;
 
-    FilesMap removeNonDuplicates(FilesMap& filesMap);
+    FilesMap removeNonDuplicates(const FilesMap& filesMap);
 };
 
 #endif // DUPLICATES_FINDER_HPP__
