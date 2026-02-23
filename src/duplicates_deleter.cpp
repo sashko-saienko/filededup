@@ -3,6 +3,7 @@
 #include <Poco/File.h>
 
 #include "duplicates_deleter.hpp"
+#include "deleter_keep_policy.hpp"
 #include "time_helpers.hpp"
 
 using Poco::File;
@@ -15,7 +16,7 @@ void DuplicatesDeleter::remove(bool deleteDuplcates)
         listDuplicates(elem);
         if (deleteDuplcates)
         {
-            removeDuplicates(elem, 0);
+            removeDuplicates(elem);
         }
     }
 }
@@ -27,7 +28,7 @@ void DuplicatesDeleter::orderByCreatedTsAsc(FilesMap::reference elem)
     files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
 }
 
-void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem) const
+void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem)
 {
     const auto& [checksum, files] = elem;
 
@@ -39,15 +40,12 @@ void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem) const
     }
 }
 
-void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem, size_t keepIdx)
+void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem)
 {
     auto& [_, files] = elem;
 
-    if (keepIdx > files.size() - 1)
-    {
-        return;
-    }
-
+    size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest? 0: files.size() - 1;
+    
     for (const auto& [idx, file] : std::views::enumerate(files))
     {
         if (idx == keepIdx)

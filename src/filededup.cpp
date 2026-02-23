@@ -12,6 +12,7 @@
 
 #include "duplicates_deleter.hpp"
 #include "duplicates_finder.hpp"
+#include "deleter_keep_policy.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -57,6 +58,12 @@ class FileDedup : public Application
                               .required(false)
                               .repeatable(false)
                               .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeleteDuplicates)));
+
+        options.addOption(Option("keep-policy", "p", "Deletion policy, which file to keep (default: oldest; case-sensitive)")
+                              .required(false)
+                              .repeatable(false)
+                              .argument("{oldest|newest}")
+                              .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeletePolicy)));
     }
 
     void handleHelp(const std::string& name, const std::string& value)
@@ -80,6 +87,14 @@ class FileDedup : public Application
         deleteDuplicates_ = !deleteDuplicates_;
     }
 
+    void handleDeletePolicy(const std::string& name, const std::string& value)
+    {
+        if (value == "newest") 
+        {
+            keepPolicy_ = DeleterKeepPolicy::Newest;
+        } 
+    }
+
     int main(const ArgVec& argv) override
     {
         if (helpMode_)
@@ -89,7 +104,7 @@ class FileDedup : public Application
 
         try
         {
-            DuplicatesDeleter duplicatesDeleter(directoryScanner.scan());
+            DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(), keepPolicy_);
             duplicatesDeleter.remove(deleteDuplicates_);
         }
         catch (std::exception& e)
@@ -104,6 +119,7 @@ class FileDedup : public Application
   private:
     bool helpMode_{false};
     bool deleteDuplicates_{false};
+    DeleterKeepPolicy keepPolicy_{DeleterKeepPolicy::Oldest};
     std::filesystem::path targetDirectory_;
 };
 
