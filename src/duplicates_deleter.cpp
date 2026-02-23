@@ -16,11 +16,30 @@ const std::string DuplicatesDeleter::DT_FORMAT = "%Y/%b/%e %H:%M:%S";
 
 void DuplicatesDeleter::remove()
 {
-    orderByCreatedDateAsc();
     for(auto& elem: filesMap_)
     {
+        orderByCreatedTsAsc(elem);
         listDuplicates(elem);
         removeDuplicates(elem, 0);
+    }
+}
+
+void DuplicatesDeleter::orderByCreatedTsAsc(FilesMap::reference elem)
+{
+    auto& [_, files] = elem;
+
+    files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
+}
+
+void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem) const
+{
+    const auto& [checksum, files] = elem;
+
+    std::cout << "[Checksum: " << checksum << "]\n";
+
+    for (const auto& file : files)
+    {
+        std::cout << '\t' << "[" << formatTimestamp(file.created()) << "] " << file.path() << '\n';
     }
 }
 
@@ -40,27 +59,6 @@ void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem, size_t keepId
             continue;
         }
         file.remove();
-    }
-}
-
-void DuplicatesDeleter::orderByCreatedDateAsc()
-{
-    for (auto& elem : filesMap_)
-    {
-        auto& [_, files] = elem;
-        files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
-    }
-}
-
-void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem) const
-{
-    const auto& [checksum, files] = elem;
-
-    std::cout << "[Checksum: " << checksum << "]\n";
-
-    for (const auto& file : files)
-    {
-        std::cout << '\t' << "[" << formatTimestamp(file.created()) << "] " << file.path() << '\n';
     }
 }
 
