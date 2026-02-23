@@ -7,13 +7,16 @@
 
 using Poco::File;
 
-void DuplicatesDeleter::remove()
+void DuplicatesDeleter::remove(bool deleteDuplcates)
 {
     for (auto& elem : filesMap_)
     {
         orderByCreatedTsAsc(elem);
         listDuplicates(elem);
-        removeDuplicates(elem, 0);
+        if (deleteDuplcates)
+        {
+            removeDuplicates(elem, 0);
+        }
     }
 }
 

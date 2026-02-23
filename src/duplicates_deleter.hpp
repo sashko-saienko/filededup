@@ -12,7 +12,7 @@ class DuplicatesDeleter
     {
     }
 
-    void remove();
+    void remove(bool deleteDuplicates = false);
 
   private:
     FilesMap filesMap_;

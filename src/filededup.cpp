@@ -52,6 +52,11 @@ class FileDedup : public Application
                               .repeatable(false)
                               .argument("<target-dir>")
                               .callback(OptionCallback<FileDedup>(this, &FileDedup::handleTargetDirectory)));
+
+        options.addOption(Option("delete", "d", "Delete duplicates (default: lists found files)")
+                              .required(false)
+                              .repeatable(false)
+                              .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeleteDuplicates)));
     }
 
     void handleHelp(const std::string& name, const std::string& value)
@@ -70,6 +75,11 @@ class FileDedup : public Application
         targetDirectory_ = value;
     }
 
+    void handleDeleteDuplicates(const std::string& name, const std::string& value)
+    {
+        deleteDuplicates_ = !deleteDuplicates_;
+    }
+
     int main(const ArgVec& argv) override
     {
         if (helpMode_)
@@ -80,7 +90,7 @@ class FileDedup : public Application
         try
         {
             DuplicatesDeleter duplicatesDeleter(directoryScanner.scan());
-            duplicatesDeleter.remove();
+            duplicatesDeleter.remove(deleteDuplicates_);
         }
         catch (std::exception& e)
         {
@@ -93,6 +103,7 @@ class FileDedup : public Application
 
   private:
     bool helpMode_{false};
+    bool deleteDuplicates_{false};
     std::filesystem::path targetDirectory_;
 };
 
