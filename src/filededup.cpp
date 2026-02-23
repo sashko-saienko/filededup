@@ -11,6 +11,7 @@
 #include <Poco/Util/OptionSet.h>
 
 #include "duplicates_finder.hpp"
+#include "duplicates_deleter.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -78,7 +79,8 @@ class FileDedup : public Application
 
         try
         {
-            directoryScanner.scan();
+            DuplicatesDeleter duplicatesDeleter(directoryScanner.scan());
+            duplicatesDeleter.remove();
         }
         catch (std::exception& e)
         {

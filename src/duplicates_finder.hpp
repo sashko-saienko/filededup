@@ -7,24 +7,17 @@
 
 class DuplicatesFinder
 {
-  private:
-    static const std::string DT_FORMAT;
-
   public:
     DuplicatesFinder(std::filesystem::path& p) : path_{p}
     {
     }
 
-    unsigned scan();
+    FilesMap scan();
 
   private:
     std::filesystem::path path_;
-    FilesMap FilesMap_;
 
-    FilesMap& buildFilesMap();
-
-    static void list(FilesMap::const_reference);
-    static std::string formatTimestamp(const Poco::Timestamp&);
+    FilesMap removeNonDuplicatedFiles(FilesMap& filesMap);
 };
 
 #endif // DUPLICATES_FINDER_HPP__
