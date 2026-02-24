@@ -16,4 +16,5 @@ target_sources(filededup PRIVATE src/filededup.cpp
     src/duplicates_deleter.cpp
     src/chksum.cpp
     src/time_helpers.cpp
+    src/logging.cpp
 )

@@ -13,6 +13,7 @@
 #include "duplicates_deleter.hpp"
 #include "duplicates_finder.hpp"
 #include "deleter_keep_policy.hpp"
+#include "logging.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -99,6 +100,8 @@ class FileDedup : public Application
     {
         if (helpMode_)
             return Application::EXIT_OK;
+
+        initLogging();
 
         DuplicatesFinder directoryScanner{targetDirectory_};
 
