@@ -1,21 +1,15 @@
 #include <ranges>
 
 #include <Poco/File.h>
-#include <Poco/Logger.h>
 
-#include "deleter_keep_policy.hpp"
 #include "duplicates_deleter.hpp"
+#include "deleter_keep_policy.hpp"
 #include "time_helpers.hpp"
 
 using Poco::File;
 
 void DuplicatesDeleter::remove(bool deleteDuplcates)
 {
-    if (filesMap_.size() == 0)
-    {
-        poco_information(logger, "No duplicates to process.");
-    }
-
     for (auto& elem : filesMap_)
     {
         orderByCreatedTsAsc(elem);
@@ -50,8 +44,8 @@ void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem)
 {
     auto& [_, files] = elem;
 
-    size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest ? 0 : files.size() - 1;
-
+    size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest? 0: files.size() - 1;
+    
     for (const auto& [idx, file] : std::views::enumerate(files))
     {
         if (idx == keepIdx)
