@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 
+#include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
 #include <Poco/Util/Option.h>
@@ -112,7 +113,7 @@ class FileDedup : public Application
         }
         catch (std::exception& e)
         {
-            logger().error(e.what());
+            Poco::Logger::root().error(e.what());
             return Application::EXIT_USAGE;
         }
 

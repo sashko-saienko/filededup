@@ -3,12 +3,14 @@
 
 #include <filesystem>
 
+#include <Poco/Logger.h>
+
 #include "files_map.hpp"
 
 class DuplicatesFinder
 {
   public:
-    DuplicatesFinder(std::filesystem::path& p) : path_{p}
+    DuplicatesFinder(std::filesystem::path& p) : path_{p}, logger{Poco::Logger::root()}
     {
     }
 
@@ -16,6 +18,7 @@ class DuplicatesFinder
 
   private:
     std::filesystem::path path_;
+    Poco::Logger& logger; 
 
     FilesMap removeNonDuplicates(const FilesMap& filesMap);
 };

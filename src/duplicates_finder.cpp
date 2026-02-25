@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <list>
 #include <ranges>
 #include <vector>
@@ -27,12 +26,10 @@ FilesMap DuplicatesFinder::scan()
         
         for (const auto& ent : fs::directory_iterator{dir})
         {
-            cout << "Processing: " << ent;
-            
             if (fs::is_directory(ent))
             {
                 dirs.push_back(ent);
-                cerr << " SKIP (directory)\n";
+                logger.information("%s has been skipped as directoyr", ent.path().string());
                 continue;
             }
             
@@ -47,7 +44,7 @@ FilesMap DuplicatesFinder::scan()
             }
             
             filesMap[chksum].emplace_back(p);
-            cout << " DONE\n";
+            logger.information("%s has been processed", p.string());
         }
     }
     
