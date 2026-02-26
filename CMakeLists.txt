@@ -11,6 +11,8 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 add_executable(filededup)
 target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
+configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
+
 target_sources(filededup PRIVATE src/filededup.cpp
     src/duplicates_finder.cpp
     src/duplicates_deleter.cpp

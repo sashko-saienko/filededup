@@ -102,7 +102,7 @@ class FileDedup : public Application
         if (helpMode_)
             return Application::EXIT_OK;
 
-        initLogging();
+        // initLogging();
 
         DuplicatesFinder directoryScanner{targetDirectory_};
 
@@ -117,6 +117,8 @@ class FileDedup : public Application
             return Application::EXIT_USAGE;
         }
 
+        Poco::Logger &l = Poco::Logger::get("filededup");
+        l.information("test log");
         return Application::EXIT_OK;
     }
 
