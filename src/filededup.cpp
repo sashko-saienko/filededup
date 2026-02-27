@@ -14,7 +14,6 @@
 #include "duplicates_deleter.hpp"
 #include "duplicates_finder.hpp"
 #include "deleter_keep_policy.hpp"
-#include "logging.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -95,14 +94,16 @@ class FileDedup : public Application
         {
             keepPolicy_ = DeleterKeepPolicy::Newest;
         } 
+        else
+        {
+
+        }
     }
 
     int main(const ArgVec& argv) override
     {
         if (helpMode_)
             return Application::EXIT_OK;
-
-        // initLogging();
 
         DuplicatesFinder directoryScanner{targetDirectory_};
 
@@ -116,10 +117,6 @@ class FileDedup : public Application
             Poco::Logger::root().error(e.what());
             return Application::EXIT_USAGE;
         }
-
-        Poco::Logger &l = Poco::Logger::get("filededup");
-        l.information("test log");
-        return Application::EXIT_OK;
     }
 
   private:
