@@ -10,7 +10,7 @@
 class DuplicatesFinder
 {
   public:
-    DuplicatesFinder(std::filesystem::path& p) : path_{p}, logger{Poco::Logger::root()}
+    DuplicatesFinder(std::filesystem::path& p) : path_{p}, logger{Poco::Logger::get("filededup")}
     {
     }
 
