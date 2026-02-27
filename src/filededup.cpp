@@ -94,9 +94,11 @@ class FileDedup : public Application
         {
             keepPolicy_ = DeleterKeepPolicy::Newest;
         } 
-        else
+        else if (value != "oldest")
         {
-
+            logger().error("Option \"%s\": unsupported value \"%s\". See help for proper usage.", name, value);
+            helpMode_ = true;
+            stopOptionsProcessing();
         }
     }
 
@@ -117,6 +119,8 @@ class FileDedup : public Application
             Poco::Logger::root().error(e.what());
             return Application::EXIT_USAGE;
         }
+
+        return Application::EXIT_OK;
     }
 
   private:
