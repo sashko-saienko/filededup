@@ -11,9 +11,9 @@
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
 
+#include "deleter_keep_policy.hpp"
 #include "duplicates_deleter.hpp"
 #include "duplicates_finder.hpp"
-#include "deleter_keep_policy.hpp"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
@@ -24,18 +24,18 @@ using Poco::Util::OptionSet;
 class FileDedup : public Application
 {
   protected:
-    void initialize(Application& self)
+    void initialize(Application& self) override
     {
         loadConfiguration();
         Application::initialize(self);
     }
 
-    void uninitialize()
+    void uninitialize() override
     {
         Application::uninitialize();
     }
 
-    void reinitialize(Application& self)
+    void reinitialize(Application& self) override
     {
         Application::reinitialize(self);
     }
@@ -60,16 +60,17 @@ class FileDedup : public Application
                               .repeatable(false)
                               .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeleteDuplicates)));
 
-        options.addOption(Option("keep-policy", "p", "Deletion policy, which file to keep (default: oldest; case-sensitive)")
-                              .required(false)
-                              .repeatable(false)
-                              .argument("{oldest|newest}")
-                              .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeletePolicy)));
+        options.addOption(
+            Option("keep-policy", "p", "Deletion policy, which file to keep (default: oldest; case-sensitive)")
+                .required(false)
+                .repeatable(false)
+                .argument("{oldest|newest}")
+                .callback(OptionCallback<FileDedup>(this, &FileDedup::handleDeletePolicy)));
     }
 
     void handleHelp(const std::string& name, const std::string& value)
     {
-        helpMode_ = true;
+        _helpMode = true;
         HelpFormatter helpFormatter(options());
         helpFormatter.setCommand(commandName());
         helpFormatter.setUsage("OPTIONS");
@@ -80,39 +81,39 @@ class FileDedup : public Application
 
     void handleTargetDirectory(const std::string& name, const std::string& value)
     {
-        targetDirectory_ = value;
+        _targetDirectory = value;
     }
 
     void handleDeleteDuplicates(const std::string& name, const std::string& value)
     {
-        deleteDuplicates_ = !deleteDuplicates_;
+        _deleteDuplicates = !_deleteDuplicates;
     }
 
     void handleDeletePolicy(const std::string& name, const std::string& value)
     {
-        if (value == "newest") 
+        if (value == "newest")
         {
-            keepPolicy_ = DeleterKeepPolicy::Newest;
-        } 
+            _keepPolicy = DeleterKeepPolicy::Newest;
+        }
         else if (value != "oldest")
         {
-            logger().error("Option \"%s\": unsupported value \"%s\". See help for proper usage.", name, value);
-            helpMode_ = true;
+            logger().error(R"(Option "%s": unsupported value "%s". See help for proper usage.)", name, value);
+            _helpMode = true;
             stopOptionsProcessing();
         }
     }
 
     int main(const ArgVec& argv) override
     {
-        if (helpMode_)
+        if (_helpMode)
             return Application::EXIT_OK;
 
-        DuplicatesFinder directoryScanner{targetDirectory_};
+        DuplicatesFinder directoryScanner{_targetDirectory};
 
         try
         {
-            DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(), keepPolicy_);
-            duplicatesDeleter.remove(deleteDuplicates_);
+            DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(), _keepPolicy);
+            duplicatesDeleter.remove(_deleteDuplicates);
         }
         catch (std::exception& e)
         {
@@ -124,10 +125,10 @@ class FileDedup : public Application
     }
 
   private:
-    bool helpMode_{false};
-    bool deleteDuplicates_{false};
-    DeleterKeepPolicy keepPolicy_{DeleterKeepPolicy::Oldest};
-    std::filesystem::path targetDirectory_;
+    bool _helpMode{false};
+    bool _deleteDuplicates{false};
+    DeleterKeepPolicy _keepPolicy{DeleterKeepPolicy::Oldest};
+    std::filesystem::path _targetDirectory;
 };
 
 POCO_APP_MAIN(FileDedup)
