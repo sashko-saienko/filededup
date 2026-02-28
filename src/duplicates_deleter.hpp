@@ -1,8 +1,6 @@
 #ifndef DUPLICATES_DELETER_HPP__
 #define DUPLICATES_DELETER_HPP__
 
-#include <Poco/Timestamp.h>
-
 #include "deleter_keep_policy.hpp"
 #include "files_map.hpp"
 

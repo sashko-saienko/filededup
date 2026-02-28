@@ -3,23 +3,19 @@
 #include <fstream>
 #include <list>
 #include <ranges>
-#include <vector>
 
 #include "files_map.hpp"
 #include "chksum.hpp"
 #include "duplicates_finder.hpp"
-#include "duplicates_deleter.hpp"
 
 namespace fs = std::filesystem;
 
-using std::cerr;
-using std::cout;
 using std::filesystem::path;
 
 FilesMap DuplicatesFinder::scan()
 {   
     FilesMap filesMap;
-    std::list<fs::path> dirs{path_};
+    std::list dirs{path_};
     for (; !dirs.empty(); dirs.pop_front())
     {
         fs::path& dir = dirs.front();
@@ -29,16 +25,16 @@ FilesMap DuplicatesFinder::scan()
             if (fs::is_directory(ent))
             {
                 dirs.push_back(ent);
-                logger.information("%s has been skipped as directoyr", ent.path().string());
+                logger.information("%s has been skipped as directory", ent.path().string());
                 continue;
             }
             
-            const fs::path& p = ent;
+            const path& p = ent;
             
             std::ifstream inpFileStream{p, std::ios::binary};
             unsigned chksum = calculateChecksum(inpFileStream);
             
-            if (filesMap.find(chksum) == filesMap.end())
+            if (!filesMap.contains(chksum))
             {
                 filesMap[chksum] = {};
             }

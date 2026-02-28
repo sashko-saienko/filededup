@@ -1,7 +1,5 @@
 #include <filesystem>
 #include <iostream>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 #include <Poco/Logger.h>
@@ -20,6 +18,7 @@ using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
+using Poco::Logger;
 
 class FileDedup : public Application
 {
@@ -106,7 +105,7 @@ class FileDedup : public Application
     int main(const ArgVec& argv) override
     {
         if (_helpMode)
-            return Application::EXIT_OK;
+            return EXIT_OK;
 
         DuplicatesFinder directoryScanner{_targetDirectory};
 
@@ -117,11 +116,11 @@ class FileDedup : public Application
         }
         catch (std::exception& e)
         {
-            Poco::Logger::root().error(e.what());
-            return Application::EXIT_USAGE;
+            Logger::root().error(e.what());
+            return EXIT_USAGE;
         }
 
-        return Application::EXIT_OK;
+        return EXIT_OK;
     }
 
   private:

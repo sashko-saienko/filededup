@@ -18,9 +18,9 @@ class DuplicatesFinder
 
   private:
     std::filesystem::path path_;
-    Poco::Logger& logger; 
+    Poco::Logger& logger;
 
-    FilesMap removeNonDuplicates(const FilesMap& filesMap);
+    static FilesMap removeNonDuplicates(const FilesMap& filesMap);
 };
 
 #endif // DUPLICATES_FINDER_HPP__
