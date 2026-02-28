@@ -8,14 +8,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
-add_executable(filededup)
+add_executable(filededup
+        src/duplicates_finder.cpp
+        src/duplicates_deleter.cpp
+        src/chksum.cpp
+        src/time_helpers.cpp
+        src/filededup.cpp)
+
 target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
 configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
-
-target_sources(filededup PRIVATE src/filededup.cpp
-    src/duplicates_finder.cpp
-    src/duplicates_deleter.cpp
-    src/chksum.cpp
-    src/time_helpers.cpp
-)
