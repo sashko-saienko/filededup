@@ -13,7 +13,9 @@ add_executable(filededup
         src/duplicates_deleter.cpp
         src/checksummer.cpp
         src/time_helpers.cpp
-        src/filededup.cpp)
+        src/filededup.cpp
+        src/filededup_application.cpp
+        src/filededup_application.h)
 
 target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
