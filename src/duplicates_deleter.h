@@ -7,7 +7,7 @@
 class DuplicatesDeleter
 {
   public:
-    DuplicatesDeleter(ChecksumFilesMap&& filesMap, DeleterKeepPolicy keepPolicy = DeleterKeepPolicy::Oldest)
+    explicit DuplicatesDeleter(ChecksumFilesMap&& filesMap, const DeleterKeepPolicy keepPolicy = DeleterKeepPolicy::Oldest)
         : keepPolicy_{keepPolicy}, filesMap_{filesMap}
     {
     }
