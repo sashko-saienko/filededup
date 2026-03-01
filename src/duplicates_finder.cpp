@@ -7,6 +7,7 @@
 #include "checksummer.h"
 #include "duplicates_finder.h"
 #include "files_map.h"
+#include "logging.h"
 
 namespace fs = std::filesystem;
 
@@ -22,7 +23,7 @@ auto DuplicatesFinder::scan() const -> FilesMap
             if (fs::is_directory(ent))
             {
                 dirs.push_back(ent);
-                logger.information("%s has been skipped as directory", ent.path().string());
+                Logging::logger().information("%s has been skipped as directory", ent.path().string());
                 continue;
             }
             
@@ -37,7 +38,7 @@ auto DuplicatesFinder::scan() const -> FilesMap
             }
             
             filesMap[chksum].emplace_back(p);
-            logger.information("%s has been processed", p.string());
+            Logging::logger().information("%s has been processed", p.string());
         }
     }
     

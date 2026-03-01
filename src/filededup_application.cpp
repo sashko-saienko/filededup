@@ -123,5 +123,6 @@ int FileDedupApplication::main(const ArgVec& argv)
         return EXIT_USAGE;
     }
 
+    logger().information(logger().name());
     return EXIT_OK;
 }

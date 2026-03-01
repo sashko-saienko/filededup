@@ -6,6 +6,7 @@
 #include "deleter_keep_policy.h"
 #include "duplicates_deleter.h"
 #include "time_helpers.h"
+#include "logging.h"
 
 using Poco::File;
 
@@ -26,18 +27,19 @@ void DuplicatesDeleter::orderByCreatedTsAsc(FilesMap::reference elem)
 {
     auto& [_, files] = elem;
 
-    files.sort([](const Poco::File& lhs, const Poco::File& rhs) -> bool { return lhs.created() <= rhs.created(); });
+    files.sort([](const File& lhs, const File& rhs) -> bool { return lhs.created() <= rhs.created(); });
 }
 
 void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem)
 {
     const auto& [checksum, files] = elem;
 
-    std::cout << "[Checksum: " << checksum << "]\n";
+    Logging::logger().information("[Checksum: %u]",  checksum);
 
     for (const auto& file : files)
     {
-        std::cout << '\t' << "[" << formatTimestamp(file.created()) << "] " << file.path() << '\n';
+        const auto tsFormatted = formatTimestamp(file.created());
+        Logging::logger().information("\t[created: %s] %s", tsFormatted, file.path());
     }
 }
 
