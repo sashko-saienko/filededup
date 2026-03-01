@@ -21,7 +21,9 @@ add_executable(filededup
         src/time_helpers.cpp
         src/time_helpers.h
         src/filededup_application.cpp
-        src/filededup_application.h)
+        src/filededup_application.h
+        src/logging.cpp
+        src/logging.h)
 
 target_link_libraries(filededup PRIVATE Poco::Foundation Poco::Util)
 
