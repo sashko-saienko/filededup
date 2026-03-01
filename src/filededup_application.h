@@ -14,7 +14,7 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
 
-#include "deleter_keep_policy.hpp"
+#include "deleter_keep_policy.h"
 
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;

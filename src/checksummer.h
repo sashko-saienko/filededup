@@ -1,5 +1,5 @@
-#ifndef CHECKSUMMER_HPP__
-#define CHECKSUMMER_HPP__
+#ifndef CHECKSUMMER_H
+#define CHECKSUMMER_H
 
 #include <istream>
 

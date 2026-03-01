@@ -1,11 +1,11 @@
-#ifndef DUPLICATES_FINDER_HPP__
-#define DUPLICATES_FINDER_HPP__
+#ifndef DUPLICATES_FINDER_H
+#define DUPLICATES_FINDER_H
 
 #include <filesystem>
 
 #include <Poco/Logger.h>
 
-#include "files_map.hpp"
+#include "files_map.h"
 
 class DuplicatesFinder
 {
@@ -23,4 +23,4 @@ class DuplicatesFinder
     static FilesMap removeNonDuplicates(const FilesMap& filesMap);
 };
 
-#endif // DUPLICATES_FINDER_HPP__
+#endif // DUPLICATES_FINDER_H

@@ -1,8 +1,8 @@
-#ifndef DUPLICATES_DELETER_HPP__
-#define DUPLICATES_DELETER_HPP__
+#ifndef DUPLICATES_DELETER_H
+#define DUPLICATES_DELETER_H
 
-#include "deleter_keep_policy.hpp"
-#include "files_map.hpp"
+#include "deleter_keep_policy.h"
+#include "files_map.h"
 
 class DuplicatesDeleter
 {
@@ -23,4 +23,4 @@ class DuplicatesDeleter
     void removeDuplicates(FilesMap::reference elem);
 };
 
-#endif // DUPLICATES_DELETER_HPP__
+#endif // DUPLICATES_DELETER_H

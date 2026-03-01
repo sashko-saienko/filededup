@@ -1,5 +1,5 @@
-#ifndef TIME_HELPERS_HPP__
-#define TIME_HELPERS_HPP__
+#ifndef TIME_HELPERS_H
+#define TIME_HELPERS_H
 
 #include <string>
 
@@ -7,4 +7,4 @@
 
 std::string formatTimestamp(const Poco::Timestamp& ts);
 
-#endif // TIME_HELPERS_HPP__
+#endif // TIME_HELPERS_H

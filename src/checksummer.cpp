@@ -1,6 +1,6 @@
 #include <Poco/Checksum.h>
 
-#include "checksummer.hpp"
+#include "checksummer.h"
 
 unsigned calculateChecksum(std::istream& is)
 {

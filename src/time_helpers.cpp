@@ -4,7 +4,7 @@
 #include <Poco/LocalDateTime.h>
 #include <Poco/Timezone.h>
 
-#include "time_helpers.hpp"
+#include "time_helpers.h"
 
 using Poco::DateTimeFormatter;
 using Poco::LocalDateTime;

@@ -1,5 +1,5 @@
-#ifndef FILES_MAP_HPP__
-#define FILES_MAP_HPP__
+#ifndef FILES_MAP_H
+#define FILES_MAP_H
 
 #include <list>
 #include <unordered_map>
@@ -8,4 +8,4 @@
 
 using FilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
 
-#endif // FILES_MAP_HPP__
+#endif // FILES_MAP_H

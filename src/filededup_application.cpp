@@ -15,9 +15,9 @@
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
 
-#include "deleter_keep_policy.hpp"
-#include "duplicates_deleter.hpp"
-#include "duplicates_finder.hpp"
+#include "deleter_keep_policy.h"
+#include "duplicates_deleter.h"
+#include "duplicates_finder.h"
 
 using Poco::Logger;
 using Poco::Util::Application;
