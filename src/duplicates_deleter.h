@@ -20,7 +20,7 @@ class DuplicatesDeleter
 
     static void orderByCreatedTsAsc(FilesMap::reference);
     static void listDuplicates(FilesMap::const_reference elem);
-    void removeDuplicates(FilesMap::reference elem);
+    void removeDuplicates(FilesMap::reference elem) const;
 };
 
 #endif // DUPLICATES_DELETER_H

@@ -10,13 +10,13 @@
 
 using Poco::File;
 
-void DuplicatesDeleter::remove(bool deleteDuplcates)
+void DuplicatesDeleter::remove(const bool deleteDuplicates)
 {
     for (auto& elem : filesMap_)
     {
         orderByCreatedTsAsc(elem);
         listDuplicates(elem);
-        if (deleteDuplcates)
+        if (deleteDuplicates)
         {
             removeDuplicates(elem);
         }
@@ -43,11 +43,11 @@ void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem)
     }
 }
 
-void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem)
+void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem) const
 {
     auto& [_, files] = elem;
 
-    size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest? 0: files.size() - 1;
+    const size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest? 0: files.size() - 1;
     
     for (const auto& [idx, file] : std::views::enumerate(files))
     {

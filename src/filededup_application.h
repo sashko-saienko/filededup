@@ -2,8 +2,8 @@
 // Created by sashko on 01.03.26.
 //
 
-#ifndef FILEDEDUP_FILEDEDUPAPPLICATION_H
-#define FILEDEDUP_FILEDEDUPAPPLICATION_H
+#ifndef FILEDEDUP_APPLICATION_H
+#define FILEDEDUP_APPLICATION_H
 
 #include <filesystem>
 #include <string>
@@ -45,4 +45,4 @@ class FileDedupApplication : public Application
     std::filesystem::path _targetDirectory;
 };
 
-#endif // FILEDEDUP_FILEDEDUPAPPLICATION_H
+#endif // FILEDEDUP_APPLICATION_H

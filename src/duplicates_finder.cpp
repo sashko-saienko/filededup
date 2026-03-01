@@ -30,14 +30,14 @@ auto DuplicatesFinder::scan() const -> FilesMap
             const path& p = ent;
             
             std::ifstream inpFileStream{p, std::ios::binary};
-            unsigned chksum = calculateChecksum(inpFileStream);
+            unsigned checksum = calculateChecksum(inpFileStream);
             
-            if (!filesMap.contains(chksum))
+            if (!filesMap.contains(checksum))
             {
-                filesMap[chksum] = {};
+                filesMap[checksum] = {};
             }
             
-            filesMap[chksum].emplace_back(p);
+            filesMap[checksum].emplace_back(p);
             Logging::logger().information("%s has been processed", p.string());
         }
     }

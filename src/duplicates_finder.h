@@ -12,7 +12,7 @@ using Poco::Logger;
 class DuplicatesFinder
 {
   public:
-    DuplicatesFinder(std::filesystem::path& p) : path_{p}
+    explicit DuplicatesFinder(const std::filesystem::path& p) : path_{p}
     {
     }
 

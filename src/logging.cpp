@@ -1,7 +1,6 @@
 //
 // Created by sashko on 01.03.26.
 //
-#include <iostream>
 
 #include <Poco/Logger.h>
 
