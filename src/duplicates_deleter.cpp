@@ -49,7 +49,7 @@ void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem) const
 
     const size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest? 0: files.size() - 1;
     
-    for (const auto& [idx, file] : std::views::enumerate(files))
+    for (auto [idx, file] : std::views::enumerate(files))
     {
         if (idx == keepIdx)
         {

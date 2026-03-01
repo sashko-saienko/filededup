@@ -110,7 +110,7 @@ int FileDedupApplication::main(const ArgVec& argv)
     if (_helpMode)
         return EXIT_OK;
 
-    DuplicatesFinder directoryScanner{_targetDirectory};
+    const DuplicatesFinder directoryScanner{_targetDirectory};
 
     try
     {
@@ -123,6 +123,5 @@ int FileDedupApplication::main(const ArgVec& argv)
         return EXIT_USAGE;
     }
 
-    logger().information(logger().name());
     return EXIT_OK;
 }
