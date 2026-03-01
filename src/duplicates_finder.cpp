@@ -13,9 +13,9 @@ namespace fs = std::filesystem;
 
 using std::filesystem::path;
 
-auto DuplicatesFinder::scan() const -> FilesMap
+auto DuplicatesFinder::scan() const -> ChecksumFilesMap
 {   
-    FilesMap filesMap;
+    ChecksumFilesMap filesMap;
     for (std::list dirs{path_}; !dirs.empty(); dirs.pop_front())
     {
         for (const path& dir = dirs.front(); const auto& ent : fs::directory_iterator{dir})
@@ -45,9 +45,9 @@ auto DuplicatesFinder::scan() const -> FilesMap
     return removeNonDuplicates(filesMap);
 }
 
-FilesMap DuplicatesFinder::removeNonDuplicates(const FilesMap& filesMap)
+ChecksumFilesMap DuplicatesFinder::removeNonDuplicates(const ChecksumFilesMap& filesMap)
 {
-    auto doesContainDuplicates = [](FilesMap::const_reference p) { return p.second.size() > 1; };
+    auto doesContainDuplicates = [](ChecksumFilesMap::const_reference p) { return p.second.size() > 1; };
     auto duplicatesView = filesMap | std::ranges::views::filter(doesContainDuplicates); 
-    return FilesMap{duplicatesView.begin(), duplicatesView.end()};
+    return ChecksumFilesMap{duplicatesView.begin(), duplicatesView.end()};
 }

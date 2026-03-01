@@ -16,12 +16,12 @@ class DuplicatesFinder
     {
     }
 
-    [[nodiscard]] FilesMap scan() const;
+    [[nodiscard]] ChecksumFilesMap scan() const;
 
   private:
     std::filesystem::path path_;
 
-    static FilesMap removeNonDuplicates(const FilesMap& filesMap);
+    static ChecksumFilesMap removeNonDuplicates(const ChecksumFilesMap& filesMap);
 };
 
 #endif // DUPLICATES_FINDER_H

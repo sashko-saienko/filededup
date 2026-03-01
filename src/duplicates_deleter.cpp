@@ -23,14 +23,14 @@ void DuplicatesDeleter::remove(const bool deleteDuplicates)
     }
 }
 
-void DuplicatesDeleter::orderByCreatedTsAsc(FilesMap::reference elem)
+void DuplicatesDeleter::orderByCreatedTsAsc(ChecksumFilesMap::reference elem)
 {
     auto& [_, files] = elem;
 
     files.sort([](const File& lhs, const File& rhs) -> bool { return lhs.created() <= rhs.created(); });
 }
 
-void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem)
+void DuplicatesDeleter::listDuplicates(ChecksumFilesMap::const_reference elem)
 {
     const auto& [checksum, files] = elem;
 
@@ -43,7 +43,7 @@ void DuplicatesDeleter::listDuplicates(FilesMap::const_reference elem)
     }
 }
 
-void DuplicatesDeleter::removeDuplicates(FilesMap::reference elem) const
+void DuplicatesDeleter::removeDuplicates(ChecksumFilesMap::reference elem) const
 {
     auto& [_, files] = elem;
 

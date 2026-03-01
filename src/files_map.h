@@ -6,6 +6,6 @@
 
 #include <Poco/File.h>
 
-using FilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
+using ChecksumFilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
 
 #endif // FILES_MAP_H

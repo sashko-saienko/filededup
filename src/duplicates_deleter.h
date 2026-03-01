@@ -7,7 +7,7 @@
 class DuplicatesDeleter
 {
   public:
-    DuplicatesDeleter(FilesMap&& filesMap, DeleterKeepPolicy keepPolicy = DeleterKeepPolicy::Oldest)
+    DuplicatesDeleter(ChecksumFilesMap&& filesMap, DeleterKeepPolicy keepPolicy = DeleterKeepPolicy::Oldest)
         : keepPolicy_{keepPolicy}, filesMap_{filesMap}
     {
     }
@@ -16,11 +16,11 @@ class DuplicatesDeleter
 
   private:
     DeleterKeepPolicy keepPolicy_;
-    FilesMap filesMap_;
+    ChecksumFilesMap filesMap_;
 
-    static void orderByCreatedTsAsc(FilesMap::reference);
-    static void listDuplicates(FilesMap::const_reference elem);
-    void removeDuplicates(FilesMap::reference elem) const;
+    static void orderByCreatedTsAsc(ChecksumFilesMap::reference);
+    static void listDuplicates(ChecksumFilesMap::const_reference elem);
+    void removeDuplicates(ChecksumFilesMap::reference elem) const;
 };
 
 #endif // DUPLICATES_DELETER_H
