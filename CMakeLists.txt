@@ -9,11 +9,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_executable(filededup
-        src/duplicates_finder.cpp
-        src/duplicates_deleter.cpp
-        src/checksummer.cpp
-        src/time_helpers.cpp
         src/filededup.cpp
+        src/files_map.h
+        src/deleter_keep_policy.h
+        src/duplicates_finder.cpp
+        src/duplicates_finder.h
+        src/duplicates_deleter.cpp
+        src/duplicates_deleter.h
+        src/checksummer.cpp
+        src/checksummer.h
+        src/time_helpers.cpp
+        src/time_helpers.h
         src/filededup_application.cpp
         src/filededup_application.h)
 
