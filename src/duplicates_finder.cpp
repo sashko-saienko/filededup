@@ -12,15 +12,12 @@ namespace fs = std::filesystem;
 
 using std::filesystem::path;
 
-FilesMap DuplicatesFinder::scan()
+auto DuplicatesFinder::scan() const -> FilesMap
 {   
     FilesMap filesMap;
-    std::list dirs{path_};
-    for (; !dirs.empty(); dirs.pop_front())
+    for (std::list dirs{path_}; !dirs.empty(); dirs.pop_front())
     {
-        fs::path& dir = dirs.front();
-        
-        for (const auto& ent : fs::directory_iterator{dir})
+        for (const path& dir = dirs.front(); const auto& ent : fs::directory_iterator{dir})
         {
             if (fs::is_directory(ent))
             {

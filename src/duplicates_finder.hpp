@@ -14,7 +14,7 @@ class DuplicatesFinder
     {
     }
 
-    FilesMap scan();
+    [[nodiscard]] FilesMap scan() const;
 
   private:
     std::filesystem::path path_;
