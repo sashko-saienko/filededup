@@ -11,7 +11,7 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 add_executable(filededup
         src/duplicates_finder.cpp
         src/duplicates_deleter.cpp
-        src/chksum.cpp
+        src/checksummer.cpp
         src/time_helpers.cpp
         src/filededup.cpp)
 
