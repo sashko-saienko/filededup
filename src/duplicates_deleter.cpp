@@ -27,7 +27,7 @@ void DuplicatesDeleter::orderByCreatedTsAsc(ChecksumFilesMap::reference elem)
 {
     auto& [_, files] = elem;
 
-    files.sort([](const File& lhs, const File& rhs) -> bool { return lhs.created() <= rhs.created(); });
+    files.sort([](const File& lhs, const File& rhs) -> bool { return lhs.created() > rhs.created(); });
 }
 
 void DuplicatesDeleter::listDuplicates(ChecksumFilesMap::const_reference elem)
