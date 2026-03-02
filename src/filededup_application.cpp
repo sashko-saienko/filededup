@@ -119,7 +119,7 @@ int FileDedupApplication::main(const ArgVec& argv)
     }
     catch (std::exception& e)
     {
-        Logger::root().error(e.what());
+        logger().error(e.what());
         return EXIT_USAGE;
     }
 
