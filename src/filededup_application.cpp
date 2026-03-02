@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <chrono>
 
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
@@ -18,6 +19,7 @@
 #include "deleter_keep_policy.h"
 #include "duplicates_deleter.h"
 #include "duplicates_finder.h"
+#include "time_helpers.h"
 
 using Poco::Logger;
 using Poco::Util::Application;
@@ -107,6 +109,10 @@ void FileDedupApplication::handleDeletePolicy(const std::string& name, const std
 
 int FileDedupApplication::main(const ArgVec& argv)
 {
+    ObservableStopwatch sw([&](const long seconds) {
+        logger().warning("Completed in %ld(s)", seconds);
+    });
+
     if (_helpMode)
         return EXIT_OK;
 
