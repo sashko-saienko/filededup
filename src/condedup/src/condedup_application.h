@@ -16,12 +16,12 @@
 
 #include "deleter_keep_policy.h"
 
+using Poco::Logger;
 using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
-using Poco::Logger;
 
 class FileDedupApplication : public Application
 {

@@ -1,8 +1,8 @@
 #ifndef DUPLICATES_DELETER_H
 #define DUPLICATES_DELETER_H
 
+#include "../../duplib/include/duplib/files_map.h"
 #include "deleter_keep_policy.h"
-#include "files_map.h"
 
 class DuplicatesDeleter
 {

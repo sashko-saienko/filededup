@@ -4,8 +4,8 @@
 
 #include <Poco/Logger.h>
 
-#include "filededup_application.h"
 #include "logging.h"
+#include "condedup_application.h"
 
 Logger& Logging::logger()
 {
