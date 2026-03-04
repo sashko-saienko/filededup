@@ -2,8 +2,8 @@
 // Created by sashko on 01.03.26.
 //
 
-#ifndef FILEDEDUP_APPLICATION_H
-#define FILEDEDUP_APPLICATION_H
+#ifndef CONDEDUP_APPLICATION_H
+#define CONDEDUP_APPLICATION_H
 
 #include <filesystem>
 #include <string>
@@ -23,7 +23,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
 
-class FileDedupApplication : public Application
+class ConDedupApplication : public Application
 {
   protected:
     void initialize(Application& self) override;
@@ -45,4 +45,4 @@ class FileDedupApplication : public Application
     std::filesystem::path _targetDirectory;
 };
 
-#endif // FILEDEDUP_APPLICATION_H
+#endif // CONDEDUP_APPLICATION_H

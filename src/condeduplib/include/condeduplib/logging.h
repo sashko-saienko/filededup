@@ -2,8 +2,8 @@
 // Created by sashko on 01.03.26.
 //
 
-#ifndef FILEDEDUP_LOGGING_H
-#define FILEDEDUP_LOGGING_H
+#ifndef LOGGING_H
+#define LOGGING_H
 
 #include <Poco/Logger.h>
 
@@ -15,4 +15,4 @@ public:
     static Logger& logger();
 };
 
-#endif // FILEDEDUP_LOGGING_H
+#endif // LOGGING_H

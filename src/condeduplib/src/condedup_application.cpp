@@ -27,51 +27,51 @@ using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
 
-void FileDedupApplication::initialize(Application& self)
+void ConDedupApplication::initialize(Application& self)
 {
     loadConfiguration();
     Application::initialize(self);
 }
 
-void FileDedupApplication::uninitialize()
+void ConDedupApplication::uninitialize()
 {
     Application::uninitialize();
 }
 
-void FileDedupApplication::reinitialize(Application& self)
+void ConDedupApplication::reinitialize(Application& self)
 {
     Application::reinitialize(self);
 }
 
-void FileDedupApplication::defineOptions(OptionSet& options)
+void ConDedupApplication::defineOptions(OptionSet& options)
 {
     Application::defineOptions(options);
 
     options.addOption(Option("help", "h", "display help information")
                           .required(false)
                           .repeatable(false)
-                          .callback(OptionCallback(this, &FileDedupApplication::handleHelp)));
+                          .callback(OptionCallback(this, &ConDedupApplication::handleHelp)));
 
     options.addOption(Option("target-dir", "t", "target directory to look for duplicates")
                           .required(true)
                           .repeatable(false)
                           .argument("<target-dir>")
-                          .callback(OptionCallback(this, &FileDedupApplication::handleTargetDirectory)));
+                          .callback(OptionCallback(this, &ConDedupApplication::handleTargetDirectory)));
 
     options.addOption(Option("delete", "d", "Delete duplicates (default: lists found files)")
                           .required(false)
                           .repeatable(false)
-                          .callback(OptionCallback(this, &FileDedupApplication::handleDeleteDuplicates)));
+                          .callback(OptionCallback(this, &ConDedupApplication::handleDeleteDuplicates)));
 
     options.addOption(
         Option("keep-policy", "p", "Deletion policy, which file to keep (default: oldest; case-sensitive)")
             .required(false)
             .repeatable(false)
             .argument("{oldest|newest}")
-            .callback(OptionCallback(this, &FileDedupApplication::handleDeletePolicy)));
+            .callback(OptionCallback(this, &ConDedupApplication::handleDeletePolicy)));
 }
 
-void FileDedupApplication::handleHelp(const std::string& name, const std::string& value)
+void ConDedupApplication::handleHelp(const std::string& name, const std::string& value)
 {
     _helpMode = true;
     HelpFormatter helpFormatter(options());
@@ -82,17 +82,17 @@ void FileDedupApplication::handleHelp(const std::string& name, const std::string
     stopOptionsProcessing();
 }
 
-void FileDedupApplication::handleTargetDirectory(const std::string& name, const std::string& value)
+void ConDedupApplication::handleTargetDirectory(const std::string& name, const std::string& value)
 {
     _targetDirectory = value;
 }
 
-void FileDedupApplication::handleDeleteDuplicates(const std::string& name, const std::string& value)
+void ConDedupApplication::handleDeleteDuplicates(const std::string& name, const std::string& value)
 {
     _deleteDuplicates = !_deleteDuplicates;
 }
 
-void FileDedupApplication::handleDeletePolicy(const std::string& name, const std::string& value)
+void ConDedupApplication::handleDeletePolicy(const std::string& name, const std::string& value)
 {
     if (value == "newest")
     {
@@ -106,7 +106,7 @@ void FileDedupApplication::handleDeletePolicy(const std::string& name, const std
     }
 }
 
-int FileDedupApplication::main(const ArgVec& argv)
+int ConDedupApplication::main(const ArgVec& argv)
 {
     ObservableStopwatch sw([&](const long seconds) {
         logger().warning("Completed in %ld(s)", seconds);

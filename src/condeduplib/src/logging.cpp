@@ -9,6 +9,6 @@
 
 Logger& Logging::logger()
 {
-    static Logger& l{FileDedupApplication::instance().logger()};
+    static Logger& l{ConDedupApplication::instance().logger()};
     return l;
 }
