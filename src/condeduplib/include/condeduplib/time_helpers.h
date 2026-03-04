@@ -19,7 +19,7 @@ public:
     explicit ObservableStopwatch(Observer observer) : start_(high_resolution_clock::now()), observer_(observer) {}
     ~ObservableStopwatch();
 private:
-    high_resolution_clock::time_point start_;
+    const high_resolution_clock::time_point start_;
     Observer observer_;
 };
 
