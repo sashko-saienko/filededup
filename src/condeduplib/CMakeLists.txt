@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
-        condeduplib
+        condeduplib SHARED
         include/condeduplib/condedup_application.h
         src/condedup_application.cpp
         include/condeduplib/deleter_keep_policy.h

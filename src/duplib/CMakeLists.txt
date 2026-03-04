@@ -8,12 +8,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
-add_library(duplib
+add_library(
+        duplib SHARED
         include/duplib/files_map.h
         src/duplicates_finder.cpp
         include/duplib/duplicates_finder.h
         src/checksummer.cpp
-        include/duplib/checksummer.h)
+        include/duplib/checksummer.h
+)
 
 target_include_directories(duplib PUBLIC include)
 
