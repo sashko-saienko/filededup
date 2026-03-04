@@ -4,9 +4,9 @@
 #include <list>
 #include <ranges>
 
-#include "duplib/checksummer.h"
-#include "duplib/duplicates_finder.h"
-#include "duplib/files_map.h"
+#include <duplib/checksummer.h>
+#include <duplib/duplicates_finder.h>
+#include <duplib/files_map.h>
 
 namespace fs = std::filesystem;
 
