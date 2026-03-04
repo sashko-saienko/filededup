@@ -3,10 +3,10 @@
 
 #include <Poco/File.h>
 
-#include "duplicates_deleter.h"
-#include "logging.h"
-#include "time_helpers.h"
-#include "deleter_keep_policy.h"
+#include <condeduplib/deleter_keep_policy.h>
+#include <condeduplib/duplicates_deleter.h>
+#include <condeduplib/logging.h>
+#include <condeduplib/time_helpers.h>
 
 using Poco::File;
 

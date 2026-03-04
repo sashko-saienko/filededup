@@ -2,8 +2,6 @@
 // Created by sashko on 01.03.26.
 //
 
-#include "condedup_application.h"
-
 #include <chrono>
 #include <filesystem>
 #include <iostream>
@@ -15,11 +13,12 @@
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
-#include <duplib/duplicates_finder.h>
 
-#include "time_helpers.h"
-#include "deleter_keep_policy.h"
-#include "duplicates_deleter.h"
+#include <duplib/duplicates_finder.h>
+#include <condeduplib/condedup_application.h>
+#include <condeduplib/deleter_keep_policy.h>
+#include <condeduplib/duplicates_deleter.h>
+#include <condeduplib/time_helpers.h>
 
 using Poco::Logger;
 using Poco::Util::Application;
