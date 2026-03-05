@@ -19,4 +19,6 @@ add_library(
 
 target_include_directories(duplib PUBLIC include)
 
-target_link_libraries(duplib PRIVATE Poco::Foundation Poco::Util)
+target_compile_definitions(duplib PRIVATE LOGGER_NAME="${PROJECT_NAME}")
+
+target_link_libraries(duplib PRIVATE reusablelib Poco::Foundation Poco::Util)

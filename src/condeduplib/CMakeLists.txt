@@ -15,13 +15,12 @@ add_library(
         include/condeduplib/deleter_keep_policy.h
         include/condeduplib/duplicates_deleter.h
         src/duplicates_deleter.cpp
-        include/condeduplib/logging.h
-        src/logging.cpp
         include/condeduplib/time_helpers.h
         src/time_helpers.cpp
 )
 
 target_include_directories(condeduplib PUBLIC include)
 
-target_link_libraries(condeduplib PRIVATE duplib)
-target_link_libraries(condeduplib PRIVATE Poco::Foundation Poco::Util)
+target_compile_definitions(condeduplib PRIVATE LOGGER_NAME="${PROJECT_NAME}")
+
+target_link_libraries(condeduplib PRIVATE duplib reusablelib Poco::Foundation Poco::Util)

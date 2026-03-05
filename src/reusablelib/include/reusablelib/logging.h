@@ -5,6 +5,8 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
+#include <string>
+
 #include <Poco/Logger.h>
 
 using Poco::Logger;
@@ -12,7 +14,7 @@ using Poco::Logger;
 class Logging
 {
 public:
-    static Logger& logger();
+    static Logger& logger(const std::string&);
 };
 
 #endif // LOGGING_H

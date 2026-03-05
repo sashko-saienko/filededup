@@ -2,10 +2,10 @@
 #include <ranges>
 
 #include <Poco/File.h>
+#include <reusablelib/logging.h>
 
 #include <condeduplib/deleter_keep_policy.h>
 #include <condeduplib/duplicates_deleter.h>
-#include <condeduplib/logging.h>
 #include <condeduplib/time_helpers.h>
 
 using Poco::File;
@@ -34,12 +34,12 @@ void DuplicatesDeleter::listDuplicates(ChecksumFilesMap::const_reference elem)
 {
     const auto& [checksum, files] = elem;
 
-    Logging::logger().information("[Checksum: %u]",  checksum);
+    Logging::logger(LOGGER_NAME).information("[Checksum: %u]",  checksum);
 
     for (const auto& file : files)
     {
         const auto tsFormatted = formatTimestamp(file.created());
-        Logging::logger().information("\t[created: %s] %s", tsFormatted, file.path());
+        Logging::logger(LOGGER_NAME).information("\t[created: %s] %s", tsFormatted, file.path());
     }
 }
 
