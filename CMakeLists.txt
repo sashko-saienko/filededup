@@ -9,3 +9,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_subdirectory(src)
+add_subdirectory(tests)

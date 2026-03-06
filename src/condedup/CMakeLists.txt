@@ -11,6 +11,7 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 add_executable(
         condedup
         src/condedup.cpp
+        ../../tests/duplib_ut/duplicates_finder_test.cpp
 )
 
 target_link_libraries(condedup PRIVATE condeduplib)
