@@ -18,9 +18,7 @@ add_library(
 )
 
 target_include_directories(duplib PUBLIC include)
-
 target_compile_definitions(duplib PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-
 target_link_libraries(duplib PRIVATE reusablelib Poco::Foundation Poco::Util)
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -28,3 +26,5 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
     target_link_options(duplib PUBLIC --coverage)
     add_custom_command(TARGET duplib PRE_BUILD COMMAND find ${CMAKE_BINARY_DIR} -type f -name '*.gcda' -exec rm {} +)
 endif()
+
+AddClangTidy(duplib)
