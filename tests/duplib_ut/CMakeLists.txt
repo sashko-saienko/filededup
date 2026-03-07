@@ -13,4 +13,7 @@ add_executable(
 
 target_link_libraries(duplib_ut PRIVATE duplib testsuplib Catch2::Catch2WithMain)
 
+include(Coverage)
+AddCoverage(duplib_ut)
+
 catch_discover_tests(duplib_ut)
