@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(
         duplib_ut
-        duplicates_finder_test.cpp
+        src/duplicates_finder_test.cpp
 )
 
 target_link_libraries(duplib_ut PRIVATE duplib testsuplib Catch2::Catch2WithMain)
