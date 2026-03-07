@@ -11,6 +11,6 @@ add_executable(
         duplicates_finder_test.cpp
 )
 
-target_link_libraries(duplib_ut PRIVATE duplib Catch2::Catch2WithMain)
+target_link_libraries(duplib_ut PRIVATE duplib testsuplib Catch2::Catch2WithMain)
 
 catch_discover_tests(duplib_ut)
