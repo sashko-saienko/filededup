@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 
 TEST_CASE("GivenNonExistingPath_WhenScan_Throws", "[duplib]")
 {
-    const DuplicatesFinder sut{""};
+    const DuplicatesFinder sut{fs::temp_directory_path() / "nonExistingPath" };
 
     REQUIRE_THROWS_AS(sut.scan(), std::filesystem::filesystem_error);
 }
