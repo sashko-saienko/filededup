@@ -15,5 +15,4 @@ add_library(
 )
 
 target_include_directories(reusablelib PUBLIC include)
-
 target_link_libraries(reusablelib PRIVATE Poco::Util)
