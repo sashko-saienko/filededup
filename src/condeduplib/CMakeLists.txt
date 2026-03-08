@@ -20,7 +20,7 @@ add_library(
 )
 
 target_include_directories(condeduplib PUBLIC include)
-
 target_compile_definitions(condeduplib PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-
 target_link_libraries(condeduplib PRIVATE duplib reusablelib Poco::Foundation Poco::Util)
+
+AddClangTidy(condeduplib)

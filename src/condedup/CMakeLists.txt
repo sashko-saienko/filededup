@@ -17,3 +17,5 @@ target_link_libraries(condedup PRIVATE condeduplib)
 target_link_libraries(condedup PRIVATE Poco::Foundation Poco::Util)
 
 configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
+
+AddClangTidy(condedup)
