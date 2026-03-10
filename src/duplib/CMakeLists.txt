@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(LINK_WHAT_YOU_USE)
+set(CXX_INCLUDE_WHAT_YOU_USE)
+
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
@@ -28,3 +31,4 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif()
 
 AddClangTidy(duplib)
+AddCppCheck(duplib)
