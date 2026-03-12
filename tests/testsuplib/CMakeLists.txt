@@ -10,6 +10,8 @@ add_library(
         testsuplib SHARED
         src/time_helpers.cpp
         include/testsuplib/time_helpers.h
+        src/file_helpers.cpp
+        include/testsuplib/file_helpers.h
 )
 
 target_include_directories(testsuplib PUBLIC include)

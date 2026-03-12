@@ -11,6 +11,7 @@ add_executable(
         src/duplicates_finder_test.cpp
 )
 
+target_compile_definitions(duplib_ut PRIVATE PROJECT_NAME="${PROJECT_NAME}")
 target_link_libraries(duplib_ut PRIVATE duplib testsuplib Catch2::Catch2WithMain)
 catch_discover_tests(duplib_ut)
 AddCoverage(duplib_ut)
