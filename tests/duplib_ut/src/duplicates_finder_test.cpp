@@ -21,7 +21,7 @@ TEST_CASE("InstantiatingDuplicatesFinderWithNonExistingPathThrows", "[duplib]")
 
 TEST_CASE("RunningScanOverEmptyDirectoryReturnsEmptyResult", "[duplib]")
 {
-    const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME);
+    const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME, __FUNCTION__);
     const auto dirPath = fs::temp_directory_path()/ dirName;
     fs::create_directories(dirPath);
 
@@ -30,9 +30,9 @@ TEST_CASE("RunningScanOverEmptyDirectoryReturnsEmptyResult", "[duplib]")
     REQUIRE(sut.scan().empty());
 }
 
-TEST_CASE("RunningScanOverNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", "[duplib]")
+TEST_CASE("ScanningNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", "[duplib]")
 {
-    const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME);
+    const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME, __FUNCTION__);
     const auto dirPath = fs::temp_directory_path()/ dirName;
     fs::create_directories(dirPath);
     FileHelpers::createFile(dirPath / "file1", "file1");
@@ -41,4 +41,21 @@ TEST_CASE("RunningScanOverNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", 
     const DuplicatesFinder sut{dirPath};
 
     REQUIRE(sut.scan().empty());
+}
+
+TEST_CASE("ScanningNonEmptyDirectoryWithDuplicatedFilesReturnsDuplicates", "[duplib]")
+{
+    const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME, __FUNCTION__);
+    const auto dirPath = fs::temp_directory_path()/ dirName;
+    fs::create_directories(dirPath);
+    FileHelpers::createFile(dirPath / "file1", "file1");
+    FileHelpers::createFile(dirPath / "file2", "file2");
+    FileHelpers::createFile(dirPath / "file3", "file1");
+
+    const DuplicatesFinder sut{dirPath};
+
+    const ChecksumFilesMap result = sut.scan();
+
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.cbegin()->second.size() == 2);
 }

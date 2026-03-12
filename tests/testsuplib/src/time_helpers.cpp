@@ -15,8 +15,8 @@ std::string TimeHelpers::getNowYYYYMMDDHHMMSS(const string_view& prefix, const s
 {
     const auto now = system_clock::to_time_t(system_clock::now());
     char tsBuf[32] = {0};
-    std::strftime(tsBuf, sizeof(tsBuf), "%Y%m%d%H%M%S", std::localtime(&now));
+    std::strftime(tsBuf, sizeof(tsBuf), "%Y%m%d_%H%M%S", std::localtime(&now));
     stringstream ss;
-    ss << prefix << tsBuf << suffix;
+    ss << prefix << '_' << tsBuf << '_' << suffix;
     return ss.str();
 }
