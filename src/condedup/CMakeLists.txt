@@ -6,16 +6,18 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Poco REQUIRED COMPONENTS Foundation Util)
+find_package(Poco REQUIRED COMPONENTS Util)
 
 add_executable(
-        condedup
+        ${PROJECT_NAME}
         src/condedup.cpp
+        ../uidedup/src/uidedup.cpp
+        ../uideduplib/include/uideduplib/uidedup_application.h
 )
 
-target_link_libraries(condedup PRIVATE condeduplib)
-target_link_libraries(condedup PRIVATE Poco::Foundation Poco::Util)
+target_link_libraries(${PROJECT_NAME} PRIVATE condeduplib)
+target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Foundation Poco::Util)
 
 configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
 
-AddClangTidy(condedup)
+AddClangTidy(${PROJECT_NAME})
