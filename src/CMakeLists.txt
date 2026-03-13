@@ -13,5 +13,7 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_subdirectory(condedup)
 add_subdirectory(condeduplib)
+add_subdirectory(uidedup)
+add_subdirectory(uideduplib)
 add_subdirectory(duplib)
 add_subdirectory(reusablelib)
