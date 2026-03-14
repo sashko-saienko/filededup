@@ -2,59 +2,14 @@
 // Created by sashko on 13.03.26.
 //
 #include "uideduplib/uidedup_application.h"
+#include "uideduplib/main_frame.h"
 #include "reusablelib/logging.h"
-#include <Poco/Util/HelpFormatter.h>
-#include <Poco/Util/Option.h>
-#include <Poco/Util/OptionCallback.h>
 
-using Poco::Util::HelpFormatter;
-using Poco::Util::Option;
-using Poco::Util::OptionCallback;
-
-void
-UidedupApplication::initialize(Application& self)
+bool
+UidedupApplication::OnInit()
 {
-    loadConfiguration();
-    Application::initialize(self);
-}
-
-void
-UidedupApplication::uninitialize()
-{
-    Application::uninitialize();
-}
-
-void
-UidedupApplication::reinitialize(Application& self)
-{
-    Application::reinitialize(self);
-}
-
-void
-UidedupApplication::defineOptions(OptionSet& options)
-{
-    Application::defineOptions(options);
-
-    options.addOption(Option("help", "h", "display help information")
-                        .required(false)
-                        .repeatable(false)
-                        .callback(OptionCallback(this, &UidedupApplication::handleHelp)));
-}
-
-void
-UidedupApplication::handleHelp(const std::string& name, const std::string& value)
-{
-    _helpMode = true;
-    HelpFormatter helpFormatter(options());
-    helpFormatter.setCommand(commandName());
-    helpFormatter.setUsage("OPTIONS");
-    helpFormatter.setHeader("Explore duplicated files via checksums calculation");
-    helpFormatter.format(std::cout);
-    stopOptionsProcessing();
-}
-
-int
-UidedupApplication::main(const ArgVec& argv)
-{
-    return EXIT_OK;
+    Logger::get(LOGGER_NAME).information(__FUNCTION__);
+    auto* mainFrame = new MainFrame();
+    mainFrame->Show();
+    return true;
 }

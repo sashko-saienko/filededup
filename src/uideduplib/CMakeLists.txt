@@ -6,17 +6,20 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Poco REQUIRED COMPONENTS Util)
+find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
         ${PROJECT_NAME} SHARED
         src/uidedup_application.cpp
         include/uideduplib/uidedup_application.h
+        src/main_frame.cpp
+        include/uideduplib/main_frame.h
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
 target_link_libraries(${PROJECT_NAME} PRIVATE reusablelib Poco::Util)
 
+AddWxWidgets(${PROJECT_NAME})
 AddClangTidy(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})

@@ -1,9 +1,8 @@
-#include <duplib/checksummer.h>
-#include <duplib/duplicates_finder.h>
-#include <duplib/files_map.h>
-#include <reusablelib/logging.h>
+#include "duplib/duplicates_finder.h"
+#include "duplib/checksummer.h"
+#include "duplib/files_map.h"
+#include "reusablelib/logging.h"
 
-#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <list>
