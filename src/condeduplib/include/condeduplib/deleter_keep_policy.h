@@ -1,7 +1,7 @@
 #ifndef DELETER_KEEP_POLICY_H
 #define DELETER_KEEP_POLICY_H
 
-enum class DeleterKeepPolicy 
+enum class DeleterKeepPolicy
 {
     Oldest,
     Newest,

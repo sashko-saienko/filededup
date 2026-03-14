@@ -6,7 +6,6 @@
 #define UIDEDUP_APPLICATION_H
 
 #include <Poco/Util/Application.h>
-#include <Poco/Util/OptionSet.h>
 
 using Poco::Util::Application;
 using Poco::Util::OptionSet;
@@ -24,7 +23,7 @@ class UidedupApplication : public Application
     int main(const ArgVec& argv) override;
 
   private:
-    bool _helpMode{false};
+    bool _helpMode{ false };
 };
 
 #endif // UIDEDUP_APPLICATION_H

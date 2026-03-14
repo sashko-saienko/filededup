@@ -5,16 +5,14 @@
 #ifndef CONDEDUP_APPLICATION_H
 #define CONDEDUP_APPLICATION_H
 
-#include <filesystem>
-#include <string>
-
+#include "deleter_keep_policy.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
-
-#include "deleter_keep_policy.h"
+#include <filesystem>
+#include <string>
 
 using Poco::Logger;
 using Poco::Util::Application;
@@ -39,9 +37,9 @@ class ConDedupApplication : public Application
     int main(const ArgVec& argv) override;
 
   private:
-    bool _helpMode{false};
-    bool _deleteDuplicates{false};
-    DeleterKeepPolicy _keepPolicy{DeleterKeepPolicy::Oldest};
+    bool _helpMode{ false };
+    bool _deleteDuplicates{ false };
+    DeleterKeepPolicy _keepPolicy{ DeleterKeepPolicy::Oldest };
     std::filesystem::path _targetDirectory;
 };
 

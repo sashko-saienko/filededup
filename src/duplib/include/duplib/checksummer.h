@@ -3,6 +3,7 @@
 
 #include <istream>
 
-unsigned calculateChecksum(std::istream& is);
+unsigned
+calculateChecksum(std::istream& is);
 
 #endif

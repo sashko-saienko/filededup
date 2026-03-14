@@ -1,10 +1,9 @@
 #ifndef FILES_MAP_H
 #define FILES_MAP_H
 
+#include <Poco/File.h>
 #include <list>
 #include <unordered_map>
-
-#include <Poco/File.h>
 
 using ChecksumFilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
 
