@@ -9,12 +9,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Poco REQUIRED COMPONENTS Util)
 
 add_library(
-        reusablelib SHARED
+        ${PROJECT_NAME} SHARED
         include/reusablelib/logging.h
         src/logging.cpp
 )
 
-target_include_directories(reusablelib PUBLIC include)
-target_link_libraries(reusablelib PRIVATE Poco::Util)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
 
-AddClangTidy(reusablelib)
+AddClangTidy(${PROJECT_NAME})
+AddCppCheck(${PROJECT_NAME})

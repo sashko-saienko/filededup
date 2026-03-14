@@ -15,3 +15,6 @@ add_library(
 )
 
 target_include_directories(testsuplib PUBLIC include)
+
+AddClangTidy(${PROJECT_NAME})
+AddCppCheck(${PROJECT_NAME})

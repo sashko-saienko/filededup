@@ -18,3 +18,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE uideduplib Poco::Util)
 configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
 
 AddClangTidy(${PROJECT_NAME})
+AddCppCheck(${PROJECT_NAME})

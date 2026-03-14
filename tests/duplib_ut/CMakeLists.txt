@@ -7,11 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(
-        duplib_ut
+        ${PROJECT_NAME}
         src/duplicates_finder_test.cpp
 )
 
-target_compile_definitions(duplib_ut PRIVATE PROJECT_NAME="${PROJECT_NAME}")
-target_link_libraries(duplib_ut PRIVATE duplib testsuplib Catch2::Catch2WithMain)
-catch_discover_tests(duplib_ut)
-AddCoverage(duplib_ut)
+target_compile_definitions(${PROJECT_NAME} PRIVATE PROJECT_NAME="${PROJECT_NAME}")
+target_link_libraries(${PROJECT_NAME} PRIVATE duplib testsuplib Catch2::Catch2WithMain)
+catch_discover_tests(${PROJECT_NAME})
+
+AddClangTidy(${PROJECT_NAME})
+AddCppCheck(${PROJECT_NAME})
+
+AddCoverage(${PROJECT_NAME})

@@ -9,9 +9,9 @@
 
 using std::string_view;
 
-struct TimeHelpers
-{
-    static std::string getNowYYYYMMDDHHMMSS(const string_view& prefix = "", const string_view& suffix = "");
+struct TimeHelpers {
+    static std::string getNowYYYYMMDDHHMMSS(const string_view& prefix = "",
+                                            const string_view& suffix = "");
 };
 
-#endif // TESTSUPLIB_TIME_HELPERS_H
+#endif  // TESTSUPLIB_TIME_HELPERS_H

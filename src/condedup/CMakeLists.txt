@@ -11,12 +11,9 @@ find_package(Poco REQUIRED COMPONENTS Util)
 add_executable(
         ${PROJECT_NAME}
         src/condedup.cpp
-        ../uidedup/src/uidedup.cpp
-        ../uideduplib/include/uideduplib/uidedup_application.h
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE condeduplib)
-target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Foundation Poco::Util)
+target_link_libraries(${PROJECT_NAME} PRIVATE condeduplib Poco::Util)
 
 configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
 

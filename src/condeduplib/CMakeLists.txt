@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
-        condeduplib SHARED
+        ${PROJECT_NAME} SHARED
         include/condeduplib/condedup_application.h
         src/condedup_application.cpp
         include/condeduplib/deleter_keep_policy.h
@@ -19,8 +19,8 @@ add_library(
         src/time_helpers.cpp
 )
 
-target_include_directories(condeduplib PUBLIC include)
-target_compile_definitions(condeduplib PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-target_link_libraries(condeduplib PRIVATE duplib reusablelib Poco::Foundation Poco::Util)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
+target_link_libraries(${PROJECT_NAME} PRIVATE duplib reusablelib Poco::Foundation Poco::Util)
 
-AddClangTidy(condeduplib)
+AddClangTidy(${PROJECT_NAME})
