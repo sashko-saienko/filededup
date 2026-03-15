@@ -1,8 +1,7 @@
 #include "duplib/duplicates_finder.h"
 #include "duplib/checksummer.h"
 #include "duplib/files_map.h"
-#include "reusablelib/logging.h"
-
+#include <Poco/Logger.h>
 #include <filesystem>
 #include <fstream>
 #include <list>
@@ -10,6 +9,7 @@
 
 namespace fs = std::filesystem;
 
+using Poco::Logger;
 using std::filesystem::path;
 
 auto
@@ -20,7 +20,7 @@ DuplicatesFinder::scan() const -> ChecksumFilesMap
         for (const path& dir = dirs.front(); const auto& ent : fs::directory_iterator{ dir }) {
             if (fs::is_directory(ent)) {
                 dirs.push_back(ent);
-                Logging::logger(LOGGER_NAME)
+                Logger::get(LOGGER_NAME)
                   .information("%s has been skipped as directory", ent.path().string());
                 continue;
             }
@@ -35,7 +35,7 @@ DuplicatesFinder::scan() const -> ChecksumFilesMap
             }
 
             filesMap[checksum].emplace_back(p);
-            Logging::logger(LOGGER_NAME).information("%s has been processed", p.string());
+            Logger::get(LOGGER_NAME).information("%s has been processed", p.string());
         }
     }
 

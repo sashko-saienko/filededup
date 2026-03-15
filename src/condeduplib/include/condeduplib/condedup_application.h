@@ -5,7 +5,7 @@
 #ifndef CONDEDUP_APPLICATION_H
 #define CONDEDUP_APPLICATION_H
 
-#include "deleter_keep_policy.h"
+#include "condeduplib/deleter_keep_policy.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>

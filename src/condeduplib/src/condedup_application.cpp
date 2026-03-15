@@ -5,8 +5,8 @@
 #include "condeduplib/condedup_application.h"
 #include "condeduplib/deleter_keep_policy.h"
 #include "condeduplib/duplicates_deleter.h"
-#include "condeduplib/time_helpers.h"
-#include "duplib/duplicates_finder.h"
+#include <duplib/duplicates_finder.h>
+#include <reusablelib/time_helpers.h>
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
