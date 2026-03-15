@@ -15,6 +15,6 @@ add_executable(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE condeduplib Poco::Util)
 
-configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/config/logging.properties logging.properties COPYONLY)
 
 AddClangTidy(${PROJECT_NAME})

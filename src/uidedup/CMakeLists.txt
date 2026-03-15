@@ -13,7 +13,7 @@ add_executable(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE uideduplib)
 
-configure_file(config/${PROJECT_NAME}.properties ${PROJECT_NAME}.properties COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/config/logging.properties logging.properties COPYONLY)
 
 AddWxWidgets(${PROJECT_NAME})
 AddClangTidy(${PROJECT_NAME})
