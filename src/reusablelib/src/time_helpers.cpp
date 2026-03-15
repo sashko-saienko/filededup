@@ -18,7 +18,7 @@ formatTimestamp(const Poco::Timestamp& ts)
 
 ObservableStopwatch::~ObservableStopwatch()
 {
-    high_resolution_clock::time_point end(high_resolution_clock::now());
+    const high_resolution_clock::time_point end(high_resolution_clock::now());
     const long lastedSeconds =
       std::chrono::duration_cast<std::chrono::seconds>(end - start_).count();
     observer_(lastedSeconds);
