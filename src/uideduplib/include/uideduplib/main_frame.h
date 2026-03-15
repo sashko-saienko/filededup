@@ -14,9 +14,9 @@ class MainFrame : public wxFrame
     };
 
   private:
-    void OnHello(wxCommandEvent& event) {}
-    void OnExit(wxCommandEvent& event) {}
-    void OnAbout(wxCommandEvent& event) {}
+    void OnHello(wxCommandEvent& event);
+    void OnExit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
 };
 
 #endif // __UIDEDUPLIB_MAIN_FRAME_H__

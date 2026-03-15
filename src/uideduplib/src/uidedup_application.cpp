@@ -1,9 +1,11 @@
 //
 // Created by sashko on 13.03.26.
 //
+#include <Poco/Logger.h>
 #include "uideduplib/uidedup_application.h"
 #include "uideduplib/main_frame.h"
-#include "reusablelib/logging.h"
+
+using Poco::Logger;
 
 bool
 UidedupApplication::OnInit()
