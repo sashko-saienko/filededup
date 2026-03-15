@@ -15,8 +15,6 @@ add_library(
         include/condeduplib/deleter_keep_policy.h
         include/condeduplib/duplicates_deleter.h
         src/duplicates_deleter.cpp
-        include/condeduplib/time_helpers.h
-        src/time_helpers.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)

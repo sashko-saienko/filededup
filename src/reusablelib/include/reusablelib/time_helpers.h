@@ -16,7 +16,7 @@ class ObservableStopwatch
   public:
     using Observer = std::function<void(const long&)>;
 
-    explicit ObservableStopwatch(Observer observer)
+    explicit ObservableStopwatch(Observer&& observer)
       : start_(high_resolution_clock::now())
       , observer_(observer)
     {
