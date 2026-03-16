@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28.0)
 
-project(duplib VERSION 0.0.1 LANGUAGES CXX)
+project(deduplib VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,11 +13,11 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
         ${PROJECT_NAME} SHARED
-        include/duplib/files_map.h
+        include/deduplib/files_map.h
         src/duplicates_finder.cpp
-        include/duplib/duplicates_finder.h
+        include/deduplib/duplicates_finder.h
         src/checksummer.cpp
-        include/duplib/checksummer.h
+        include/deduplib/checksummer.h
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)

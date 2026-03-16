@@ -1,4 +1,4 @@
-#include "condeduplib/condedup_application.h"
+#include "condeduplib/application.h"
 #include <Poco/Util/Application.h>
 
-POCO_APP_MAIN(ConDedupApplication)
+POCO_APP_MAIN(Deduplicator::ConsoleLib::Application)

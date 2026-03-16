@@ -21,4 +21,4 @@ include(Catch)
 include(Coverage)
 
 add_subdirectory(testsuplib)
-add_subdirectory(duplib_ut)
+add_subdirectory(deduplib_ut)

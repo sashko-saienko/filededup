@@ -10,8 +10,8 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
         ${PROJECT_NAME} SHARED
-        include/condeduplib/condedup_application.h
-        src/condedup_application.cpp
+        include/condeduplib/application.h
+        src/application.cpp
         include/condeduplib/deleter_keep_policy.h
         include/condeduplib/duplicates_deleter.h
         src/duplicates_deleter.cpp
@@ -19,6 +19,6 @@ add_library(
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PRIVATE duplib reusablelib Poco::Foundation Poco::Util)
+target_link_libraries(${PROJECT_NAME} PRIVATE deduplib reusablelib Poco::Foundation Poco::Util)
 
 AddClangTidy(${PROJECT_NAME})

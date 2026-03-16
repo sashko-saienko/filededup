@@ -2,8 +2,8 @@
 // Created by sashko on 01.03.26.
 //
 
-#ifndef CONDEDUP_APPLICATION_H
-#define CONDEDUP_APPLICATION_H
+#ifndef CONDEDUPLIB_APPLICATION_H
+#define CONDEDUPLIB_APPLICATION_H
 
 #include "condeduplib/deleter_keep_policy.h"
 #include <Poco/Logger.h>
@@ -14,19 +14,23 @@
 #include <filesystem>
 #include <string>
 
+namespace Deduplicator::ConsoleLib
+{
+
 using Poco::Logger;
-using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
 
-class ConDedupApplication : public Application
+using PocoApplication = Poco::Util::Application;
+
+class Application : public PocoApplication
 {
   protected:
-    void initialize(Application& self) override;
+    void initialize(PocoApplication& self) override;
     void uninitialize() override;
-    void reinitialize(Application& self) override;
+    void reinitialize(PocoApplication& self) override;
     void defineOptions(OptionSet& options) override;
 
     void handleHelp(const std::string& name, const std::string& value);
@@ -37,10 +41,12 @@ class ConDedupApplication : public Application
     int main(const ArgVec& argv) override;
 
   private:
-    bool _helpMode{ false };
-    bool _deleteDuplicates{ false };
-    DeleterKeepPolicy _keepPolicy{ DeleterKeepPolicy::Oldest };
+    bool _helpMode{false};
+    bool _deleteDuplicates{false};
+    DeleterKeepPolicy _keepPolicy{DeleterKeepPolicy::Oldest};
     std::filesystem::path _targetDirectory;
 };
 
-#endif // CONDEDUP_APPLICATION_H
+} // namespace Deduplicator::Console
+
+#endif // CONDEDUPLIB_APPLICATION_H

@@ -10,8 +10,8 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_library(
         ${PROJECT_NAME} SHARED
-        src/uidedup_application.cpp
-        include/uideduplib/uidedup_application.h
+        src/application.cpp
+        include/uideduplib/application.h
         src/main_frame.cpp
         include/uideduplib/main_frame.h
 )

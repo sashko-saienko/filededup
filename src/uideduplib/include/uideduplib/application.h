@@ -7,13 +7,18 @@
 
 #include <wx/wx.h>
 
-class UidedupApplication : public wxApp
+namespace Deduplicator::UiLib
 {
-  public:
+
+class Application : public ::wxApp
+{
+public:
     bool OnInit() override;
 
 protected:
     static void ConfigureLogging();
 };
+
+}
 
 #endif // UIDEDUP_APPLICATION_H

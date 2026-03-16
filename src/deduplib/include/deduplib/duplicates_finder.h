@@ -5,13 +5,14 @@
 #include <Poco/Logger.h>
 #include <filesystem>
 
+namespace Deduplicator
+{
 using Poco::Logger;
 
 class DuplicatesFinder
 {
   public:
-    explicit DuplicatesFinder(const std::filesystem::path& p)
-      : path_{ p }
+    explicit DuplicatesFinder(const std::filesystem::path& p) : path_{p}
     {
     }
 
@@ -22,5 +23,6 @@ class DuplicatesFinder
 
     static ChecksumFilesMap removeNonDuplicates(const ChecksumFilesMap& filesMap);
 };
+} // namespace Deduplicator
 
 #endif // DUPLICATES_FINDER_H

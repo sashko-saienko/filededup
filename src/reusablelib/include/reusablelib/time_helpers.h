@@ -6,10 +6,12 @@
 #include <functional>
 #include <string>
 
+namespace Deduplicator::ReusableLib
+{
+
 using std::chrono::high_resolution_clock;
 
-std::string
-formatTimestamp(const Poco::Timestamp& ts);
+std::string formatTimestamp(const Poco::Timestamp& ts);
 
 class ObservableStopwatch
 {
@@ -17,8 +19,7 @@ class ObservableStopwatch
     using Observer = std::function<void(const long&)>;
 
     explicit ObservableStopwatch(Observer&& observer)
-      : start_(high_resolution_clock::now())
-      , observer_(observer)
+        : start_(high_resolution_clock::now()), observer_(observer)
     {
     }
     ~ObservableStopwatch();
@@ -28,4 +29,5 @@ class ObservableStopwatch
     Observer observer_;
 };
 
+} // namespace Deduplicator::Reusable
 #endif // TIME_HELPERS_H

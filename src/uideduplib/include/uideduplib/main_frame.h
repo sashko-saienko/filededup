@@ -3,9 +3,12 @@
 
 #include <wx/wx.h>
 
-class MainFrame : public wxFrame
+namespace Deduplicator::UiLib
 {
-  public:
+
+class MainFrame : public ::wxFrame
+{
+public:
     MainFrame();
 
     enum ControlId
@@ -13,10 +16,12 @@ class MainFrame : public wxFrame
         ID_HELLO = 0,
     };
 
-  private:
-    void OnHello(wxCommandEvent& event);
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
+private:
+    void OnHello(::wxCommandEvent& event);
+    void OnExit(::wxCommandEvent& event);
+    void OnAbout(::wxCommandEvent& event);
 };
+
+}
 
 #endif // __UIDEDUPLIB_MAIN_FRAME_H__

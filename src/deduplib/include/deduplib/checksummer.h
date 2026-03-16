@@ -3,7 +3,12 @@
 
 #include <istream>
 
+namespace Deduplicator
+{
+
 unsigned
 calculateChecksum(std::istream& is);
+
+}
 
 #endif

@@ -3,13 +3,14 @@
 //
 #include "uideduplib/main_frame.h"
 #include <Poco/Logger.h>
-#include <wx/wx.h>
 #include <iostream>
+#include <wx/wx.h>
 
+namespace Deduplicator::UiLib
+{
 using Poco::Logger;
 
-MainFrame::MainFrame()
-  : wxFrame(NULL, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize)
+MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize)
 {
     wxMenu* menuFile = new wxMenu();
     menuFile->Append(ID_HELLO, "&Hello...\tCtrl+H", "Hello world example!");
@@ -33,22 +34,21 @@ MainFrame::MainFrame()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
 }
 
-void
-MainFrame::OnHello(wxCommandEvent& _)
+void MainFrame::OnHello(wxCommandEvent& _)
 {
     Logger::get(LOGGER_NAME).information("Hello world!");
     std::cerr << "Hello world!" << std::endl;
 }
 
-void
-MainFrame::OnExit(wxCommandEvent& _)
+void MainFrame::OnExit(wxCommandEvent& _)
 {
     Close(true);
 }
 
-void
-MainFrame::OnAbout(wxCommandEvent& _)
+void MainFrame::OnAbout(wxCommandEvent& _)
 {
-    wxMessageBox(
-      "This is Hello World! example in wxWidgets", "About uidedup", wxOK | wxICON_INFORMATION);
+    wxMessageBox("This is Hello World! example in wxWidgets", "About uidedup",
+                 wxOK | wxICON_INFORMATION);
 }
+
+} // namespace Deduplicator::UiLib

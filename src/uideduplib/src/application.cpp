@@ -1,7 +1,7 @@
 //
 // Created by sashko on 13.03.26.
 //
-#include "uideduplib/uidedup_application.h"
+#include "uideduplib/application.h"
 #include "uideduplib/main_frame.h"
 #include <Poco/AutoPtr.h>
 #include <Poco/Logger.h>
@@ -9,14 +9,16 @@
 #include <Poco/Util/PropertyFileConfiguration.h>
 #include <sstream>
 
+namespace Deduplicator::UiLib
+{
+
 using Poco::Logger;
 using Poco::makeAuto;
 using Poco::Util::LoggingConfigurator;
 using Poco::Util::PropertyFileConfiguration;
 using std::stringstream;
 
-bool
-UidedupApplication::OnInit()
+bool Application::OnInit()
 {
     ConfigureLogging();
     Logger::get(LOGGER_NAME).error(__FUNCTION__);
@@ -25,11 +27,13 @@ UidedupApplication::OnInit()
     return true;
 }
 
-void
-UidedupApplication::ConfigureLogging()
+void Application::ConfigureLogging()
 {
     stringstream ss;
-    PropertyFileConfiguration::Ptr pConfig = makeAuto<PropertyFileConfiguration>("logging.properties");
+    PropertyFileConfiguration::Ptr pConfig =
+        makeAuto<PropertyFileConfiguration>("logging.properties");
     LoggingConfigurator lc;
     lc.configure(pConfig);
 }
+
+} // namespace Deduplicator::UiLib

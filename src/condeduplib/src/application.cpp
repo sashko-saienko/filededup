@@ -1,0 +1,136 @@
+//
+// Created by sashko on 01.03.26.
+//
+
+#include "condeduplib/application.h"
+#include "condeduplib/deleter_keep_policy.h"
+#include "condeduplib/duplicates_deleter.h"
+#include "deduplib/duplicates_finder.h"
+#include "reusablelib/time_helpers.h"
+#include <Poco/Logger.h>
+#include <Poco/Util/Application.h>
+#include <Poco/Util/HelpFormatter.h>
+#include <Poco/Util/Option.h>
+#include <Poco/Util/OptionCallback.h>
+#include <Poco/Util/OptionSet.h>
+#include <filesystem>
+#include <iostream>
+#include <string>
+
+namespace Deduplicator::ConsoleLib
+{
+
+using Poco::Logger;
+using Poco::Util::HelpFormatter;
+using Poco::Util::Option;
+using Poco::Util::OptionCallback;
+using Poco::Util::OptionSet;
+using PocoApplication = Poco::Util::Application;
+using ReusableLib::ObservableStopwatch;
+
+void Application::initialize(PocoApplication& self)
+{
+    loadConfiguration();
+    PocoApplication::initialize(self);
+}
+
+void Application::uninitialize()
+{
+    PocoApplication::uninitialize();
+}
+
+void Application::reinitialize(PocoApplication& self)
+{
+    PocoApplication::reinitialize(self);
+}
+
+void Application::defineOptions(OptionSet& options)
+{
+    PocoApplication::defineOptions(options);
+
+    options.addOption(Option("help", "h", "display help information")
+                          .required(false)
+                          .repeatable(false)
+                          .callback(OptionCallback(this, &Application::handleHelp)));
+
+    options.addOption(Option("target-dir", "t", "target directory to look for duplicates")
+                          .required(true)
+                          .repeatable(false)
+                          .argument("<target-dir>")
+                          .callback(OptionCallback(this, &Application::handleTargetDirectory)));
+
+    options.addOption(Option("delete", "d", "Delete duplicates (default: lists found files)")
+                          .required(false)
+                          .repeatable(false)
+                          .callback(OptionCallback(this, &Application::handleDeleteDuplicates)));
+
+    options.addOption(
+        Option("keep-policy", "p",
+               "Deletion policy, which file to keep (default: oldest; case-sensitive)")
+            .required(false)
+            .repeatable(false)
+            .argument("{oldest|newest}")
+            .callback(OptionCallback(this, &Application::handleDeletePolicy)));
+}
+
+void Application::handleHelp(const std::string& name, const std::string& value)
+{
+    _helpMode = true;
+    HelpFormatter helpFormatter(options());
+    helpFormatter.setCommand(commandName());
+    helpFormatter.setUsage("OPTIONS");
+    helpFormatter.setHeader("Find duplicated files in a target directory by calculating checksums");
+    helpFormatter.format(std::cout);
+    stopOptionsProcessing();
+}
+
+void Application::handleTargetDirectory(const std::string& name, const std::string& value)
+{
+    _targetDirectory = value;
+}
+
+void Application::handleDeleteDuplicates(const std::string& name, const std::string& value)
+{
+    _deleteDuplicates = !_deleteDuplicates;
+}
+
+void Application::handleDeletePolicy(const std::string& name, const std::string& value)
+{
+    if (value == "newest")
+    {
+        _keepPolicy = DeleterKeepPolicy::Newest;
+    }
+    else if (value != "oldest")
+    {
+        logger().error(R"(Option "%s": unsupported value "%s". See help for proper usage.)", name,
+                       value);
+        _helpMode = true;
+        stopOptionsProcessing();
+    }
+}
+
+int Application::main(const ArgVec& argv)
+{
+    ObservableStopwatch sw(
+        [&](const long seconds) { logger().warning("Completed in %ld(s)", seconds); });
+
+    if (_helpMode)
+        return EXIT_OK;
+
+    const DuplicatesFinder directoryScanner{_targetDirectory};
+
+    try
+    {
+        DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(), _keepPolicy);
+        duplicatesDeleter.remove(_deleteDuplicates);
+    }
+    catch (std::exception& e)
+    {
+        logger().error(e.what());
+        return EXIT_USAGE;
+    }
+
+    return EXIT_OK;
+}
+
+} // namespace Deduplicator::ConsoleLib

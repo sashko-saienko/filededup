@@ -5,6 +5,11 @@
 #include <list>
 #include <unordered_map>
 
+namespace Deduplicator
+{
+
 using ChecksumFilesMap = std::unordered_map<unsigned, std::list<Poco::File>>;
+
+}
 
 #endif // FILES_MAP_H
