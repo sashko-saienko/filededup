@@ -29,8 +29,7 @@ void
 UidedupApplication::ConfigureLogging()
 {
     stringstream ss;
-    ss << argv[0] << ".properties";
-    PropertyFileConfiguration::Ptr pConfig = makeAuto<PropertyFileConfiguration>(ss.str());
+    PropertyFileConfiguration::Ptr pConfig = makeAuto<PropertyFileConfiguration>("logging.properties");
     LoggingConfigurator lc;
     lc.configure(pConfig);
 }

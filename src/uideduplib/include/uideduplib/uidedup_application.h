@@ -13,7 +13,7 @@ class UidedupApplication : public wxApp
     bool OnInit() override;
 
 protected:
-    void ConfigureLogging();
+    static void ConfigureLogging();
 };
 
 #endif // UIDEDUP_APPLICATION_H
