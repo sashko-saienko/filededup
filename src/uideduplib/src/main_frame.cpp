@@ -10,17 +10,17 @@ namespace Deduplicator::UiLib
 {
 using Poco::Logger;
 
-MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize)
+MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize)
 {
-    wxMenu* menuFile = new wxMenu();
+    ::wxMenu* menuFile = new ::wxMenu();
     menuFile->Append(ID_HELLO, "&Hello...\tCtrl+H", "Hello world example!");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
-    wxMenu* menuHelp = new wxMenu();
+    ::wxMenu* menuHelp = new ::wxMenu();
     menuHelp->Append(wxID_ABOUT);
 
-    wxMenuBar* menuBar = new wxMenuBar();
+    ::wxMenuBar* menuBar = new ::wxMenuBar();
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
@@ -34,18 +34,17 @@ MainFrame::MainFrame() : wxFrame(NULL, wxID_ANY, wxEmptyString, wxDefaultPositio
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
 }
 
-void MainFrame::OnHello(wxCommandEvent& _)
+void MainFrame::OnHello(::wxCommandEvent& _)
 {
     Logger::get(LOGGER_NAME).information("Hello world!");
-    std::cerr << "Hello world!" << std::endl;
 }
 
-void MainFrame::OnExit(wxCommandEvent& _)
+void MainFrame::OnExit(::wxCommandEvent& _)
 {
     Close(true);
 }
 
-void MainFrame::OnAbout(wxCommandEvent& _)
+void MainFrame::OnAbout(::wxCommandEvent& _)
 {
     wxMessageBox("This is Hello World! example in wxWidgets", "About uidedup",
                  wxOK | wxICON_INFORMATION);

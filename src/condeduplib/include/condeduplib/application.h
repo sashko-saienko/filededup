@@ -22,7 +22,6 @@ using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
-
 using PocoApplication = Poco::Util::Application;
 
 class Application : public PocoApplication
@@ -47,6 +46,6 @@ class Application : public PocoApplication
     std::filesystem::path _targetDirectory;
 };
 
-} // namespace Deduplicator::Console
+} // namespace Deduplicator::ConsoleLib
 
 #endif // CONDEDUPLIB_APPLICATION_H
