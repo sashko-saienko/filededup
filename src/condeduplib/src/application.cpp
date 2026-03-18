@@ -20,14 +20,6 @@
 namespace Deduplicator::ConsoleLib
 {
 
-using Poco::Logger;
-using Poco::Util::HelpFormatter;
-using Poco::Util::Option;
-using Poco::Util::OptionCallback;
-using Poco::Util::OptionSet;
-using PocoApplication = Poco::Util::Application;
-using ReusableLib::ObservableStopwatch;
-
 void Application::initialize(PocoApplication& self)
 {
     loadConfiguration();
@@ -111,6 +103,8 @@ void Application::handleDeletePolicy(const std::string& name, const std::string&
 
 int Application::main(const ArgVec& argv)
 {
+    using ReusableLib::ObservableStopwatch;
+
     ObservableStopwatch sw(
         [&](const long seconds) { logger().warning("Completed in %ld(s)", seconds); });
 
