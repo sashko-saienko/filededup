@@ -14,7 +14,7 @@ namespace Deduplicator::UnitTests
 
 namespace fs = std::filesystem;
 
-TEST_CASE("InstantiatingDuplicatesFinderWithNonExistingPathThrows", "[duplib]")
+TEST_CASE("InstantiatingDuplicatesFinderWithNonExistingPathThrows", "[deduplib]")
 {
     const DuplicatesFinder sut{fs::temp_directory_path() / "nonExistingPath"};
 
@@ -32,7 +32,7 @@ TEST_CASE("RunningScanOverEmptyDirectoryReturnsEmptyResult", "[duplib]")
     REQUIRE(sut.scan().empty());
 }
 
-TEST_CASE("ScanningNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", "[duplib]")
+TEST_CASE("ScanningNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", "[deduplib]")
 {
     const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME, __FUNCTION__);
     const auto dirPath = fs::temp_directory_path() / dirName;
@@ -45,7 +45,7 @@ TEST_CASE("ScanningNonEmptyDirectoryWithUniqueFilesReturnsEmptyResults", "[dupli
     REQUIRE(sut.scan().empty());
 }
 
-TEST_CASE("ScanningNonEmptyDirectoryWithDuplicatedFilesReturnsDuplicates", "[duplib]")
+TEST_CASE("ScanningNonEmptyDirectoryWithDuplicatedFilesReturnsDuplicates", "[deduplib]")
 {
     const auto dirName = TimeHelpers::getNowYYYYMMDDHHMMSS(PROJECT_NAME, __FUNCTION__);
     const auto dirPath = fs::temp_directory_path() / dirName;
