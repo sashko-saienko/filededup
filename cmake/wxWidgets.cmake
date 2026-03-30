@@ -1,7 +1,8 @@
+find_package(wxWidgets REQUIRED COMPONENTS core)
+if (wxWidgets_USE_FILE)
+    include(${wxWidgets_USE_FILE})
+endif ()
+
 function(AddWxWidgets target)
-    find_package(wxWidgets REQUIRED COMPONENTS core)
-    if (wxWidgets_USE_FILE)
-        include(${wxWidgets_USE_FILE})
-    endif ()
     target_link_libraries(${target} PRIVATE ${wxWidgets_LIBRARIES})
 endfunction()
