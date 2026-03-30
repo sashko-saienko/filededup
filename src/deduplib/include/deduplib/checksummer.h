@@ -6,8 +6,7 @@
 namespace Deduplicator
 {
 
-unsigned
-calculateChecksum(std::istream& is);
+unsigned calculateChecksum(std::istream& is);
 
 }
 
