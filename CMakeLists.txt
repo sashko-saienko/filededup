@@ -17,3 +17,5 @@ find_package(Poco REQUIRED COMPONENTS Foundation Util)
 
 add_subdirectory(src)
 add_subdirectory(tests)
+
+include(Packaging)
