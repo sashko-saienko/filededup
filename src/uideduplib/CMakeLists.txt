@@ -23,3 +23,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
 AddWxWidgets(${PROJECT_NAME})
 AddClangTidy(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})
+
+InstrumentForCoverage(${PROJECT_NAME})
+CleanCoverage(${PROJECT_NAME})
