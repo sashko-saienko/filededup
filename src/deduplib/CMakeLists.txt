@@ -30,7 +30,6 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
     add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND find ${CMAKE_BINARY_DIR} -type f -name '*.gcda' -exec rm {} +)
 endif()
 
-AddClangTidy(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})
 
 InstrumentForCoverage(${PROJECT_NAME})

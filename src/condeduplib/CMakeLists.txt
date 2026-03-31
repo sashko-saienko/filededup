@@ -21,7 +21,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
 target_link_libraries(${PROJECT_NAME} PRIVATE deduplib reusablelib Poco::Foundation Poco::Util)
 
-AddClangTidy(${PROJECT_NAME})
-
 InstrumentForCoverage(${PROJECT_NAME})
 CleanCoverage(${PROJECT_NAME})

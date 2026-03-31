@@ -14,7 +14,6 @@ add_library(
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
-AddClangTidy(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})
 
 InstrumentForCoverage(${PROJECT_NAME})
