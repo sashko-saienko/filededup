@@ -23,3 +23,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE deduplib reusablelib Poco::Foundat
 
 InstrumentForCoverage(${PROJECT_NAME})
 CleanCoverage(${PROJECT_NAME})
+
+AddCppCheck(${PROJECT_NAME})

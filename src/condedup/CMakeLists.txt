@@ -16,3 +16,5 @@ add_executable(
 target_link_libraries(${PROJECT_NAME} PRIVATE condeduplib Poco::Util)
 
 configure_file(${CMAKE_SOURCE_DIR}/config/logging.properties logging.properties COPYONLY)
+
+AddCppCheck(${PROJECT_NAME})
