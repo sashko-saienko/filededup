@@ -19,3 +19,4 @@ configure_file(${CMAKE_SOURCE_DIR}/config/logging.properties logging.properties 
 
 AddWxWidgets(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})
+

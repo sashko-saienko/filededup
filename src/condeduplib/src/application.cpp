@@ -2,6 +2,7 @@
 // Created by sashko on 01.03.26.
 //
 
+#include "buildinfo.h"
 #include "condeduplib/application.h"
 #include "condeduplib/deleter_keep_policy.h"
 #include "condeduplib/duplicates_deleter.h"
@@ -15,6 +16,7 @@
 #include <Poco/Util/OptionSet.h>
 #include <filesystem>
 #include <iostream>
+#include <format>
 #include <string>
 
 namespace Deduplicator::ConsoleLib
@@ -71,7 +73,8 @@ void Application::handleHelp(const std::string& name, const std::string& value)
     HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
     helpFormatter.setUsage("OPTIONS");
-    helpFormatter.setHeader("Find duplicated files in a target directory by calculating checksums");
+    const std::string description = std::format("Duplicates finder (sha: {}; ts: {}; ver: {})", BuildInfo::COMMIT_SHA, BuildInfo::TIMESTAMP, BuildInfo::VERSION);
+    helpFormatter.setHeader(description);
     helpFormatter.format(std::cout);
     stopOptionsProcessing();
 }

@@ -1,0 +1,13 @@
+#ifndef BUILD_INFO_H__
+#define BUILD_INFO_H__
+
+#include <string>
+
+struct BuildInfo 
+{
+  static inline const std::string COMMIT_SHA = "@COMMIT_SHA@";
+  static inline const std::string TIMESTAMP = "@TIMESTAMP@";
+  static inline const std::string VERSION = "@PROJECT_VERSION@";
+};
+
+#endif // BUILD_INFO_H__
