@@ -2,8 +2,8 @@
 // Created by sashko on 01.03.26.
 //
 
-#include "buildinfo.h"
 #include "condeduplib/application.h"
+#include "buildinfo.h"
 #include "condeduplib/deleter_keep_policy.h"
 #include "condeduplib/duplicates_deleter.h"
 #include "deduplib/duplicates_finder.h"
@@ -15,8 +15,8 @@
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
 #include <filesystem>
-#include <iostream>
 #include <format>
+#include <iostream>
 #include <string>
 
 namespace Deduplicator::ConsoleLib
@@ -73,7 +73,9 @@ void Application::handleHelp(const std::string& name, const std::string& value)
     HelpFormatter helpFormatter(options());
     helpFormatter.setCommand(commandName());
     helpFormatter.setUsage("OPTIONS");
-    const std::string description = std::format("Duplicates finder (sha: {}; ts: {}; ver: {})", BuildInfo::COMMIT_SHA, BuildInfo::TIMESTAMP, BuildInfo::VERSION);
+    const std::string description =
+        std::format("Duplicates finder (sha: {}; ts: {}; ver: {})", BuildInfo::COMMIT_SHA,
+                    BuildInfo::TIMESTAMP, BuildInfo::VERSION);
     helpFormatter.setHeader(description);
     helpFormatter.format(std::cout);
     stopOptionsProcessing();

@@ -16,5 +16,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE deduplib testsuplib Catch2::Catch2
 catch_discover_tests(${PROJECT_NAME})
 
 AddCppCheck(${PROJECT_NAME})
+Format(${PROJECT_NAME} .)
 
 AddCoverage(${PROJECT_NAME})

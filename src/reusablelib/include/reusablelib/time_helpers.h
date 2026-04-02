@@ -29,5 +29,5 @@ class ObservableStopwatch
     Observer observer_;
 };
 
-} // namespace Deduplicator::Reusable
+} // namespace Deduplicator::ReusableLib
 #endif // TIME_HELPERS_H

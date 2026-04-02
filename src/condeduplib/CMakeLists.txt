@@ -28,3 +28,4 @@ InstrumentForCoverage(${PROJECT_NAME})
 CleanCoverage(${PROJECT_NAME})
 
 AddCppCheck(${PROJECT_NAME})
+Format(${PROJECT_NAME} .)

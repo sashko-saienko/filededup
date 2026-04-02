@@ -8,7 +8,7 @@ namespace Deduplicator::UiLib
 
 class MainFrame : public ::wxFrame
 {
-public:
+  public:
     MainFrame();
 
     enum ControlId
@@ -16,12 +16,12 @@ public:
         ID_HELLO = 0,
     };
 
-private:
+  private:
     void OnHello(::wxCommandEvent& event);
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
 };
 
-}
+} // namespace Deduplicator::UiLib
 
 #endif // __UIDEDUPLIB_MAIN_FRAME_H__

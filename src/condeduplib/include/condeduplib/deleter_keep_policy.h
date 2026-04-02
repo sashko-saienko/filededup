@@ -10,6 +10,6 @@ enum class DeleterKeepPolicy
     Newest,
 };
 
-} // namespace Deduplicator::Console
+} // namespace Deduplicator::ConsoleLib
 
 #endif // DELETER_KEEP_POLICY_H

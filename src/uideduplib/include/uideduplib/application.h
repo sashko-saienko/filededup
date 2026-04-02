@@ -12,13 +12,13 @@ namespace Deduplicator::UiLib
 
 class Application : public ::wxApp
 {
-public:
+  public:
     bool OnInit() override;
 
-protected:
+  protected:
     static void ConfigureLogging();
 };
 
-}
+} // namespace Deduplicator::UiLib
 
 #endif // UIDEDUP_APPLICATION_H
