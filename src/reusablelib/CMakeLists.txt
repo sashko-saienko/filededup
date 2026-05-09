@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(Poco REQUIRED COMPONENTS Foundation Util)
+
 add_library(
         ${PROJECT_NAME} SHARED
         src/time_helpers.cpp
@@ -13,7 +15,7 @@ add_library(
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
 AddCppCheck(${PROJECT_NAME})
 
 InstrumentForCoverage(${PROJECT_NAME})
