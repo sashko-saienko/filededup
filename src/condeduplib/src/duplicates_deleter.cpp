@@ -4,7 +4,6 @@
 #include "condeduplib/deleter_keep_policy.h"
 #include <Poco/File.h>
 #include <Poco/Logger.h>
-#include <ranges>
 #include <reusablelib/time_helpers.h>
 
 namespace Deduplicator::ConsoleLib
@@ -53,9 +52,10 @@ void DuplicatesDeleter::removeDuplicates(ChecksumFilesMap::reference elem) const
 
     const size_t keepIdx = keepPolicy_ == DeleterKeepPolicy::Oldest ? 0 : files.size() - 1;
 
-    for (auto [idx, file] : std::views::enumerate(files))
+    size_t idx = 0;
+    for (auto file : files)
     {
-        if (idx == keepIdx)
+        if (idx++ == keepIdx)
         {
             continue;
         }
