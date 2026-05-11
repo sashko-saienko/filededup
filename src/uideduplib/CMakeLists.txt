@@ -18,7 +18,7 @@ add_library(
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
+target_link_libraries(${PROJECT_NAME} PUBLIC Poco::Util)
 
 AddWxWidgets(${PROJECT_NAME})
 AddCppCheck(${PROJECT_NAME})

@@ -15,7 +15,7 @@ add_library(
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
+target_link_libraries(${PROJECT_NAME} PUBLIC Poco::Util)
 AddCppCheck(${PROJECT_NAME})
 
 InstrumentForCoverage(${PROJECT_NAME})

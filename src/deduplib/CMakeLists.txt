@@ -22,7 +22,7 @@ add_library(
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Foundation Poco::Util)
+target_link_libraries(${PROJECT_NAME} PUBLIC Poco::Util)
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     target_compile_options(${PROJECT_NAME} PRIVATE --coverage)
