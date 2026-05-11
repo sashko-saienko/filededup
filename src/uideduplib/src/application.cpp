@@ -11,7 +11,6 @@
 namespace Deduplicator::UiLib
 {
 
-using Poco::Logger;
 using Poco::makeAuto;
 using Poco::Util::LoggingConfigurator;
 using Poco::Util::PropertyFileConfiguration;
