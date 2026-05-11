@@ -5,10 +5,13 @@
 #ifndef UIDEDUP_APPLICATION_H
 #define UIDEDUP_APPLICATION_H
 
+#include <filesystem>
 #include <wx/wx.h>
 
 namespace Deduplicator::UiLib
 {
+
+namespace fs = std::filesystem;
 
 class Application : public ::wxApp
 {
@@ -16,7 +19,7 @@ class Application : public ::wxApp
     bool OnInit() override;
 
   protected:
-    static void ConfigureLogging();
+    static void ConfigureLogging(const fs::path&);
 };
 
 } // namespace Deduplicator::UiLib

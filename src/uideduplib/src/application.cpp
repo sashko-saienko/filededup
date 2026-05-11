@@ -17,16 +17,17 @@ using Poco::Util::PropertyFileConfiguration;
 
 bool Application::OnInit()
 {
-    ConfigureLogging();
+    fs::path props =
+        fs::path{Application::argv[0].ToStdString()}.parent_path() / "logging.properties";
+    ConfigureLogging(props);
     auto* mainFrame = new MainFrame();
     mainFrame->Show();
     return true;
 }
 
-void Application::ConfigureLogging()
+void Application::ConfigureLogging(const fs::path& propsPath)
 {
-    PropertyFileConfiguration::Ptr pConfig =
-        makeAuto<PropertyFileConfiguration>("logging.properties");
+    PropertyFileConfiguration::Ptr pConfig = makeAuto<PropertyFileConfiguration>(propsPath);
     LoggingConfigurator lc;
     lc.configure(pConfig);
 }
