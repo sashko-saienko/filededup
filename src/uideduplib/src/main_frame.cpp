@@ -3,7 +3,6 @@
 //
 #include "uideduplib/main_frame.h"
 #include <Poco/Logger.h>
-#include <iostream>
 #include <wx/wx.h>
 
 namespace Deduplicator::UiLib
