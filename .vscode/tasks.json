@@ -1,0 +1,35 @@
+{
+    "tasks": [
+        {
+            "label": "Build uidedup",
+            "command": "cmake",
+            "type": "shell",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build/src",
+                "--target",
+                "uidedup"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Build condedup",
+            "command": "cmake",
+            "type": "shell",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build/src",
+                "--target",
+                "condedup"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        }
+    ],
+    "version": "2.0.0"
+}

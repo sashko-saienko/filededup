@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run uidedup",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/src/uidedup/uidedup",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build uidedup",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
+        {
+            "name": "Run condedup",
+            "type": "lldb-dap",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/src/condedup/condedup",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build condedup",
+            "stopOnEntry": false,
+            "terminal": "integrated"
+        }
+    ]
+}
