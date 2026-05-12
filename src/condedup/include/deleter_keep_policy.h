@@ -1,7 +1,7 @@
 #ifndef DELETER_KEEP_POLICY_H
 #define DELETER_KEEP_POLICY_H
 
-namespace Deduplicator::ConsoleLib
+namespace Deduplicator::Console
 {
 
 enum class DeleterKeepPolicy
@@ -10,6 +10,6 @@ enum class DeleterKeepPolicy
     Newest,
 };
 
-} // namespace Deduplicator::ConsoleLib
+} // namespace Deduplicator::Console
 
 #endif // DELETER_KEEP_POLICY_H

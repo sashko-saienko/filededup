@@ -1,11 +1,11 @@
 #ifndef DUPLICATES_DELETER_H
 #define DUPLICATES_DELETER_H
 
-#include "deduplib/files_map.h"
-#include "deleter_keep_policy.h"
-#include "reusablelib/time_helpers.h"
+#include <deleter_keep_policy.h>
+#include <deduplib/files_map.h>
+#include <reusablelib/time_helpers.h>
 
-namespace Deduplicator::ConsoleLib
+namespace Deduplicator::Console
 {
 
 using Deduplicator::ChecksumFilesMap;
@@ -31,6 +31,6 @@ class DuplicatesDeleter
     void removeDuplicates(ChecksumFilesMap::reference elem) const;
 };
 
-} // namespace Deduplicator::ConsoleLib
+} // namespace Deduplicator::Console
 
 #endif // DUPLICATES_DELETER_H

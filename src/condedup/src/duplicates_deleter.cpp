@@ -1,12 +1,11 @@
-#include "condeduplib/duplicates_deleter.h"
-
-#include "../../deduplib/include/deduplib/files_map.h"
-#include "condeduplib/deleter_keep_policy.h"
+#include "duplicates_deleter.h"
+#include "deleter_keep_policy.h"
 #include <Poco/File.h>
 #include <Poco/Logger.h>
+#include <deduplib/files_map.h>
 #include <reusablelib/time_helpers.h>
 
-namespace Deduplicator::ConsoleLib
+namespace Deduplicator::Console
 {
 
 using Poco::File;
@@ -42,7 +41,8 @@ void DuplicatesDeleter::listDuplicates(ChecksumFilesMap::const_reference elem)
     for (const auto& file : files)
     {
         const auto tsFormatted = formatTimestamp(file.created());
-        Logger::get(LOGGER_NAME).information("\t[created: %s] %s", tsFormatted, file.path());
+        Logger::get(LOGGER_NAME)
+            .information("\t[created: %s] %s", tsFormatted, file.path().c_str());
     }
 }
 
@@ -63,4 +63,4 @@ void DuplicatesDeleter::removeDuplicates(ChecksumFilesMap::reference elem) const
     }
 }
 
-} // namespace Deduplicator::ConsoleLib
+} // namespace Deduplicator::Console

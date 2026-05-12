@@ -1,3 +1,3 @@
-#include "condeduplib/application.h"
+#include "application.h"
 
-POCO_APP_MAIN(Deduplicator::ConsoleLib::Application)
+POCO_APP_MAIN(Deduplicator::Console::Application)

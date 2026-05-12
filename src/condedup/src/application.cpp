@@ -2,11 +2,11 @@
 // Created by sashko on 01.03.26.
 //
 
-#include "condeduplib/application.h"
+#include "application.h"
 #include "buildinfo.h"
-#include "condeduplib/deleter_keep_policy.h"
-#include "condeduplib/duplicates_deleter.h"
 #include "deduplib/duplicates_finder.h"
+#include "deleter_keep_policy.h"
+#include "duplicates_deleter.h"
 #include "reusablelib/time_helpers.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
@@ -19,7 +19,7 @@
 #include <iostream>
 #include <string>
 
-namespace Deduplicator::ConsoleLib
+namespace Deduplicator::Console
 {
 
 void Application::initialize(PocoApplication& self)
@@ -132,4 +132,4 @@ int Application::main(const ArgVec& argv)
     return EXIT_OK;
 }
 
-} // namespace Deduplicator::ConsoleLib
+} // namespace Deduplicator::Console

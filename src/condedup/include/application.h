@@ -2,10 +2,10 @@
 // Created by sashko on 01.03.26.
 //
 
-#ifndef CONDEDUPLIB_APPLICATION_H
-#define CONDEDUPLIB_APPLICATION_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-#include "condeduplib/deleter_keep_policy.h"
+#include "deleter_keep_policy.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <string>
 
-namespace Deduplicator::ConsoleLib
+namespace Deduplicator::Console
 {
 
 using Poco::Logger;
@@ -23,6 +23,7 @@ using Poco::Util::Option;
 using Poco::Util::OptionCallback;
 using Poco::Util::OptionSet;
 using PocoApplication = Poco::Util::Application;
+using ArgVec = std::vector<std::string>;
 
 class Application : public PocoApplication
 {
@@ -46,6 +47,6 @@ class Application : public PocoApplication
     std::filesystem::path _targetDirectory;
 };
 
-} // namespace Deduplicator::ConsoleLib
+} // namespace Deduplicator::Console
 
 #endif // CONDEDUPLIB_APPLICATION_H
