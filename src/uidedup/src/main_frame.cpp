@@ -120,7 +120,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
     Logger::get(LOGGER_NAME).information("Item selected: " + fileName.ToStdString());
 
-    m_previewText->SetValue(fileName);
+    // m_previewText->SetValue(fileName);
 
     // TODO: Update preview panel with actual file content
 }

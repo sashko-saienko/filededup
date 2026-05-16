@@ -3,10 +3,10 @@
         {
             "label": "Build uidedup",
             "command": "cmake",
-            "type": "shell",
+            "type": "process",
             "args": [
                 "--build",
-                "${workspaceFolder}/build/src",
+                "${workspaceFolder}/build/",
                 "--target",
                 "uidedup"
             ],
@@ -18,10 +18,10 @@
         {
             "label": "Build condedup",
             "command": "cmake",
-            "type": "shell",
+            "type": "process",
             "args": [
                 "--build",
-                "${workspaceFolder}/build/src",
+                "${workspaceFolder}/build",
                 "--target",
                 "condedup"
             ],
