@@ -13,7 +13,33 @@ namespace Deduplicator::Ui
 using Poco::Logger;
 
 MainFrame::MainFrame()
-    : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600))
+    : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
+      m_listCtrl(nullptr),
+      m_splitter(nullptr),
+      m_leftPanel(nullptr),
+      m_rightPanel(nullptr),
+      m_previewText(nullptr)
+{
+    // Initialize all UI components
+    Initialize();
+}
+
+void MainFrame::Initialize()
+{
+    SetupMenuBar();
+    SetupMainLayout();
+    SetupListControl();
+    PopulateSampleData();
+
+    CreateStatusBar();
+    
+    // Bind events
+    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_LIST_ITEM_SELECTED, &MainFrame::OnItemSelected, this);
+}
+
+void MainFrame::SetupMenuBar()
 {
     ::wxMenu* menuFile = new ::wxMenu();
     menuFile->AppendSeparator();
@@ -27,63 +53,67 @@ MainFrame::MainFrame()
     menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
+}
 
-    CreateStatusBar();
-
+void MainFrame::SetupMainLayout()
+{
     // Create main splitter window
-    wxSplitterWindow* splitter = new wxSplitterWindow(this, wxID_ANY);
-    splitter->SetMinimumPaneSize(200);
+    m_splitter = new wxSplitterWindow(this, wxID_ANY);
+    m_splitter->SetMinimumPaneSize(200);
 
     // Left panel with list control
-    wxPanel* leftPanel = new wxPanel(splitter, wxID_ANY);
+    m_leftPanel = new wxPanel(m_splitter, wxID_ANY);
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxListCtrl* listCtrl = new wxListCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                          wxLC_REPORT | wxLC_SINGLE_SEL);
+    // Right panel for preview
+    m_rightPanel = new wxPanel(m_splitter, wxID_ANY);
+    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText* previewLabel = new wxStaticText(m_rightPanel, wxID_ANY, "Preview:");
+    m_previewText = new wxTextCtrl(m_rightPanel, wxID_ANY, "Select an item from the list to preview it.",
+                                  wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+
+    rightSizer->Add(previewLabel, 0, wxALL, 5);
+    rightSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    m_rightPanel->SetSizer(rightSizer);
+
+    // Split the window
+    m_splitter->SplitVertically(m_leftPanel, m_rightPanel, 300);
+
+    // Main sizer
+    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer->Add(m_splitter, 1, wxEXPAND);
+    SetSizer(mainSizer);
+}
+
+void MainFrame::SetupListControl()
+{
+    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+    
+    m_listCtrl = new wxListCtrl(m_leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                               wxLC_REPORT | wxLC_SINGLE_SEL);
 
     // Add columns to list control
-    listCtrl->InsertColumn(0, "File Name", wxLIST_FORMAT_LEFT, 200);
-    listCtrl->InsertColumn(1, "Size", wxLIST_FORMAT_RIGHT, 100);
-    listCtrl->InsertColumn(2, "Type", wxLIST_FORMAT_LEFT, 100);
+    m_listCtrl->InsertColumn(0, "File Name", wxLIST_FORMAT_LEFT, 200);
+    m_listCtrl->InsertColumn(1, "Size", wxLIST_FORMAT_RIGHT, 100);
+    m_listCtrl->InsertColumn(2, "Type", wxLIST_FORMAT_LEFT, 100);
 
+    leftSizer->Add(m_listCtrl, 1, wxEXPAND | wxALL, 5);
+    m_leftPanel->SetSizer(leftSizer);
+}
+
+void MainFrame::PopulateSampleData()
+{
     // Add some sample items
     for (int i = 0; i < 10; i++)
     {
         wxListItem item;
         item.SetId(i);
         item.SetText(wxString::Format("File %d.txt", i));
-        listCtrl->InsertItem(item);
-        listCtrl->SetItem(i, 1, wxString::Format("%d KB", 100 + i * 10));
-        listCtrl->SetItem(i, 2, "Text");
+        m_listCtrl->InsertItem(item);
+        m_listCtrl->SetItem(i, 1, wxString::Format("%d KB", 100 + i * 10));
+        m_listCtrl->SetItem(i, 2, "Text");
     }
-
-    leftSizer->Add(listCtrl, 1, wxEXPAND | wxALL, 5);
-    leftPanel->SetSizer(leftSizer);
-
-    // Right panel for preview
-    wxPanel* rightPanel = new wxPanel(splitter, wxID_ANY);
-    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
-
-    wxStaticText* previewLabel = new wxStaticText(rightPanel, wxID_ANY, "Preview:");
-    wxTextCtrl* previewText =
-        new wxTextCtrl(rightPanel, wxID_ANY, "Select an item from the list to preview it.",
-                       wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
-
-    rightSizer->Add(previewLabel, 0, wxALL, 5);
-    rightSizer->Add(previewText, 1, wxEXPAND | wxALL, 5);
-    rightPanel->SetSizer(rightSizer);
-
-    // Split the window
-    splitter->SplitVertically(leftPanel, rightPanel, 300);
-
-    // Main sizer
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-    mainSizer->Add(splitter, 1, wxEXPAND);
-    SetSizer(mainSizer);
-
-    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_LIST_ITEM_SELECTED, &MainFrame::OnItemSelected, this);
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
