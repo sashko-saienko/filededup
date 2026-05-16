@@ -21,13 +21,9 @@ class MainFrame : public ::wxFrame
 
     void SetupMenuBar();
     void SetupMainLayout();
-    void SetupTreeControl();
     void PopulateSampleData();
 
     wxTreeCtrl* m_treeCtrl;
-    wxSplitterWindow* m_splitter;
-    wxPanel* m_leftPanel;
-    wxPanel* m_rightPanel;
     wxTextCtrl* m_previewText;
 };
 

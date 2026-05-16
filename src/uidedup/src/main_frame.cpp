@@ -13,8 +13,7 @@ using Poco::Logger;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
-      m_treeCtrl(nullptr), m_splitter(nullptr), m_leftPanel(nullptr), m_rightPanel(nullptr),
-      m_previewText(nullptr)
+      m_treeCtrl(nullptr), m_previewText(nullptr)
 {
     // Initialize all UI components
     Initialize();
@@ -24,7 +23,6 @@ void MainFrame::Initialize()
 {
     SetupMenuBar();
     SetupMainLayout();
-    SetupTreeControl();
     PopulateSampleData();
 
     CreateStatusBar();
@@ -54,47 +52,42 @@ void MainFrame::SetupMenuBar()
 void MainFrame::SetupMainLayout()
 {
     // Create main splitter window
-    m_splitter = new wxSplitterWindow(this, wxID_ANY);
-    m_splitter->SetMinimumPaneSize(200);
+    wxSplitterWindow* splitter = new wxSplitterWindow(this, wxID_ANY);
+    splitter->SetMinimumPaneSize(200);
 
-    // Left panel with list control
-    m_leftPanel = new wxPanel(m_splitter, wxID_ANY);
+    // Left panel with tree control
+    wxPanel* leftPanel = new wxPanel(splitter, wxID_ANY);
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+    leftPanel->SetSizer(leftSizer);
+
+    m_treeCtrl = new wxTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                wxTR_DEFAULT_STYLE | wxTR_SINGLE);
+
+    // Add root item
+    wxTreeItemId rootId = m_treeCtrl->AddRoot("Duplicates");
+
+    leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
     // Right panel for preview
-    m_rightPanel = new wxPanel(m_splitter, wxID_ANY);
+    wxPanel* rightPanel = new wxPanel(splitter, wxID_ANY);
     wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxStaticText* previewLabel = new wxStaticText(m_rightPanel, wxID_ANY, "Preview:");
+    // Split the window
+    splitter->SplitVertically(leftPanel, rightPanel, 300);
+
+    wxStaticText* previewLabel = new wxStaticText(rightPanel, wxID_ANY, "Preview:");
     m_previewText =
-        new wxTextCtrl(m_rightPanel, wxID_ANY, "Select an item from the list to preview it.",
+        new wxTextCtrl(rightPanel, wxID_ANY, "Select an item from the list to preview it.",
                        wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
 
     rightSizer->Add(previewLabel, 0, wxALL, 5);
     rightSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
-    m_rightPanel->SetSizer(rightSizer);
-
-    // Split the window
-    m_splitter->SplitVertically(m_leftPanel, m_rightPanel, 300);
+    rightPanel->SetSizer(rightSizer);
 
     // Main sizer
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-    mainSizer->Add(m_splitter, 1, wxEXPAND);
+    mainSizer->Add(splitter, 1, wxEXPAND);
     SetSizer(mainSizer);
-}
-
-void MainFrame::SetupTreeControl()
-{
-    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
-
-    m_treeCtrl = new wxTreeCtrl(m_leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxTR_DEFAULT_STYLE | wxTR_SINGLE);
-
-    // Add root item
-    wxTreeItemId rootId = m_treeCtrl->AddRoot("Files");
-
-    leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
-    m_leftPanel->SetSizer(leftSizer);
 }
 
 void MainFrame::PopulateSampleData()
@@ -126,6 +119,8 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     wxString fileName = m_treeCtrl->GetItemText(selectedItem);
 
     Logger::get(LOGGER_NAME).information("Item selected: " + fileName.ToStdString());
+
+    m_previewText->SetValue(fileName);
 
     // TODO: Update preview panel with actual file content
 }
