@@ -1,6 +1,7 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
+#include <wx/listbase.h>
 #include <wx/wx.h>
 
 namespace Deduplicator::Ui
@@ -20,6 +21,7 @@ class MainFrame : public ::wxFrame
     void OnHello(::wxCommandEvent& event);
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
+    void OnItemSelected(::wxListEvent& event);
 };
 
 } // namespace Deduplicator::Ui
