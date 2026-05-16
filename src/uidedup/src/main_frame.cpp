@@ -3,9 +3,8 @@
 //
 #include <Poco/Logger.h>
 #include <main_frame.h>
-#include <wx/listbase.h>
-#include <wx/listctrl.h>
 #include <wx/splitter.h>
+#include <wx/treectrl.h>
 #include <wx/wx.h>
 
 namespace Deduplicator::Ui
@@ -14,10 +13,7 @@ using Poco::Logger;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
-      m_listCtrl(nullptr),
-      m_splitter(nullptr),
-      m_leftPanel(nullptr),
-      m_rightPanel(nullptr),
+      m_treeCtrl(nullptr), m_splitter(nullptr), m_leftPanel(nullptr), m_rightPanel(nullptr),
       m_previewText(nullptr)
 {
     // Initialize all UI components
@@ -28,15 +24,15 @@ void MainFrame::Initialize()
 {
     SetupMenuBar();
     SetupMainLayout();
-    SetupListControl();
+    SetupTreeControl();
     PopulateSampleData();
 
     CreateStatusBar();
-    
+
     // Bind events
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_LIST_ITEM_SELECTED, &MainFrame::OnItemSelected, this);
+    Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
 }
 
 void MainFrame::SetupMenuBar()
@@ -70,8 +66,9 @@ void MainFrame::SetupMainLayout()
     wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText* previewLabel = new wxStaticText(m_rightPanel, wxID_ANY, "Preview:");
-    m_previewText = new wxTextCtrl(m_rightPanel, wxID_ANY, "Select an item from the list to preview it.",
-                                  wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+    m_previewText =
+        new wxTextCtrl(m_rightPanel, wxID_ANY, "Select an item from the list to preview it.",
+                       wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
 
     rightSizer->Add(previewLabel, 0, wxALL, 5);
     rightSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
@@ -86,33 +83,28 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-void MainFrame::SetupListControl()
+void MainFrame::SetupTreeControl()
 {
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
-    
-    m_listCtrl = new wxListCtrl(m_leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                               wxLC_REPORT | wxLC_SINGLE_SEL);
 
-    // Add columns to list control
-    m_listCtrl->InsertColumn(0, "File Name", wxLIST_FORMAT_LEFT, 200);
-    m_listCtrl->InsertColumn(1, "Size", wxLIST_FORMAT_RIGHT, 100);
-    m_listCtrl->InsertColumn(2, "Type", wxLIST_FORMAT_LEFT, 100);
+    m_treeCtrl = new wxTreeCtrl(m_leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                wxTR_DEFAULT_STYLE | wxTR_SINGLE);
 
-    leftSizer->Add(m_listCtrl, 1, wxEXPAND | wxALL, 5);
+    // Add root item
+    wxTreeItemId rootId = m_treeCtrl->AddRoot("Files");
+
+    leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
     m_leftPanel->SetSizer(leftSizer);
 }
 
 void MainFrame::PopulateSampleData()
 {
     // Add some sample items
+    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
     for (int i = 0; i < 10; i++)
     {
-        wxListItem item;
-        item.SetId(i);
-        item.SetText(wxString::Format("File %d.txt", i));
-        m_listCtrl->InsertItem(item);
-        m_listCtrl->SetItem(i, 1, wxString::Format("%d KB", 100 + i * 10));
-        m_listCtrl->SetItem(i, 2, "Text");
+        wxString itemText = wxString::Format("File %d.txt", i);
+        m_treeCtrl->AppendItem(rootId, itemText);
     }
 }
 
@@ -127,15 +119,13 @@ void MainFrame::OnAbout(::wxCommandEvent& _)
                  "About File Deduplicator", wxOK | wxICON_INFORMATION);
 }
 
-void MainFrame::OnItemSelected(::wxListEvent& event)
+void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
-    // Update the preview panel based on the selected item from the list
-    long selectedIndex = event.GetIndex();
-    wxString fileName = event.GetText();
+    // Update the preview panel based on the selected item from the tree
+    wxTreeItemId selectedItem = event.GetItem();
+    wxString fileName = m_treeCtrl->GetItemText(selectedItem);
 
-    Logger::get(LOGGER_NAME)
-        .information("Item selected: " + std::to_string(selectedIndex) + " - " +
-                     fileName.ToStdString());
+    Logger::get(LOGGER_NAME).information("Item selected: " + fileName.ToStdString());
 
     // TODO: Update preview panel with actual file content
 }

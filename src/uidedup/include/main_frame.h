@@ -1,9 +1,8 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
-#include <wx/listbase.h>
-#include <wx/listctrl.h>
 #include <wx/splitter.h>
+#include <wx/treectrl.h>
 #include <wx/wx.h>
 
 namespace Deduplicator::Ui
@@ -18,14 +17,14 @@ class MainFrame : public ::wxFrame
   private:
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
-    void OnItemSelected(::wxListEvent& event);
-    
+    void OnItemSelected(::wxTreeEvent& event);
+
     void SetupMenuBar();
     void SetupMainLayout();
-    void SetupListControl();
+    void SetupTreeControl();
     void PopulateSampleData();
-    
-    wxListCtrl* m_listCtrl;
+
+    wxTreeCtrl* m_treeCtrl;
     wxSplitterWindow* m_splitter;
     wxPanel* m_leftPanel;
     wxPanel* m_rightPanel;
@@ -34,4 +33,4 @@ class MainFrame : public ::wxFrame
 
 } // namespace Deduplicator::Ui
 
-#endif // __UIDEDUPLIB_MAIN_FRAME_H__
+#endif // __UIDEDUPLIB_MAIN_FRAME_H__UIDEDUPLIB_MAIN_FRAME_H__
