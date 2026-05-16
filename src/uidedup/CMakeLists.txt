@@ -11,9 +11,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(
         ${PROJECT_NAME}
         src/uidedup.cpp
+        src/application.cpp
+        src/main_frame.cpp
+        include/application.h
+        include/main_frame.h
 )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE uideduplib)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")
+target_link_libraries(${PROJECT_NAME} PRIVATE Poco::Util)
 
 configure_file(${CMAKE_SOURCE_DIR}/config/logging.properties logging.properties COPYONLY)
 

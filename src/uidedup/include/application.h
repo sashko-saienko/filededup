@@ -8,7 +8,7 @@
 #include <filesystem>
 #include <wx/wx.h>
 
-namespace Deduplicator::UiLib
+namespace Deduplicator::Ui
 {
 
 namespace fs = std::filesystem;
@@ -22,6 +22,6 @@ class Application : public ::wxApp
     static void ConfigureLogging(const fs::path&);
 };
 
-} // namespace Deduplicator::UiLib
+} // namespace Deduplicator::Ui
 
 #endif // UIDEDUP_APPLICATION_H

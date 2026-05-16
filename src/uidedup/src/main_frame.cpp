@@ -1,11 +1,11 @@
 //
 // Created by sashko on 14.03.26.
 //
-#include "uideduplib/main_frame.h"
 #include <Poco/Logger.h>
+#include <main_frame.h>
 #include <wx/wx.h>
 
-namespace Deduplicator::UiLib
+namespace Deduplicator::Ui
 {
 using Poco::Logger;
 
@@ -49,4 +49,4 @@ void MainFrame::OnAbout(::wxCommandEvent& _)
                  wxOK | wxICON_INFORMATION);
 }
 
-} // namespace Deduplicator::UiLib
+} // namespace Deduplicator::Ui

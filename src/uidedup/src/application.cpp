@@ -1,14 +1,14 @@
 //
 // Created by sashko on 13.03.26.
 //
-#include "uideduplib/application.h"
-#include "uideduplib/main_frame.h"
 #include <Poco/AutoPtr.h>
 #include <Poco/Logger.h>
 #include <Poco/Util/LoggingConfigurator.h>
 #include <Poco/Util/PropertyFileConfiguration.h>
+#include <application.h>
+#include <main_frame.h>
 
-namespace Deduplicator::UiLib
+namespace Deduplicator::Ui
 {
 
 using Poco::makeAuto;
@@ -32,4 +32,4 @@ void Application::ConfigureLogging(const fs::path& propsPath)
     lc.configure(pConfig);
 }
 
-} // namespace Deduplicator::UiLib
+} // namespace Deduplicator::Ui

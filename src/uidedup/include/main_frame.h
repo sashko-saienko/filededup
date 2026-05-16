@@ -1,9 +1,9 @@
-#ifndef __UIDEDUPLIB_MAIN_FRAME_H__
-#define __UIDEDUPLIB_MAIN_FRAME_H__
+#ifndef __UIDEDUP_MAIN_FRAME_H__
+#define __UIDEDUP_MAIN_FRAME_H__
 
 #include <wx/wx.h>
 
-namespace Deduplicator::UiLib
+namespace Deduplicator::Ui
 {
 
 class MainFrame : public ::wxFrame
@@ -22,6 +22,6 @@ class MainFrame : public ::wxFrame
     void OnAbout(::wxCommandEvent& event);
 };
 
-} // namespace Deduplicator::UiLib
+} // namespace Deduplicator::Ui
 
 #endif // __UIDEDUPLIB_MAIN_FRAME_H__
