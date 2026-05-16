@@ -16,7 +16,6 @@ MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600))
 {
     ::wxMenu* menuFile = new ::wxMenu();
-    menuFile->Append(ID_HELLO, "&Hello...\tCtrl+H", "Hello world example!");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -30,7 +29,6 @@ MainFrame::MainFrame()
     SetMenuBar(menuBar);
 
     CreateStatusBar();
-    SetStatusText("Ready");
 
     // Create main splitter window
     wxSplitterWindow* splitter = new wxSplitterWindow(this, wxID_ANY);
@@ -83,15 +81,9 @@ MainFrame::MainFrame()
     mainSizer->Add(splitter, 1, wxEXPAND);
     SetSizer(mainSizer);
 
-    Bind(wxEVT_MENU, &MainFrame::OnHello, this, ID_HELLO);
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_LIST_ITEM_SELECTED, &MainFrame::OnItemSelected, this);
-}
-
-void MainFrame::OnHello(::wxCommandEvent& _)
-{
-    Logger::get(LOGGER_NAME).information("Hello world!");
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
