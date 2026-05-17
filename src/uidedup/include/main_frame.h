@@ -1,7 +1,9 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
+#include <wx/image.h>
 #include <wx/splitter.h>
+#include <wx/statbmp.h>
 #include <wx/treectrl.h>
 #include <wx/wx.h>
 
@@ -22,9 +24,15 @@ class MainFrame : public ::wxFrame
     void SetupMenuBar();
     void SetupMainLayout();
     void PopulateSampleData();
+    void ShowTextPreview(const wxString& content);
+    void ShowImagePreview(const wxString& imagePath);
+    void ClearPreview();
 
     wxTreeCtrl* m_treeCtrl;
     wxTextCtrl* m_previewText;
+    wxStaticBitmap* m_previewImage;
+    wxPanel* m_previewPanel;
+    wxBoxSizer* m_previewSizer;
 };
 
 } // namespace Deduplicator::Ui

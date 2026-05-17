@@ -13,7 +13,8 @@ using Poco::Logger;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
-      m_treeCtrl(nullptr), m_previewText(nullptr)
+      m_treeCtrl(nullptr), m_previewText(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
+      m_previewSizer(nullptr)
 {
     // Initialize all UI components
     Initialize();
@@ -69,20 +70,21 @@ void MainFrame::SetupMainLayout()
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
     // Right panel for preview
-    wxPanel* rightPanel = new wxPanel(splitter, wxID_ANY);
-    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+    m_previewPanel = new wxPanel(splitter, wxID_ANY);
+    m_previewSizer = new wxBoxSizer(wxVERTICAL);
+    m_previewPanel->SetSizer(m_previewSizer);
 
     // Split the window
-    splitter->SplitVertically(leftPanel, rightPanel, 300);
+    splitter->SplitVertically(leftPanel, m_previewPanel, 300);
 
-    wxStaticText* previewLabel = new wxStaticText(rightPanel, wxID_ANY, "Preview:");
+    // Create both controls but only show text initially
     m_previewText =
-        new wxTextCtrl(rightPanel, wxID_ANY, "Select an item from the list to preview it.",
+        new wxTextCtrl(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
                        wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+    m_previewImage = new wxStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
 
-    rightSizer->Add(previewLabel, 0, wxALL, 5);
-    rightSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
-    rightPanel->SetSizer(rightSizer);
+    // Add text control to sizer initially
+    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
 
     // Main sizer
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -94,11 +96,22 @@ void MainFrame::PopulateSampleData()
 {
     // Add some sample items
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
-    for (int i = 0; i < 10; i++)
+
+    // Add text files
+    for (int i = 0; i < 5; i++)
     {
         wxString itemText = wxString::Format("File %d.txt", i);
         m_treeCtrl->AppendItem(rootId, itemText);
     }
+
+    // Add image files
+    m_treeCtrl->AppendItem(rootId, "image1.png");
+    m_treeCtrl->AppendItem(rootId, "photo.jpg");
+    m_treeCtrl->AppendItem(rootId, "screenshot.jpeg");
+
+    // Add some other file types
+    m_treeCtrl->AppendItem(rootId, "document.pdf");
+    m_treeCtrl->AppendItem(rootId, "data.csv");
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
@@ -120,9 +133,92 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
     Logger::get(LOGGER_NAME).information("Item selected: " + fileName.ToStdString());
 
-    // m_previewText->SetValue(fileName);
+    // Determine file type and show appropriate preview
+    if (fileName.EndsWith(".txt") || fileName.EndsWith(".cpp") || fileName.EndsWith(".h"))
+    {
+        ShowTextPreview("This would show the content of " + fileName);
+    }
+    else if (fileName.EndsWith(".png") || fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") ||
+             fileName.EndsWith(".bmp"))
+    {
+        ShowImagePreview(fileName);
+    }
+    else
+    {
+        ShowTextPreview("Unsupported file type: " + fileName);
+    }
+}
 
-    // TODO: Update preview panel with actual file content
+void MainFrame::ShowTextPreview(const wxString& content)
+{
+    // Clear the preview sizer
+    m_previewSizer->Clear();
+
+    // Show text control and hide image control
+    m_previewText->Show();
+    m_previewImage->Hide();
+
+    // Set the text content
+    m_previewText->SetValue(content);
+
+    // Add text control to sizer and layout
+    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    m_previewPanel->Layout();
+    m_previewPanel->Refresh();
+}
+
+void MainFrame::ShowImagePreview(const wxString& imagePath)
+{
+    // Clear the preview sizer
+    m_previewSizer->Clear();
+
+    // Hide text control and show image control
+    m_previewText->Hide();
+    m_previewImage->Show();
+
+    // Load and display the image
+    if (wxFileExists(imagePath))
+    {
+        wxImage image;
+        if (image.LoadFile(imagePath))
+        {
+            wxBitmap bitmap(image);
+            m_previewImage->SetBitmap(bitmap);
+        }
+        else
+        {
+            m_previewImage->SetBitmap(wxBitmap());
+            m_previewText->SetValue("Failed to load image: " + imagePath);
+            m_previewText->Show();
+            m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+        }
+    }
+    else
+    {
+        m_previewImage->SetBitmap(wxBitmap());
+        m_previewText->SetValue("Image file not found: " + imagePath);
+        m_previewText->Show();
+        m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    }
+
+    // Add image control to sizer and layout
+    if (m_previewImage->IsShown())
+    {
+        m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL, 5);
+    }
+
+    m_previewPanel->Layout();
+    m_previewPanel->Refresh();
+}
+
+void MainFrame::ClearPreview()
+{
+    m_previewSizer->Clear();
+    m_previewText->SetValue("");
+    m_previewImage->SetBitmap(wxBitmap());
+    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    m_previewPanel->Layout();
+    m_previewPanel->Refresh();
 }
 
 } // namespace Deduplicator::Ui
