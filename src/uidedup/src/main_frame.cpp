@@ -3,6 +3,8 @@
 //
 #include <Poco/Logger.h>
 #include <main_frame.h>
+#include <wx/image.h>
+#include <wx/msgdlg.h>
 #include <wx/splitter.h>
 #include <wx/treectrl.h>
 #include <wx/wx.h>
@@ -174,38 +176,25 @@ void MainFrame::ShowImagePreview(const wxString& imagePath)
 
     // Hide text control and show image control
     m_previewText->Hide();
-    m_previewImage->Show();
+    m_previewImage->Hide();
 
     // Load and display the image
-    if (wxFileExists(imagePath))
+    if (wxImage image; wxFileExists(imagePath) && image.LoadFile(imagePath))
     {
-        wxImage image;
-        if (image.LoadFile(imagePath))
-        {
-            wxBitmap bitmap(image);
-            m_previewImage->SetBitmap(bitmap);
-        }
-        else
-        {
-            m_previewImage->SetBitmap(wxBitmap());
-            m_previewText->SetValue("Failed to load image: " + imagePath);
-            m_previewText->Show();
-            m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
-        }
+        wxBitmap bitmap(image);
+        m_previewImage->SetBitmap(bitmap);
     }
     else
     {
-        m_previewImage->SetBitmap(wxBitmap());
-        m_previewText->SetValue("Image file not found: " + imagePath);
-        m_previewText->Show();
-        m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+        auto errorMessage =
+            wxString::Format("Image file not found or not supported: %s", imagePath);
+        wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTRE, this);
     }
 
+    m_previewImage->Show();
+
     // Add image control to sizer and layout
-    if (m_previewImage->IsShown())
-    {
-        m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL, 5);
-    }
+    m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL, 5);
 
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
