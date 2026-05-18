@@ -65,7 +65,7 @@ void MainFrame::SetupMainLayout()
                                 wxTR_DEFAULT_STYLE | wxTR_SINGLE);
 
     // Add root item
-    wxTreeItemId rootId = m_treeCtrl->AddRoot("Duplicates");
+    wxTreeItemId rootId = m_treeCtrl->AddRoot("Checksum duplicates");
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
