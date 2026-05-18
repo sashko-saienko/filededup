@@ -29,7 +29,7 @@ class MainFrame : public ::wxFrame
     void ClearPreview();
 
     wxTreeCtrl* m_treeCtrl;
-    wxTextCtrl* m_previewText;
+    wxStaticText* m_previewLabel;
     wxStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;

@@ -15,8 +15,7 @@ using Poco::Logger;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
-      m_treeCtrl(nullptr), m_previewText(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
-      m_previewSizer(nullptr)
+      m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr), m_previewSizer(nullptr)
 {
     // Initialize all UI components
     Initialize();
@@ -79,14 +78,13 @@ void MainFrame::SetupMainLayout()
     // Split the window
     splitter->SplitVertically(leftPanel, m_previewPanel, 300);
 
-    // Create both controls but only show text initially
-    m_previewText =
-        new wxTextCtrl(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
-                       wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+    m_previewLabel =
+        new wxStaticText(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
+                         wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
     m_previewImage = new wxStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
 
     // Add text control to sizer initially
-    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    m_previewSizer->Add(m_previewLabel, 1, wxEXPAND | wxALL | wxCENTER, 5);
 
     // Main sizer
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -133,40 +131,11 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     wxTreeItemId selectedItem = event.GetItem();
     wxString fileName = m_treeCtrl->GetItemText(selectedItem);
 
-    Logger::get(LOGGER_NAME).information("Item selected: " + fileName.ToStdString());
-
-    // Determine file type and show appropriate preview
-    if (fileName.EndsWith(".txt") || fileName.EndsWith(".cpp") || fileName.EndsWith(".h"))
-    {
-        ShowTextPreview("This would show the content of " + fileName);
-    }
-    else if (fileName.EndsWith(".png") || fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") ||
-             fileName.EndsWith(".bmp"))
+    if (fileName.EndsWith(".png") || fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") ||
+        fileName.EndsWith(".bmp"))
     {
         ShowImagePreview(fileName);
     }
-    else
-    {
-        ShowTextPreview("Unsupported file type: " + fileName);
-    }
-}
-
-void MainFrame::ShowTextPreview(const wxString& content)
-{
-    // Clear the preview sizer
-    m_previewSizer->Clear();
-
-    // Show text control and hide image control
-    m_previewText->Show();
-    m_previewImage->Hide();
-
-    // Set the text content
-    m_previewText->SetValue(content);
-
-    // Add text control to sizer and layout
-    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
-    m_previewPanel->Layout();
-    m_previewPanel->Refresh();
 }
 
 void MainFrame::ShowImagePreview(const wxString& imagePath)
@@ -175,7 +144,7 @@ void MainFrame::ShowImagePreview(const wxString& imagePath)
     m_previewSizer->Clear();
 
     // Hide text control and show image control
-    m_previewText->Hide();
+    m_previewLabel->Show();
     m_previewImage->Hide();
 
     // Load and display the image
@@ -191,6 +160,7 @@ void MainFrame::ShowImagePreview(const wxString& imagePath)
         wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTRE, this);
     }
 
+    m_previewLabel->Hide();
     m_previewImage->Show();
 
     // Add image control to sizer and layout
@@ -203,9 +173,7 @@ void MainFrame::ShowImagePreview(const wxString& imagePath)
 void MainFrame::ClearPreview()
 {
     m_previewSizer->Clear();
-    m_previewText->SetValue("");
-    m_previewImage->SetBitmap(wxBitmap());
-    m_previewSizer->Add(m_previewText, 1, wxEXPAND | wxALL, 5);
+    m_previewSizer->Add(m_previewLabel, 1, wxEXPAND | wxALL | wxCENTRE, 5);
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
 }
