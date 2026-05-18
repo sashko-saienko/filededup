@@ -18,7 +18,7 @@ using Poco::Util::PropertyFileConfiguration;
 bool Application::OnInit()
 {
     fs::path props =
-        fs::path{Application::argv[0].ToStdString()}.parent_path() / "logging.properties";
+        fs::path{argv[0].ToStdString()}.parent_path() / "logging.properties";
     ConfigureLogging(props);
     auto* mainFrame = new MainFrame();
     mainFrame->Show();
