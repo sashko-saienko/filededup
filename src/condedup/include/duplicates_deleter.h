@@ -1,8 +1,8 @@
 #ifndef DUPLICATES_DELETER_H
 #define DUPLICATES_DELETER_H
 
-#include <deleter_keep_policy.h>
 #include <deduplib/files_map.h>
+#include <deleter_keep_policy.h>
 #include <reusablelib/time_helpers.h>
 
 namespace Deduplicator::Console
