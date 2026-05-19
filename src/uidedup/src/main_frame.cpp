@@ -2,9 +2,13 @@
 // Created by sashko on 14.03.26.
 //
 #include <Poco/Logger.h>
+#include <functional>
 #include <main_frame.h>
+#include <wx/gdicmn.h>
 #include <wx/image.h>
+#include <wx/layout.h>
 #include <wx/msgdlg.h>
+#include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/treectrl.h>
 #include <wx/wx.h>
@@ -82,9 +86,12 @@ void MainFrame::SetupMainLayout()
         new wxStaticText(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
                          wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
     m_previewImage = new wxStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
+    m_previewImage->Hide();
 
-    // Add text control to sizer initially
-    m_previewSizer->Add(m_previewLabel, 1, wxEXPAND | wxALL | wxCENTER, 5);
+    m_previewSizer->AddStretchSpacer();
+    m_previewSizer->Add(m_previewLabel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+    m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL | wxCENTER, 5);
+    m_previewSizer->AddStretchSpacer();
 
     // Main sizer
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -134,15 +141,12 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     if (fileName.EndsWith(".png") || fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") ||
         fileName.EndsWith(".bmp"))
     {
-        ShowImagePreview(fileName);
+        SetupImagePreview(fileName);
     }
 }
 
-void MainFrame::ShowImagePreview(const wxString& imagePath)
+void MainFrame::SetupImagePreview(const wxString& imagePath)
 {
-    // Clear the preview sizer
-    m_previewSizer->Clear();
-
     // Hide text control and show image control
     m_previewLabel->Show();
     m_previewImage->Hide();
@@ -157,23 +161,13 @@ void MainFrame::ShowImagePreview(const wxString& imagePath)
     {
         auto errorMessage =
             wxString::Format("Image file not found or not supported: %s", imagePath);
-        wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTRE, this);
+        wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTER, this);
+        return;
     }
 
     m_previewLabel->Hide();
     m_previewImage->Show();
 
-    // Add image control to sizer and layout
-    m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL, 5);
-
-    m_previewPanel->Layout();
-    m_previewPanel->Refresh();
-}
-
-void MainFrame::ClearPreview()
-{
-    m_previewSizer->Clear();
-    m_previewSizer->Add(m_previewLabel, 1, wxEXPAND | wxALL | wxCENTRE, 5);
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
 }
