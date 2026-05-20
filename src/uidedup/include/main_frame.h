@@ -1,7 +1,6 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
-#include <functional>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>

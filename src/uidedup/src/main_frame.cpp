@@ -2,7 +2,6 @@
 // Created by sashko on 14.03.26.
 //
 #include <Poco/Logger.h>
-#include <functional>
 #include <main_frame.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>
