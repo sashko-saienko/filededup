@@ -2,7 +2,9 @@
 // Created by sashko on 14.03.26.
 //
 #include <Poco/Logger.h>
+#include <deduplib/duplicates_finder.h>
 #include <main_frame.h>
+#include <reusablelib/time_helpers.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>
 #include <wx/layout.h>
@@ -28,7 +30,7 @@ void MainFrame::Initialize()
 {
     SetupMenuBar();
     SetupMainLayout();
-    PopulateSampleData();
+    PopulateDuplicatesTree();
 
     CreateStatusBar();
 
@@ -98,8 +100,14 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-void MainFrame::PopulateSampleData()
+void MainFrame::PopulateDuplicatesTree()
 {
+    using ReusableLib::ObservableStopwatch;
+
+    ObservableStopwatch sw([&](const long seconds) {
+        Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
+    });
+
     // Add some sample items
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
 
@@ -109,15 +117,6 @@ void MainFrame::PopulateSampleData()
         wxString itemText = wxString::Format("File %d.txt", i);
         m_treeCtrl->AppendItem(rootId, itemText);
     }
-
-    // Add image files
-    m_treeCtrl->AppendItem(rootId, "image1.png");
-    m_treeCtrl->AppendItem(rootId, "photo.jpg");
-    m_treeCtrl->AppendItem(rootId, "screenshot.jpeg");
-
-    // Add some other file types
-    m_treeCtrl->AppendItem(rootId, "document.pdf");
-    m_treeCtrl->AppendItem(rootId, "data.csv");
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)

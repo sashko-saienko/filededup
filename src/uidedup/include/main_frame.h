@@ -24,7 +24,7 @@ class MainFrame : public ::wxFrame
 
     void SetupMenuBar();
     void SetupMainLayout();
-    void PopulateSampleData();
+    void PopulateDuplicatesTree();
     void SetupImagePreview(const wxString& imagePath);
 
     wxTreeCtrl* m_treeCtrl;
