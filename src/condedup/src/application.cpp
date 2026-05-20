@@ -2,21 +2,21 @@
 // Created by sashko on 01.03.26.
 //
 
-#include "application.h"
-#include "buildinfo.h"
-#include "deduplib/duplicates_finder.h"
-#include "deleter_keep_policy.h"
-#include "duplicates_deleter.h"
-#include "reusablelib/time_helpers.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
 #include <Poco/Util/OptionSet.h>
+#include <application.h>
+#include <buildinfo.h>
+#include <deduplib/duplicates_finder.h>
+#include <deleter_keep_policy.h>
+#include <duplicates_deleter.h>
 #include <filesystem>
 #include <format>
 #include <iostream>
+#include <reusablelib/time_helpers.h>
 #include <string>
 
 namespace Deduplicator::Console
