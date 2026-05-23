@@ -108,15 +108,27 @@ void MainFrame::PopulateDuplicatesTree()
         Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
     });
 
+    Deduplicator::DuplicatesFinder df{_targetDirectory};
+    cfm = df.scan();
+
     // Add some sample items
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
 
     // Add text files
-    for (int i = 0; i < 5; i++)
+    for (const auto& [checksum, files] : cfm)
     {
-        wxString itemText = wxString::Format("File %d.txt", i);
-        m_treeCtrl->AppendItem(rootId, itemText);
+        if (files.empty())
+        {
+            continue;
+        }
+
+        wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
+        for (const auto& file : files)
+        {
+            m_treeCtrl->AppendItem(parent, file.absolutePath());
+        }
     }
+    m_treeCtrl->ExpandAll();
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)

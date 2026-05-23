@@ -1,6 +1,8 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
+#include <deduplib/files_map.h>
+#include <filesystem>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -10,6 +12,8 @@
 
 namespace Deduplicator::Ui
 {
+
+namespace fs = std::filesystem;
 
 class MainFrame : public ::wxFrame
 {
@@ -32,6 +36,9 @@ class MainFrame : public ::wxFrame
     wxStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
+
+    fs::path _targetDirectory{"/Users/sashko/Documents/testbedduplicates"};
+    Deduplicator::ChecksumFilesMap cfm;
 };
 
 } // namespace Deduplicator::Ui
