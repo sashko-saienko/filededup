@@ -3,6 +3,7 @@
 
 #include <deduplib/files_map.h>
 #include <filesystem>
+#include <unordered_set>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -39,6 +40,10 @@ class MainFrame : public ::wxFrame
 
     fs::path _targetDirectory{"/Users/sashko/Documents/testbedduplicates"};
     Deduplicator::ChecksumFilesMap cfm;
+
+    inline const static std::unordered_set<std::string> supportedImageExtensions{
+        ".bmp",  ".jpg",  ".jpeg", ".png", ".gif", ".pcx", ".pnm",
+        ".tiff", ".tgah", ".iff",  ".xpm", ".ico", ".cur", ".anih"};
 };
 
 } // namespace Deduplicator::Ui

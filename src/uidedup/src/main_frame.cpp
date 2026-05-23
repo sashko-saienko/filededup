@@ -3,8 +3,11 @@
 //
 #include <Poco/Logger.h>
 #include <deduplib/duplicates_finder.h>
+#include <format>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
+#include <string>
+#include <wx/filefn.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>
 #include <wx/layout.h>
@@ -122,6 +125,13 @@ void MainFrame::PopulateDuplicatesTree()
             continue;
         }
 
+        if (const fs::path p{files.front().absolutePath()};
+            !supportedImageExtensions.contains(p.extension().c_str()))
+        {
+            Logger::get(LOGGER_NAME)
+                .warning(std::format("{} file format is not supported", p.c_str()));
+        }
+
         wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
         for (const auto& file : files)
         {
@@ -148,11 +158,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     wxTreeItemId selectedItem = event.GetItem();
     wxString fileName = m_treeCtrl->GetItemText(selectedItem);
 
-    if (fileName.EndsWith(".png") || fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") ||
-        fileName.EndsWith(".bmp"))
-    {
-        SetupImagePreview(fileName);
-    }
+    SetupImagePreview(fileName);
 }
 
 void MainFrame::SetupImagePreview(const wxString& imagePath)
