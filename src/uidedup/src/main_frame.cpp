@@ -10,7 +10,6 @@
 #include <wx/filefn.h>
 #include <wx/gdicmn.h>
 #include <wx/image.h>
-#include <wx/layout.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -125,17 +124,17 @@ void MainFrame::PopulateDuplicatesTree()
             continue;
         }
 
-        if (const fs::path p{files.front().absolutePath()};
-            !supportedImageExtensions.contains(p.extension().c_str()))
+        if (const fs::path p{files.front().path()};
+            !supportedImageExtensions.contains(p.extension()))
         {
             Logger::get(LOGGER_NAME)
-                .warning(std::format("{} file format is not supported", p.c_str()));
+                .warning(std::format("{} file format is not supported", p.string()));
         }
 
         wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
         for (const auto& file : files)
         {
-            m_treeCtrl->AppendItem(parent, file.absolutePath());
+            m_treeCtrl->AppendItem(parent, file.path());
         }
     }
     m_treeCtrl->ExpandAll();
