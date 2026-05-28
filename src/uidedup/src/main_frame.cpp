@@ -110,8 +110,18 @@ void MainFrame::PopulateDuplicatesTree()
         Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
     });
 
-    Deduplicator::DuplicatesFinder df{_targetDirectory};
-    cfm = df.scan();
+    try
+    {
+        Deduplicator::DuplicatesFinder df{_targetDirectory};
+        cfm = df.scan();
+    }
+    catch (const std::exception& e)
+    {
+        const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
+                                     _targetDirectory.string(), e.what());
+        Logger::get(LOGGER_NAME).error(msg);
+        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
+    }
 
     // Add some sample items
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
