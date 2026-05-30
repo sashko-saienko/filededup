@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run uidedup",
+            "name": "uidedup (linux)",
             "request": "launch",
             "type": "cppdbg",
             "program": "${workspaceFolder}/build/src/uidedup/uidedup",
@@ -25,7 +25,7 @@
             "MIMode": "lldb"
         },
         {
-            "name": "Run condedup",
+            "name": "condedup (linux)",
             "request": "launch",
             "type": "cppdbg",
             "program": "${workspaceFolder}/build/src/condedup/condedup",
