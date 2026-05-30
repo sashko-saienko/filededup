@@ -13,6 +13,18 @@
             "externalConsole": false
         },
         {
+            "name": "uidedup (mac)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/src/uidedup/uidedup",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build uidedup",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
+        {
             "name": "Run condedup",
             "request": "launch",
             "type": "cppdbg",
@@ -22,6 +34,18 @@
             "preLaunchTask": "Build condedup",
             "stopAtEntry": false,
             "externalConsole": false,
+        },
+        {
+            "name": "condedup (mac)",
+            "request": "launch",
+            "type": "cppdbg",
+            "program": "${workspaceFolder}/build/src/condedup/condedup",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build condedup",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "lldb"
         }
     ]
 }
