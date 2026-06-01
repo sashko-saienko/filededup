@@ -22,6 +22,8 @@ class Application : public ::wxApp
     static void ConfigureLogging(const fs::path&);
 };
 
+wxDECLARE_APP(Application);
+
 } // namespace Deduplicator::Ui
 
 #endif // UIDEDUP_APPLICATION_H
