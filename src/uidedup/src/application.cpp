@@ -19,6 +19,7 @@ bool Application::OnInit()
 {
     fs::path props = fs::path{argv[0].ToStdString()}.parent_path() / "logging.properties";
     ConfigureLogging(props);
+    wxInitAllImageHandlers();
     auto* mainFrame = new MainFrame();
     mainFrame->Show();
     return true;
