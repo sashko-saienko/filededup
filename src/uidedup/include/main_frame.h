@@ -38,12 +38,8 @@ class MainFrame : public ::wxFrame
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 
-    fs::path _targetDirectory{"/Users/sashko/Documents/testbedduplicates"};
+    fs::path _targetDirectory{"/home/sashko/Documents/playground"};
     Deduplicator::ChecksumFilesMap cfm;
-
-    inline const static std::unordered_set<std::string> supportedImageExtensions{
-        ".bmp",  ".jpg",  ".jpeg", ".png", ".gif", ".pcx", ".pnm",
-        ".tiff", ".tgah", ".iff",  ".xpm", ".ico", ".cur", ".anih"};
 };
 
 } // namespace Deduplicator::Ui

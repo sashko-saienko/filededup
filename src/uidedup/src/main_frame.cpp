@@ -133,11 +133,10 @@ void MainFrame::PopulateDuplicatesTree()
             continue;
         }
 
-        if (const fs::path p{files.front().path()};
-            !supportedImageExtensions.contains(p.extension()))
+        if (auto& path = files.front().path(); wxImage::CanRead(path) == false)
         {
-            Logger::get(LOGGER_NAME)
-                .warning(std::format("{} file format is not supported", p.string()));
+            Logger::get(LOGGER_NAME).warning(std::format("{} file format is not supported", path));
+            continue;
         }
 
         wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
