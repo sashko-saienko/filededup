@@ -165,10 +165,10 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     wxTreeItemId selectedItem = event.GetItem();
     wxString fileName = m_treeCtrl->GetItemText(selectedItem);
 
-    SetupImagePreview(fileName);
+    previewImage(fileName);
 }
 
-void MainFrame::SetupImagePreview(const wxString& imagePath)
+void MainFrame::previewImage(const wxString& imagePath)
 {
     // Hide text control and show image control
     m_previewLabel->Show();

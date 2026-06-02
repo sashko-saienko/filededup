@@ -30,7 +30,7 @@ class MainFrame : public ::wxFrame
     void SetupMenuBar();
     void SetupMainLayout();
     void PopulateDuplicatesTree();
-    void SetupImagePreview(const wxString& imagePath);
+    void previewImage(const wxString& imagePath);
 
     wxTreeCtrl* m_treeCtrl;
     wxStaticText* m_previewLabel;
