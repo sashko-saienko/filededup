@@ -123,7 +123,6 @@ void MainFrame::PopulateDuplicatesTree()
         wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
     }
 
-    // Add some sample items
     wxTreeItemId rootId = m_treeCtrl->GetRootItem();
 
     // Add text files
@@ -177,18 +176,24 @@ void MainFrame::SetupImagePreview(const wxString& imagePath)
     m_previewImage->Hide();
 
     // Load and display the image
-    if (wxImage image; wxFileExists(imagePath) && image.LoadFile(imagePath))
+    if (wxFileExists(imagePath) == false)
     {
-        wxBitmap bitmap(image);
-        m_previewImage->SetBitmap(bitmap);
+        auto errorMessage = wxString::Format("Image file does not exist: %s", imagePath);
+        wxMessageBox(errorMessage, "Error finding image to open it for preview", wxOK | wxCENTER,
+                     this);
+        return;
     }
-    else
+
+    wxImage image;
+    if (image.LoadFile(imagePath) == false)
     {
-        auto errorMessage =
-            wxString::Format("Image file not found or not supported: %s", imagePath);
+        auto errorMessage = wxString::Format("Image file not supported: %s", imagePath);
         wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTER, this);
         return;
     }
+
+    wxBitmap bitmap(image);
+    m_previewImage->SetBitmap(bitmap);
 
     m_previewLabel->Hide();
     m_previewImage->Show();
