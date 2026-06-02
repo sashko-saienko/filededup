@@ -4,6 +4,7 @@
 #include <deduplib/files_map.h>
 #include <filesystem>
 #include <unordered_set>
+#include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -34,7 +35,7 @@ class MainFrame : public ::wxFrame
 
     wxTreeCtrl* m_treeCtrl;
     wxStaticText* m_previewLabel;
-    wxStaticBitmap* m_previewImage;
+    wxGenericStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 

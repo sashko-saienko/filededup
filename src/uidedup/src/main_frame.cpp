@@ -9,6 +9,7 @@
 #include <string>
 #include <wx/filefn.h>
 #include <wx/gdicmn.h>
+#include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
@@ -88,7 +89,8 @@ void MainFrame::SetupMainLayout()
     m_previewLabel =
         new wxStaticText(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
                          wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
-    m_previewImage = new wxStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
+    m_previewImage = new wxGenericStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
+    m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     m_previewImage->Hide();
 
     m_previewSizer->AddStretchSpacer();
@@ -192,6 +194,7 @@ void MainFrame::previewImage(const wxString& imagePath)
     }
 
     wxBitmap bitmap(image);
+    m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     m_previewImage->SetBitmap(bitmap);
 
     m_previewLabel->Hide();
