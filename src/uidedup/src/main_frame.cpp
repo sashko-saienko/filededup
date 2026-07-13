@@ -7,6 +7,8 @@
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
 #include <string>
+#include <wx/artprov.h>
+#include <wx/dirdlg.h>
 #include <wx/filefn.h>
 #include <wx/gdicmn.h>
 #include <wx/generic/statbmpg.h>
@@ -23,7 +25,8 @@ using Poco::Logger;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
-      m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr), m_previewSizer(nullptr)
+      m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
+      m_previewSizer(nullptr), m_toolBar(nullptr)
 {
     // Initialize all UI components
     Initialize();
@@ -32,6 +35,7 @@ MainFrame::MainFrame()
 void MainFrame::Initialize()
 {
     SetupMenuBar();
+    SetupToolBar();
     SetupMainLayout();
     PopulateDuplicatesTree();
 
@@ -41,6 +45,7 @@ void MainFrame::Initialize()
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
+    Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDERTLBR);
 }
 
 void MainFrame::SetupMenuBar()
@@ -57,6 +62,19 @@ void MainFrame::SetupMenuBar()
     menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
+}
+
+void MainFrame::SetupToolBar()
+{
+    m_toolBar = CreateToolBar(wxTB_HORIZONTAL | wxNO_BORDER);
+
+    // Add folder selection tool
+    wxBitmap folderBitmap =
+        wxArtProvider::GetBitmap(wxART_FOLDER_OPEN, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_SELECTFOLDERTLBR, "Select Folder", folderBitmap,
+                       "Select target folder for deduplication");
+
+    m_toolBar->Realize();
 }
 
 void MainFrame::SetupMainLayout()
@@ -159,6 +177,21 @@ void MainFrame::OnAbout(::wxCommandEvent& _)
 {
     wxMessageBox("File Deduplicator\nwxWidgets application for file deduplication",
                  "About File Deduplicator", wxOK | wxICON_INFORMATION);
+}
+
+void MainFrame::OnSelectFolder(::wxCommandEvent& event)
+{
+    wxDirDialog dialog(this, "Select target directory for deduplication", _targetDirectory.string(),
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+    if (dialog.ShowModal() == wxID_OK)
+    {
+        _targetDirectory = dialog.GetPath().ToStdString();
+
+        // Clear the tree and repopulate with new directory contents
+        m_treeCtrl->DeleteAllItems();
+        PopulateDuplicatesTree();
+    }
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)

@@ -17,6 +17,11 @@ namespace Deduplicator::Ui
 
 namespace fs = std::filesystem;
 
+enum
+{
+    ID_SELECTFOLDERTLBR = wxID_HIGHEST + 1
+};
+
 class MainFrame : public ::wxFrame
 {
   public:
@@ -27,13 +32,16 @@ class MainFrame : public ::wxFrame
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
     void OnItemSelected(::wxTreeEvent& event);
+    void OnSelectFolder(wxCommandEvent& event);
 
     void SetupMenuBar();
+    void SetupToolBar();
     void SetupMainLayout();
     void PopulateDuplicatesTree();
     void previewImage(const wxString& imagePath);
 
     wxTreeCtrl* m_treeCtrl;
+    wxToolBar* m_toolBar;
     wxStaticText* m_previewLabel;
     wxGenericStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
