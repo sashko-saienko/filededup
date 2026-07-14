@@ -128,7 +128,7 @@ void MainFrame::SearchDuplicates()
         return;
     }
 
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetDirectory(_targetDirectory.value()))
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetFolder(_targetDirectory.value()))
     {
         SetDuplicatesTree(rootId);
         m_treeCtrl->ExpandAll();
@@ -163,7 +163,7 @@ void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
     }
 }
 
-bool MainFrame::EnumerateTargetDirectory(const std::string& targetDirectory)
+bool MainFrame::EnumerateTargetFolder(const std::string& targetFolder)
 {
     using ReusableLib::ObservableStopwatch;
 
@@ -173,13 +173,13 @@ bool MainFrame::EnumerateTargetDirectory(const std::string& targetDirectory)
 
     try
     {
-        Deduplicator::DuplicatesFinder df{targetDirectory};
+        Deduplicator::DuplicatesFinder df{targetFolder};
         cfm = df.scan();
     }
     catch (const std::exception& e)
     {
         const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
-                                     targetDirectory, e.what());
+                                     targetFolder, e.what());
         Logger::get(LOGGER_NAME).error(msg);
         wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
     }
@@ -200,7 +200,7 @@ void MainFrame::OnAbout(::wxCommandEvent& _)
 
 void MainFrame::OnSelectFolder(::wxCommandEvent& event)
 {
-    wxDirDialog dialog(this, "Select target directory for deduplication", _targetDirectory.string(),
+    wxDirDialog dialog(this, "Select target directory for deduplication", ::wxGetUserHome(),
                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
     if (dialog.ShowModal() == wxID_OK)
