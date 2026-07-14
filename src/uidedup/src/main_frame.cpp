@@ -123,26 +123,9 @@ void MainFrame::SetupMainLayout()
 
 void MainFrame::FindDuplicates()
 {
-    using ReusableLib::ObservableStopwatch;
+    EnumerateTargetDirectory();
 
     wxTreeItemId rootId = SetupOrCleanupRootElement();
-
-    ObservableStopwatch sw([&](const long seconds) {
-        Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
-    });
-
-    try
-    {
-        Deduplicator::DuplicatesFinder df{_targetDirectory};
-        cfm = df.scan();
-    }
-    catch (const std::exception& e)
-    {
-        const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
-                                     _targetDirectory.string(), e.what());
-        Logger::get(LOGGER_NAME).error(msg);
-        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
-    }
 
     // Add text files
     for (const auto& [checksum, files] : cfm)
@@ -165,6 +148,30 @@ void MainFrame::FindDuplicates()
         }
     }
     m_treeCtrl->ExpandAll();
+}
+
+bool MainFrame::EnumerateTargetDirectory()
+{
+    using ReusableLib::ObservableStopwatch;
+
+    ObservableStopwatch sw([&](const long seconds) {
+        Logger::get(LOGGER_NAME).information("Completed duplicates search in %ld(s)", seconds);
+    });
+
+    try
+    {
+        Deduplicator::DuplicatesFinder df{_targetDirectory};
+        cfm = df.scan();
+    }
+    catch (const std::exception& e)
+    {
+        const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
+                                     _targetDirectory.string(), e.what());
+        Logger::get(LOGGER_NAME).error(msg);
+        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
+    }
+
+    return cfm.size() > 0;
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
