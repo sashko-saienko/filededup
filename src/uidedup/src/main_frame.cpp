@@ -123,11 +123,15 @@ void MainFrame::SetupMainLayout()
 
 void MainFrame::FindDuplicates()
 {
-    EnumerateTargetDirectory();
-
-    wxTreeItemId rootId = SetupOrCleanupRootElement();
-    SetDuplicatesTree(rootId);
-    m_treeCtrl->ExpandAll();
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetDirectory())
+    {
+        SetDuplicatesTree(rootId);
+        m_treeCtrl->ExpandAll();
+    }
+    else
+    {
+        SetStatusText("No duplicates has been found in the selected target folder.");
+    }
 }
 
 void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
@@ -278,7 +282,7 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        rootId = m_treeCtrl->AddRoot("Checksum duplicates");
+        rootId = m_treeCtrl->AddRoot(_targetDirectory.c_str());
     }
     return rootId;
 }
