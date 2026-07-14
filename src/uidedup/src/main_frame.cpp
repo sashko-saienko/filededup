@@ -125,18 +125,7 @@ void MainFrame::PopulateDuplicatesTree(bool resetRoot)
 {
     using ReusableLib::ObservableStopwatch;
 
-    wxTreeItemId rootId;
-
-    // Delete all children but preserve the root item
-    rootId = m_treeCtrl->GetRootItem();
-    if (rootId.IsOk())
-    {
-        m_treeCtrl->DeleteChildren(rootId);
-    }
-    else
-    {
-        rootId = m_treeCtrl->AddRoot("Checksum duplicates");
-    }
+    wxTreeItemId rootId = SetupOrCleanupRootElement();
 
     ObservableStopwatch sw([&](const long seconds) {
         Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
@@ -266,6 +255,21 @@ void MainFrame::previewImage(const wxString& imagePath)
     SetStatusText(wxString::Format("Previewing: %s", imagePath));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
+}
+
+wxTreeItemId MainFrame::SetupOrCleanupRootElement()
+{
+    // Delete all children but preserve the root item
+    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
+    if (rootId.IsOk())
+    {
+        m_treeCtrl->DeleteChildren(rootId);
+    }
+    else
+    {
+        rootId = m_treeCtrl->AddRoot("Checksum duplicates");
+    }
+    return rootId;
 }
 
 } // namespace Deduplicator::Ui

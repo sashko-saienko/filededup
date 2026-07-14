@@ -42,6 +42,7 @@ class MainFrame : public ::wxFrame
     void PopulateDuplicatesTree(bool resetRoot = false);
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
+    wxTreeItemId SetupOrCleanupRootElement();
 
     wxTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
