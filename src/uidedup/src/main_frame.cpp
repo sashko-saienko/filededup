@@ -40,7 +40,7 @@ void MainFrame::Initialize()
     PopulateDuplicatesTree(false);
 
     CreateStatusBar();
-    SetStatusText("Select an item from the list to preview it.");
+    SetStatusText("Start by selecting a folder where to serch duplicates for.");
 
     // Bind events
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
@@ -221,7 +221,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     }
     else
     {
-        SetStatusText("Please select an image file to preview.");
+        SetStatusText("Click on an image file to preview it.");
     }
 }
 
