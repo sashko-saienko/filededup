@@ -195,9 +195,29 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
     // Update the preview panel based on the selected item from the tree
     wxTreeItemId selectedItem = event.GetItem();
-    wxString fileName = m_treeCtrl->GetItemText(selectedItem);
+    wxString itemText = m_treeCtrl->GetItemText(selectedItem);
 
-    previewImage(fileName);
+    // Only allow preview for actual file items (not root or checksum items)
+    if (IsFileItem(selectedItem))
+    {
+        previewImage(itemText);
+    }
+    else
+    {
+        SetStatusText("Please select an image file to preview.");
+    }
+}
+
+bool MainFrame::IsFileItem(const wxTreeItemId& item) const
+{
+    // A file item is not the root and has no children (leaf node)
+    if (!item.IsOk() || item == m_treeCtrl->GetRootItem())
+    {
+        return false;
+    }
+
+    // Check if this item has children - if it does, it's a checksum group
+    return !m_treeCtrl->ItemHasChildren(item);
 }
 
 void MainFrame::previewImage(const wxString& imagePath)
