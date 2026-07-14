@@ -19,7 +19,8 @@ namespace fs = std::filesystem;
 
 enum
 {
-    ID_SELECTFOLDERTLBR = wxID_HIGHEST + 1
+    ID_SELECTFOLDERTLBR = wxID_HIGHEST + 1,
+    ID_REFRESHTLBR = wxID_HIGHEST + 2
 };
 
 class MainFrame : public ::wxFrame
@@ -33,11 +34,12 @@ class MainFrame : public ::wxFrame
     void OnAbout(::wxCommandEvent& event);
     void OnItemSelected(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
+    void OnRefresh(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();
     void SetupMainLayout();
-    void PopulateDuplicatesTree();
+    void PopulateDuplicatesTree(bool resetRoot = false);
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
 

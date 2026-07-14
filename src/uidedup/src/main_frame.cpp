@@ -37,7 +37,7 @@ void MainFrame::Initialize()
     SetupMenuBar();
     SetupToolBar();
     SetupMainLayout();
-    PopulateDuplicatesTree();
+    PopulateDuplicatesTree(false);
 
     CreateStatusBar();
     SetStatusText("Select an item from the list to preview it.");
@@ -47,6 +47,7 @@ void MainFrame::Initialize()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDERTLBR);
+    Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESHTLBR);
 }
 
 void MainFrame::SetupMenuBar()
@@ -75,6 +76,10 @@ void MainFrame::SetupToolBar()
     m_toolBar->AddTool(ID_SELECTFOLDERTLBR, "Select Folder", folderBitmap,
                        "Select target folder for deduplication");
 
+    // Add refresh tool
+    wxBitmap refreshBitmap = wxArtProvider::GetBitmap(wxART_REFRESH, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_REFRESHTLBR, "Refresh", refreshBitmap, "Refresh duplicates list");
+
     m_toolBar->Realize();
 }
 
@@ -91,9 +96,6 @@ void MainFrame::SetupMainLayout()
 
     m_treeCtrl = new wxTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                 wxTR_DEFAULT_STYLE | wxTR_SINGLE);
-
-    // Add root item
-    wxTreeItemId rootId = m_treeCtrl->AddRoot("Checksum duplicates");
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
@@ -119,9 +121,22 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-void MainFrame::PopulateDuplicatesTree()
+void MainFrame::PopulateDuplicatesTree(bool resetRoot)
 {
     using ReusableLib::ObservableStopwatch;
+
+    wxTreeItemId rootId;
+
+    // Delete all children but preserve the root item
+    rootId = m_treeCtrl->GetRootItem();
+    if (rootId.IsOk())
+    {
+        m_treeCtrl->DeleteChildren(rootId);
+    }
+    else
+    {
+        rootId = m_treeCtrl->AddRoot("Checksum duplicates");
+    }
 
     ObservableStopwatch sw([&](const long seconds) {
         Logger::get(LOGGER_NAME).information("Completed duplicates seach in %ld(s)", seconds);
@@ -139,8 +154,6 @@ void MainFrame::PopulateDuplicatesTree()
         Logger::get(LOGGER_NAME).error(msg);
         wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
     }
-
-    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
 
     // Add text files
     for (const auto& [checksum, files] : cfm)
@@ -186,9 +199,13 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
         _targetDirectory = dialog.GetPath().ToStdString();
 
         // Clear the tree and repopulate with new directory contents
-        m_treeCtrl->DeleteAllItems();
-        PopulateDuplicatesTree();
+        PopulateDuplicatesTree(true);
     }
+}
+
+void MainFrame::OnRefresh(::wxCommandEvent& event)
+{
+    PopulateDuplicatesTree(true);
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
