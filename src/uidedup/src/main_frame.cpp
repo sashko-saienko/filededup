@@ -126,7 +126,12 @@ void MainFrame::FindDuplicates()
     EnumerateTargetDirectory();
 
     wxTreeItemId rootId = SetupOrCleanupRootElement();
+    SetDuplicatesTree(rootId);
+    m_treeCtrl->ExpandAll();
+}
 
+void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
+{
     // Add text files
     for (const auto& [checksum, files] : cfm)
     {
@@ -147,7 +152,6 @@ void MainFrame::FindDuplicates()
             m_treeCtrl->AppendItem(parent, file.path());
         }
     }
-    m_treeCtrl->ExpandAll();
 }
 
 bool MainFrame::EnumerateTargetDirectory()

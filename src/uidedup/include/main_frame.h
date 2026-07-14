@@ -41,6 +41,7 @@ class MainFrame : public ::wxFrame
     void SetupMainLayout();
     void FindDuplicates();
     bool EnumerateTargetDirectory();
+    void SetDuplicatesTree(const wxTreeItemId& rootId);
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
     wxTreeItemId SetupOrCleanupRootElement();
