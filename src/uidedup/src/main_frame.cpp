@@ -122,13 +122,13 @@ void MainFrame::SetupMainLayout()
 
 void MainFrame::SearchDuplicates()
 {
-    if (_targetDirectory.has_value() != true)
+    if (_targetFolder.has_value() != true)
     {
         wxMessageBox("Error searching for duplicates", "Target folder is not set.", wxOK | wxICON_ERROR);
         return;
     }
 
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetFolder(_targetDirectory.value()))
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetFolder(_targetFolder.value()))
     {
         SetDuplicatesTree(rootId);
         m_treeCtrl->ExpandAll();
@@ -205,7 +205,7 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
 
     if (dialog.ShowModal() == wxID_OK)
     {
-        _targetDirectory = dialog.GetPath().ToStdString();
+        _targetFolder = dialog.GetPath().ToStdString();
         SearchDuplicates();
     }
 }
@@ -285,7 +285,7 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        rootId = m_treeCtrl->AddRoot(_targetDirectory.c_str());
+        rootId = m_treeCtrl->AddRoot(_targetFolder.c_str());
     }
     return rootId;
 }

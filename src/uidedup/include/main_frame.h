@@ -53,7 +53,7 @@ class MainFrame : public ::wxFrame
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 
-    std::optional<fs::path> _targetDirectory;
+    std::optional<fs::path> _targetFolder;
     Deduplicator::ChecksumFilesMap cfm;
 };
 
