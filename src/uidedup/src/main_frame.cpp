@@ -37,7 +37,7 @@ void MainFrame::Initialize()
     SetupMenuBar();
     SetupToolBar();
     SetupMainLayout();
-    PopulateDuplicatesTree();
+    FindDuplicates();
 
     CreateStatusBar();
     SetStatusText("Start by selecting a folder where to serch duplicates for.");
@@ -121,7 +121,7 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-void MainFrame::PopulateDuplicatesTree()
+void MainFrame::FindDuplicates()
 {
     using ReusableLib::ObservableStopwatch;
 
@@ -188,13 +188,13 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
         _targetDirectory = dialog.GetPath().ToStdString();
 
         // Clear the tree and repopulate with new directory contents
-        PopulateDuplicatesTree();
+        FindDuplicates();
     }
 }
 
 void MainFrame::OnRefresh(::wxCommandEvent& event)
 {
-    PopulateDuplicatesTree();
+    FindDuplicates();
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
