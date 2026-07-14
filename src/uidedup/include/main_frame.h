@@ -42,7 +42,6 @@ class MainFrame : public ::wxFrame
 
     wxTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
-    wxStaticText* m_previewLabel;
     wxGenericStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;

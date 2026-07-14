@@ -40,6 +40,7 @@ void MainFrame::Initialize()
     PopulateDuplicatesTree();
 
     CreateStatusBar();
+    SetStatusText("Select an item from the list to preview it.");
 
     // Bind events
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
@@ -104,15 +105,11 @@ void MainFrame::SetupMainLayout()
     // Split the window
     splitter->SplitVertically(leftPanel, m_previewPanel, 300);
 
-    m_previewLabel =
-        new wxStaticText(m_previewPanel, wxID_ANY, "Select an item from the list to preview it.",
-                         wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
     m_previewImage = new wxGenericStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
     m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     m_previewImage->Hide();
 
     m_previewSizer->AddStretchSpacer();
-    m_previewSizer->Add(m_previewLabel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
     m_previewSizer->Add(m_previewImage, 1, wxEXPAND | wxALL | wxCENTER, 5);
     m_previewSizer->AddStretchSpacer();
 
@@ -205,14 +202,11 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::previewImage(const wxString& imagePath)
 {
-    // Hide text control and show image control
-    m_previewLabel->Show();
-    m_previewImage->Hide();
-
     // Load and display the image
     if (wxFileExists(imagePath) == false)
     {
         auto errorMessage = wxString::Format("Image file does not exist: %s", imagePath);
+        SetStatusText(errorMessage);
         wxMessageBox(errorMessage, "Error finding image to open it for preview", wxOK | wxCENTER,
                      this);
         return;
@@ -222,6 +216,7 @@ void MainFrame::previewImage(const wxString& imagePath)
     if (image.LoadFile(imagePath) == false)
     {
         auto errorMessage = wxString::Format("Image file not supported: %s", imagePath);
+        SetStatusText(errorMessage);
         wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTER, this);
         return;
     }
@@ -229,10 +224,9 @@ void MainFrame::previewImage(const wxString& imagePath)
     wxBitmap bitmap(image);
     m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     m_previewImage->SetBitmap(bitmap);
-
-    m_previewLabel->Hide();
     m_previewImage->Show();
 
+    SetStatusText(wxString::Format("Previewing: %s", imagePath));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
 }
