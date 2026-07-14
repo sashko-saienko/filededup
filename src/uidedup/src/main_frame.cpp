@@ -130,7 +130,7 @@ void MainFrame::FindDuplicates()
     }
     else
     {
-        SetStatusText("No duplicates has been found in the selected target folder.");
+        SetStatusText("No duplicates have been found in the selected target folder.");
     }
 }
 
