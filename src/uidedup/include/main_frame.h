@@ -4,6 +4,7 @@
 #include <deduplib/files_map.h>
 #include <filesystem>
 #include <unordered_set>
+#include <optional>
 #include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
@@ -40,7 +41,7 @@ class MainFrame : public ::wxFrame
     void SetupToolBar();
     void SetupMainLayout();
     void FindDuplicates();
-    bool EnumerateTargetDirectory();
+    bool EnumerateTargetDirectory(const std::string& targetDirectory);
     void SetDuplicatesTree(const wxTreeItemId& rootId);
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
@@ -52,7 +53,7 @@ class MainFrame : public ::wxFrame
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 
-    fs::path _targetDirectory{"/home/sashko/Documents/playground"};
+    std::optional<fs::path> _targetDirectory;
     Deduplicator::ChecksumFilesMap cfm;
 };
 

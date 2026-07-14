@@ -37,7 +37,6 @@ void MainFrame::Initialize()
     SetupMenuBar();
     SetupToolBar();
     SetupMainLayout();
-    FindDuplicates();
 
     CreateStatusBar();
     SetStatusText("Start by selecting a folder where to serch duplicates for.");
@@ -123,7 +122,13 @@ void MainFrame::SetupMainLayout()
 
 void MainFrame::FindDuplicates()
 {
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetDirectory())
+    if (_targetDirectory.has_value() != true)
+    {
+        wxMessageBox("Error searching for duplicates", "Target directory is not set.", wxOK | wxICON_ERROR);
+        return;
+    }
+
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetDirectory(_targetDirectory.value()))
     {
         SetDuplicatesTree(rootId);
         m_treeCtrl->ExpandAll();
@@ -158,7 +163,7 @@ void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
     }
 }
 
-bool MainFrame::EnumerateTargetDirectory()
+bool MainFrame::EnumerateTargetDirectory(const std::string& targetDirectory)
 {
     using ReusableLib::ObservableStopwatch;
 
@@ -168,13 +173,13 @@ bool MainFrame::EnumerateTargetDirectory()
 
     try
     {
-        Deduplicator::DuplicatesFinder df{_targetDirectory};
+        Deduplicator::DuplicatesFinder df{targetDirectory};
         cfm = df.scan();
     }
     catch (const std::exception& e)
     {
         const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
-                                     _targetDirectory.string(), e.what());
+                                     targetDirectory, e.what());
         Logger::get(LOGGER_NAME).error(msg);
         wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
     }
@@ -201,8 +206,6 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     if (dialog.ShowModal() == wxID_OK)
     {
         _targetDirectory = dialog.GetPath().ToStdString();
-
-        // Clear the tree and repopulate with new directory contents
         FindDuplicates();
     }
 }
