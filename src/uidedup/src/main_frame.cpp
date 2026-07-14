@@ -3,6 +3,7 @@
 //
 #include <Poco/Logger.h>
 #include <deduplib/duplicates_finder.h>
+#include <filesystem>
 #include <format>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
@@ -22,6 +23,7 @@
 namespace Deduplicator::Ui
 {
 using Poco::Logger;
+namespace fs = std::filesystem;
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
@@ -124,11 +126,13 @@ void MainFrame::SearchDuplicates()
 {
     if (_targetFolder.has_value() != true)
     {
-        wxMessageBox("Error searching for duplicates", "Target folder is not set.", wxOK | wxICON_ERROR);
+        wxMessageBox("Error searching for duplicates", "Target folder is not set.",
+                     wxOK | wxICON_ERROR);
         return;
     }
 
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetFolder(_targetFolder.value()))
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement();
+        EnumerateTargetFolder(_targetFolder.value()))
     {
         SetDuplicatesTree(rootId);
         m_treeCtrl->ExpandAll();
@@ -285,7 +289,9 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        rootId = m_treeCtrl->AddRoot(_targetFolder.c_str());
+        auto homePath = fs::path{::wxGetUserHome().ToStdString()};
+        auto relativePath = fs::relative(_targetFolder.value(), homePath);
+        rootId = m_treeCtrl->AddRoot(relativePath.c_str());
     }
     return rootId;
 }
