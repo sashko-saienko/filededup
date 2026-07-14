@@ -120,11 +120,11 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-void MainFrame::FindDuplicates()
+void MainFrame::SearchDuplicates()
 {
     if (_targetDirectory.has_value() != true)
     {
-        wxMessageBox("Error searching for duplicates", "Target directory is not set.", wxOK | wxICON_ERROR);
+        wxMessageBox("Error searching for duplicates", "Target folder is not set.", wxOK | wxICON_ERROR);
         return;
     }
 
@@ -206,13 +206,13 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     if (dialog.ShowModal() == wxID_OK)
     {
         _targetDirectory = dialog.GetPath().ToStdString();
-        FindDuplicates();
+        SearchDuplicates();
     }
 }
 
 void MainFrame::OnRefresh(::wxCommandEvent& event)
 {
-    FindDuplicates();
+    SearchDuplicates();
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
