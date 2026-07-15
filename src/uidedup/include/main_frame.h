@@ -45,7 +45,7 @@ class MainFrame : public ::wxFrame
     void SetDuplicatesTree(const wxTreeItemId& rootId);
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
-    std::string BuildRelativePath(const std::string& targetFolder) const;
+    std::string BuildRelativePath() const;
     wxTreeItemId SetupOrCleanupRootElement();
 
     wxTreeCtrl* m_treeCtrl;
