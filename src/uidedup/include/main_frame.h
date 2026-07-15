@@ -3,8 +3,8 @@
 
 #include <deduplib/files_map.h>
 #include <filesystem>
-#include <optional>
 #include <unordered_set>
+#include <optional>
 #include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
