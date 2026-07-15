@@ -279,13 +279,6 @@ void MainFrame::previewImage(const wxString& imagePath)
     m_previewPanel->Refresh();
 }
 
-std::string MainFrame::BuildRelativePath() const
-{
-    auto homePath = fs::path{::wxGetUserHome().ToStdString()};
-    auto relativePath = fs::relative(_targetFolder.value(), homePath);
-    return relativePath.string();
-}
-
 wxTreeItemId MainFrame::SetupOrCleanupRootElement()
 {
     // Delete all children but preserve the root item
@@ -296,7 +289,8 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        std::string relativePath = BuildRelativePath();
+        auto homePath = fs::path{::wxGetUserHome().ToStdString()};
+        auto relativePath = fs::relative(_targetFolder.value(), homePath);
         rootId = m_treeCtrl->AddRoot(relativePath.c_str());
     }
     return rootId;
