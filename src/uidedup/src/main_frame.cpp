@@ -162,7 +162,8 @@ void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
         wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
         for (const auto& file : files)
         {
-            m_treeCtrl->AppendItem(parent, file.path());
+            auto relativeFilePath = BuildRelativePath(file.path());
+            m_treeCtrl->AppendItem(parent, relativeFilePath);
         }
     }
 }
@@ -279,10 +280,10 @@ void MainFrame::previewImage(const wxString& imagePath)
     m_previewPanel->Refresh();
 }
 
-std::string MainFrame::BuildRelativePath() const
+std::string MainFrame::BuildRelativePath(const std::string& targetFolder) const
 {
     auto homePath = fs::path{::wxGetUserHome().ToStdString()};
-    auto relativePath = fs::relative(_targetFolder.value(), homePath);
+    auto relativePath = fs::relative(targetFolder, homePath);
     return relativePath.string();
 }
 
@@ -296,7 +297,7 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        std::string relativePath = BuildRelativePath();
+        std::string relativePath = BuildRelativePath(_targetFolder.value());
         rootId = m_treeCtrl->AddRoot(relativePath.c_str());
     }
     return rootId;
