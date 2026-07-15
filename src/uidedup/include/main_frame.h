@@ -46,6 +46,7 @@ class MainFrame : public ::wxFrame
     void previewImage(const wxString& imagePath);
     bool IsFileItem(const wxTreeItemId& item) const;
     wxTreeItemId SetupOrCleanupRootElement();
+    void UpdateRefreshButtonState();
 
     wxTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;

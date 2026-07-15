@@ -47,6 +47,8 @@ void MainFrame::Initialize()
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDERTLBR);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESHTLBR);
+
+    UpdateRefreshButtonState();
 }
 
 void MainFrame::SetupMenuBar()
@@ -206,6 +208,7 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     if (dialog.ShowModal() == wxID_OK)
     {
         _targetFolder = dialog.GetPath().ToStdString();
+        UpdateRefreshButtonState();
         SearchDuplicates();
     }
 }
@@ -288,6 +291,15 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
         rootId = m_treeCtrl->AddRoot(_targetFolder.c_str());
     }
     return rootId;
+}
+
+void MainFrame::UpdateRefreshButtonState()
+{
+    if (m_toolBar)
+    {
+        bool enableRefresh = _targetFolder.has_value();
+        m_toolBar->EnableTool(ID_REFRESHTLBR, enableRefresh);
+    }
 }
 
 } // namespace Deduplicator::Ui
