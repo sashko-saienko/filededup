@@ -288,7 +288,7 @@ wxTreeItemId MainFrame::SetupOrCleanupRootElement()
     }
     else
     {
-        rootId = m_treeCtrl->AddRoot(_targetFolder.c_str());
+        rootId = m_treeCtrl->AddRoot(_targetFolder.value().c_str());
     }
     return rootId;
 }
