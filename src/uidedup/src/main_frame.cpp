@@ -126,11 +126,13 @@ void MainFrame::SearchDuplicates()
 {
     if (_targetFolder.has_value() != true)
     {
-        wxMessageBox("Error searching for duplicates", "Target folder is not set.", wxOK | wxICON_ERROR);
+        wxMessageBox("Error searching for duplicates", "Target folder is not set.",
+                     wxOK | wxICON_ERROR);
         return;
     }
 
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement(); EnumerateTargetFolder(_targetFolder.value()))
+    if (wxTreeItemId rootId = SetupOrCleanupRootElement();
+        EnumerateTargetFolder(_targetFolder.value()))
     {
         SetDuplicatesTree(rootId);
         m_treeCtrl->ExpandAll();
