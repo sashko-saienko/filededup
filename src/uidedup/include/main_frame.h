@@ -34,6 +34,7 @@ class MainFrame : public ::wxFrame
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
     void OnItemSelected(::wxTreeEvent& event);
+    void OnItemActivated(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
 
@@ -53,6 +54,10 @@ class MainFrame : public ::wxFrame
     wxGenericStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
+
+    // Checkbox image indices within image list
+    int m_uncheckedImg = -1;
+    int m_checkedImg = -1;
 
     std::optional<fs::path> _targetFolder;
     Deduplicator::ChecksumFilesMap cfm;

@@ -45,6 +45,7 @@ void MainFrame::Initialize()
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
+    Bind(wxEVT_TREE_ITEM_ACTIVATED, &MainFrame::OnItemActivated, this);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDERTLBR);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESHTLBR);
 
@@ -96,7 +97,38 @@ void MainFrame::SetupMainLayout()
     leftPanel->SetSizer(leftSizer);
 
     m_treeCtrl = new wxTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxTR_DEFAULT_STYLE | wxTR_SINGLE);
+                                wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
+
+    // Create image list for checkboxes
+    wxImageList* imageList = new wxImageList(16, 16);
+
+    wxString resourcePath = wxString::Format("%s/src/uidedup/resources/", wxGetCwd().c_str());
+
+    wxImage uncheckedImg;
+    if (uncheckedImg.LoadFile(resourcePath + "unchecked.png", wxBITMAP_TYPE_PNG))
+    {
+        wxBitmap uncheckedBmp(uncheckedImg);
+        m_uncheckedImg = imageList->Add(uncheckedBmp);
+    } 
+    else 
+    {
+        Logger::get(LOGGER_NAME).fatal("Could not load resource.");
+        Close(true);
+    }
+ 
+    wxImage checkedImg;
+    if (checkedImg.LoadFile(resourcePath + "checked.png", wxBITMAP_TYPE_PNG))
+    {
+        wxBitmap checkedBmp(checkedImg);
+        m_checkedImg = imageList->Add(checkedBmp);
+    }
+    else 
+    {
+        Logger::get(LOGGER_NAME).fatal("Could not load resource.");
+        Close(true);
+    }
+
+    m_treeCtrl->AssignImageList(imageList);
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
@@ -162,7 +194,7 @@ void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
         wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
         for (const auto& file : files)
         {
-            m_treeCtrl->AppendItem(parent, file.path());
+            wxTreeItemId fileItem = m_treeCtrl->AppendItem(parent, file.path(), m_uncheckedImg);
         }
     }
 }
@@ -234,6 +266,27 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     else
     {
         SetStatusText("Click on an image file to preview it.");
+    }
+}
+
+void MainFrame::OnItemActivated(::wxTreeEvent& event)
+{
+    wxTreeItemId clickedOnItem = event.GetItem();
+    wxString itemText = m_treeCtrl->GetItemText(clickedOnItem);
+
+    if (IsFileItem(clickedOnItem))
+    {
+        int currentImage = m_treeCtrl->GetItemImage(clickedOnItem);
+        if (currentImage == m_checkedImg)
+        {
+            m_treeCtrl->SetItemImage(clickedOnItem, m_uncheckedImg);
+            SetStatusText(wxString::Format("%s unchecked", itemText));
+        }
+        else
+        {
+            m_treeCtrl->SetItemImage(clickedOnItem, m_checkedImg);
+            SetStatusText(wxString::Format("%s checked", itemText));
+        }
     }
 }
 
