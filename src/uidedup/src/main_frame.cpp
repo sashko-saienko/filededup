@@ -44,9 +44,10 @@ void MainFrame::Initialize()
     // Bind events
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
     Bind(wxEVT_TREE_ITEM_ACTIVATED, &MainFrame::OnItemActivated, this);
-    Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER_TLBR);
+    Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH_TLBR);
 
     UpdateRefreshButtonState();
@@ -55,6 +56,8 @@ void MainFrame::Initialize()
 void MainFrame::SetupMenuBar()
 {
     ::wxMenu* menuFile = new ::wxMenu();
+    menuFile->Append(ID_SELECTFOLDER, "&Select Folder\tCtrl-O",
+                     "Select target folder for deduplication");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -75,7 +78,7 @@ void MainFrame::SetupToolBar()
     // Add folder selection tool
     wxBitmap folderBitmap =
         wxArtProvider::GetBitmap(wxART_FOLDER_OPEN, wxART_TOOLBAR, wxSize(16, 16));
-    m_toolBar->AddTool(ID_SELECTFOLDER_TLBR, "Select Folder", folderBitmap,
+    m_toolBar->AddTool(ID_SELECTFOLDER, "Select Folder", folderBitmap,
                        "Select target folder for deduplication");
 
     // Add refresh tool
