@@ -163,7 +163,7 @@ void MainFrame::SearchDuplicates()
 {
     if (_targetFolder.has_value() != true)
     {
-        wxMessageBox("Error searching for duplicates", "Target folder is not set.",
+        wxMessageBox("Target folder is not set.", "Error searching for duplicates",
                      wxOK | wxICON_ERROR);
         return;
     }
