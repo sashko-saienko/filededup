@@ -45,10 +45,11 @@ void MainFrame::Initialize()
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
+    Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
     Bind(wxEVT_TREE_ITEM_ACTIVATED, &MainFrame::OnItemActivated, this);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
-    Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH_TLBR);
+    Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
 
     UpdateRefreshButtonState();
 }
@@ -58,6 +59,7 @@ void MainFrame::SetupMenuBar()
     ::wxMenu* menuFile = new ::wxMenu();
     menuFile->Append(ID_SELECTFOLDER, "&Select Folder\tCtrl-O",
                      "Select target folder for deduplication");
+    menuFile->Append(ID_REFRESH, "&Refresh\tF5", "Refresh duplicates list");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -83,7 +85,7 @@ void MainFrame::SetupToolBar()
 
     // Add refresh tool
     wxBitmap refreshBitmap = wxArtProvider::GetBitmap(wxART_REFRESH, wxART_TOOLBAR, wxSize(16, 16));
-    m_toolBar->AddTool(ID_REFRESH_TLBR, "Refresh", refreshBitmap, "Refresh duplicates list");
+    m_toolBar->AddTool(ID_REFRESH, "Refresh", refreshBitmap, "Refresh duplicates list");
 
     m_toolBar->Realize();
 }
@@ -356,7 +358,7 @@ void MainFrame::UpdateRefreshButtonState()
     if (m_toolBar)
     {
         bool enableRefresh = _targetFolder.has_value();
-        m_toolBar->EnableTool(ID_REFRESH_TLBR, enableRefresh);
+        m_toolBar->EnableTool(ID_REFRESH, enableRefresh);
     }
 }
 
