@@ -109,20 +109,20 @@ void MainFrame::SetupMainLayout()
     {
         wxBitmap uncheckedBmp(uncheckedImg);
         m_uncheckedImg = imageList->Add(uncheckedBmp);
-    } 
-    else 
+    }
+    else
     {
         Logger::get(LOGGER_NAME).fatal("Could not load resource.");
         Close(true);
     }
- 
+
     wxImage checkedImg;
     if (checkedImg.LoadFile(resourcePath + "checked.png", wxBITMAP_TYPE_PNG))
     {
         wxBitmap checkedBmp(checkedImg);
         m_checkedImg = imageList->Add(checkedBmp);
     }
-    else 
+    else
     {
         Logger::get(LOGGER_NAME).fatal("Could not load resource.");
         Close(true);
