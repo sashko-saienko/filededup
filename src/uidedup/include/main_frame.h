@@ -20,8 +20,8 @@ namespace fs = std::filesystem;
 
 enum
 {
-    ID_SELECTFOLDERTLBR = wxID_HIGHEST + 1,
-    ID_REFRESHTLBR = wxID_HIGHEST + 2
+    ID_SELECTFOLDER_TLBR = wxID_HIGHEST + 1,
+    ID_REFRESH_TLBR = wxID_HIGHEST + 2
 };
 
 class MainFrame : public ::wxFrame
