@@ -219,7 +219,7 @@ bool MainFrame::EnumerateTargetFolder(const std::string& targetFolder)
     }
     catch (const std::exception& e)
     {
-        const auto msg = std::format("Scanning a target directory \"{}\" for duplicates: {}",
+        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
                                      targetFolder, e.what());
         Logger::get(LOGGER_NAME).error(msg);
         wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
@@ -241,7 +241,7 @@ void MainFrame::OnAbout(::wxCommandEvent& _)
 
 void MainFrame::OnSelectFolder(::wxCommandEvent& event)
 {
-    wxDirDialog dialog(this, "Select target directory for deduplication", ::wxGetUserHome(),
+    wxDirDialog dialog(this, "Select target folder for deduplication", ::wxGetUserHome(),
                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
     if (dialog.ShowModal() == wxID_OK)
