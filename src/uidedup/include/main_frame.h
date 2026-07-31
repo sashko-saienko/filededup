@@ -43,7 +43,6 @@ class MainFrame : public ::wxFrame
     void SetupToolBar();
     void SetupMainLayout();
     void SearchDuplicates();
-    bool EnumerateTargetFolder(const std::string& targetDirectory);
     void previewImage(const wxString& imagePath);
     void UpdateRefreshButtonState();
 
