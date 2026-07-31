@@ -19,19 +19,12 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void SetDuplicatesTree(const std::optional<fs::path>& targetFolder);
     bool IsFileItem(const wxTreeItemId& item) const;
 
-    int GetUncheckedImageIndex() const
-    {
-        return m_uncheckedImg;
-    }
-    int GetCheckedImageIndex() const
-    {
-        return m_checkedImg;
-    }
-
   private:
     int m_uncheckedImg;
     int m_checkedImg;
     Deduplicator::ChecksumFilesMap checksumFilesMap;
+
+    void OnItemActivated(::wxTreeEvent& event);
 
     wxTreeItemId SetupOrCleanupRootElement(const std::optional<fs::path>& targetFolder);
     void PopulateTree(const wxTreeItemId& rootId);

@@ -47,7 +47,6 @@ void MainFrame::Initialize()
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
-    Bind(wxEVT_TREE_ITEM_ACTIVATED, &MainFrame::OnItemActivated, this);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
 
@@ -184,27 +183,6 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     else
     {
         SetStatusText("Click on an image file to preview it.");
-    }
-}
-
-void MainFrame::OnItemActivated(::wxTreeEvent& event)
-{
-    wxTreeItemId clickedOnItem = event.GetItem();
-    wxString itemText = m_treeCtrl->GetItemText(clickedOnItem);
-
-    if (m_treeCtrl->IsFileItem(clickedOnItem))
-    {
-        int currentImage = m_treeCtrl->GetItemImage(clickedOnItem);
-        if (currentImage == m_treeCtrl->GetCheckedImageIndex())
-        {
-            m_treeCtrl->SetItemImage(clickedOnItem, m_treeCtrl->GetUncheckedImageIndex());
-            SetStatusText(wxString::Format("%s unchecked", itemText));
-        }
-        else
-        {
-            m_treeCtrl->SetItemImage(clickedOnItem, m_treeCtrl->GetCheckedImageIndex());
-            SetStatusText(wxString::Format("%s checked", itemText));
-        }
     }
 }
 

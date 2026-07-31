@@ -36,7 +36,6 @@ class MainFrame : public ::wxFrame
     void OnExit(::wxCommandEvent& event);
     void OnAbout(::wxCommandEvent& event);
     void OnItemSelected(::wxTreeEvent& event);
-    void OnItemActivated(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
 

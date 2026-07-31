@@ -5,6 +5,7 @@
 #include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
+#include <main_frame.h>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
@@ -33,6 +34,8 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
     m_checkedImg = imageList->Add(checkedImg);
 
     AssignImageList(imageList);
+
+    Bind(wxEVT_TREE_ITEM_ACTIVATED, &DuplicatesTreeCtrl::OnItemActivated, this);
 }
 
 void DuplicatesTreeCtrl::SetDuplicatesTree(const std::optional<fs::path>& targetFolder)
@@ -123,6 +126,24 @@ bool DuplicatesTreeCtrl::IsFileItem(const wxTreeItemId& item) const
     }
 
     return !ItemHasChildren(item);
+}
+
+void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
+{
+    wxTreeItemId item = event.GetItem();
+
+    if (IsFileItem(item))
+    {
+        int currentImage = GetItemImage(item);
+        if (currentImage == m_checkedImg)
+        {
+            SetItemImage(item, m_uncheckedImg);
+        }
+        else
+        {
+            SetItemImage(item, m_checkedImg);
+        }
+    }
 }
 
 } // namespace Deduplicator::Ui
