@@ -30,7 +30,6 @@ class MainFrame : public ::wxFrame
 {
   public:
     MainFrame();
-    void Initialize();
 
   private:
     void OnExit(::wxCommandEvent& event);

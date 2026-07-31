@@ -28,12 +28,6 @@ MainFrame::MainFrame()
       m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
       m_previewSizer(nullptr), m_toolBar(nullptr)
 {
-    // Initialize all UI components
-    Initialize();
-}
-
-void MainFrame::Initialize()
-{
     SetupMenuBar();
     SetupToolBar();
     SetupMainLayout();
@@ -135,7 +129,7 @@ void MainFrame::SearchDuplicates()
                      wxOK | wxICON_ERROR);
         return;
     }
-
+    
     m_treeCtrl->SetDuplicatesTree(_targetFolder);
     m_treeCtrl->ExpandAll();
 }
