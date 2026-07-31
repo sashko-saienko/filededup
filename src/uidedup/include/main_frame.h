@@ -5,13 +5,15 @@
 #include <filesystem>
 #include <optional>
 #include <unordered_set>
+#include <wx/event.h>
 #include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/statbmp.h>
-#include <wx/treectrl.h>
 #include <wx/wx.h>
+
+#include <duplicates_tree_ctrl.h>
 
 namespace Deduplicator::Ui
 {
@@ -43,24 +45,16 @@ class MainFrame : public ::wxFrame
     void SetupMainLayout();
     void SearchDuplicates();
     bool EnumerateTargetFolder(const std::string& targetDirectory);
-    void SetDuplicatesTree(const wxTreeItemId& rootId);
     void previewImage(const wxString& imagePath);
-    bool IsFileItem(const wxTreeItemId& item) const;
-    wxTreeItemId SetupOrCleanupRootElement();
     void UpdateRefreshButtonState();
 
-    wxTreeCtrl* m_treeCtrl;
+    DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
     wxGenericStaticBitmap* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 
-    // Checkbox image indices within image list
-    int m_uncheckedImg = -1;
-    int m_checkedImg = -1;
-
     std::optional<fs::path> _targetFolder;
-    Deduplicator::ChecksumFilesMap cfm;
 };
 
 } // namespace Deduplicator::Ui

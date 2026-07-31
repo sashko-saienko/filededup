@@ -3,6 +3,7 @@
 //
 #include <Poco/Logger.h>
 #include <deduplib/duplicates_finder.h>
+#include <duplicates_tree_ctrl.h>
 #include <format>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
@@ -16,7 +17,6 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
-#include <wx/treectrl.h>
 #include <wx/wx.h>
 
 namespace Deduplicator::Ui
@@ -101,39 +101,8 @@ void MainFrame::SetupMainLayout()
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
     leftPanel->SetSizer(leftSizer);
 
-    m_treeCtrl = new wxTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
-
-    // Create image list for checkboxes
-    wxImageList* imageList = new wxImageList(16, 16);
-
-    wxString resourcePath = wxString::Format("%s/src/uidedup/resources/", wxGetCwd().c_str());
-
-    wxImage uncheckedImg;
-    if (uncheckedImg.LoadFile(resourcePath + "unchecked.png", wxBITMAP_TYPE_PNG))
-    {
-        wxBitmap uncheckedBmp(uncheckedImg);
-        m_uncheckedImg = imageList->Add(uncheckedBmp);
-    }
-    else
-    {
-        Logger::get(LOGGER_NAME).fatal("Could not load resource.");
-        Close(true);
-    }
-
-    wxImage checkedImg;
-    if (checkedImg.LoadFile(resourcePath + "checked.png", wxBITMAP_TYPE_PNG))
-    {
-        wxBitmap checkedBmp(checkedImg);
-        m_checkedImg = imageList->Add(checkedBmp);
-    }
-    else
-    {
-        Logger::get(LOGGER_NAME).fatal("Could not load resource.");
-        Close(true);
-    }
-
-    m_treeCtrl->AssignImageList(imageList);
+    m_treeCtrl = new DuplicatesTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                        wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
@@ -168,64 +137,8 @@ void MainFrame::SearchDuplicates()
         return;
     }
 
-    if (wxTreeItemId rootId = SetupOrCleanupRootElement();
-        EnumerateTargetFolder(_targetFolder.value()))
-    {
-        SetDuplicatesTree(rootId);
-        m_treeCtrl->ExpandAll();
-    }
-    else
-    {
-        SetStatusText("No duplicates have been found in the selected target folder.");
-    }
-}
-
-void MainFrame::SetDuplicatesTree(const wxTreeItemId& rootId)
-{
-    // Add text files
-    for (const auto& [checksum, files] : cfm)
-    {
-        if (files.empty())
-        {
-            continue;
-        }
-
-        if (auto& path = files.front().path(); wxImage::CanRead(path) == false)
-        {
-            Logger::get(LOGGER_NAME).warning(std::format("{} file format is not supported", path));
-            continue;
-        }
-
-        wxTreeItemId parent = m_treeCtrl->AppendItem(rootId, wxString::Format("%d", checksum));
-        for (const auto& file : files)
-        {
-            wxTreeItemId fileItem = m_treeCtrl->AppendItem(parent, file.path(), m_uncheckedImg);
-        }
-    }
-}
-
-bool MainFrame::EnumerateTargetFolder(const std::string& targetFolder)
-{
-    using ReusableLib::ObservableStopwatch;
-
-    ObservableStopwatch sw([&](const long seconds) {
-        Logger::get(LOGGER_NAME).information("Completed duplicates search in %ld(s)", seconds);
-    });
-
-    try
-    {
-        Deduplicator::DuplicatesFinder df{targetFolder};
-        cfm = df.scan();
-    }
-    catch (const std::exception& e)
-    {
-        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
-                                     targetFolder, e.what());
-        Logger::get(LOGGER_NAME).error(msg);
-        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
-    }
-
-    return cfm.size() > 0;
+    m_treeCtrl->SetDuplicatesTree(_targetFolder);
+    m_treeCtrl->ExpandAll();
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
@@ -264,7 +177,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     wxString itemText = m_treeCtrl->GetItemText(selectedItem);
 
     // Only allow preview for actual file items (not root or checksum items)
-    if (IsFileItem(selectedItem))
+    if (m_treeCtrl->IsFileItem(selectedItem))
     {
         previewImage(itemText);
     }
@@ -279,32 +192,20 @@ void MainFrame::OnItemActivated(::wxTreeEvent& event)
     wxTreeItemId clickedOnItem = event.GetItem();
     wxString itemText = m_treeCtrl->GetItemText(clickedOnItem);
 
-    if (IsFileItem(clickedOnItem))
+    if (m_treeCtrl->IsFileItem(clickedOnItem))
     {
         int currentImage = m_treeCtrl->GetItemImage(clickedOnItem);
-        if (currentImage == m_checkedImg)
+        if (currentImage == m_treeCtrl->GetCheckedImageIndex())
         {
-            m_treeCtrl->SetItemImage(clickedOnItem, m_uncheckedImg);
+            m_treeCtrl->SetItemImage(clickedOnItem, m_treeCtrl->GetUncheckedImageIndex());
             SetStatusText(wxString::Format("%s unchecked", itemText));
         }
         else
         {
-            m_treeCtrl->SetItemImage(clickedOnItem, m_checkedImg);
+            m_treeCtrl->SetItemImage(clickedOnItem, m_treeCtrl->GetCheckedImageIndex());
             SetStatusText(wxString::Format("%s checked", itemText));
         }
     }
-}
-
-bool MainFrame::IsFileItem(const wxTreeItemId& item) const
-{
-    // A file item is not the root and has no children (leaf node)
-    if (!item.IsOk() || item == m_treeCtrl->GetRootItem())
-    {
-        return false;
-    }
-
-    // Check if this item has children - if it does, it's a checksum group
-    return !m_treeCtrl->ItemHasChildren(item);
 }
 
 void MainFrame::previewImage(const wxString& imagePath)
@@ -336,21 +237,6 @@ void MainFrame::previewImage(const wxString& imagePath)
     SetStatusText(wxString::Format("Previewing: %s", imagePath));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
-}
-
-wxTreeItemId MainFrame::SetupOrCleanupRootElement()
-{
-    // Delete all children but preserve the root item
-    wxTreeItemId rootId = m_treeCtrl->GetRootItem();
-    if (rootId.IsOk())
-    {
-        m_treeCtrl->DeleteChildren(rootId);
-    }
-    else
-    {
-        rootId = m_treeCtrl->AddRoot(_targetFolder.value().c_str());
-    }
-    return rootId;
 }
 
 void MainFrame::UpdateRefreshButtonState()
