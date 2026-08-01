@@ -44,6 +44,7 @@ class MainFrame : public ::wxFrame
     void SearchDuplicates();
     void previewImage(const wxString& imagePath);
     void UpdateRefreshButtonState();
+    bool ScanTargetFolder();
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
@@ -52,6 +53,7 @@ class MainFrame : public ::wxFrame
     wxBoxSizer* m_previewSizer;
 
     std::optional<fs::path> _targetFolder;
+    Deduplicator::ChecksumFilesMap checksumFilesMap;
 };
 
 } // namespace Deduplicator::Ui

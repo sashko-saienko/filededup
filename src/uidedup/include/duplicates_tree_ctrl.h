@@ -16,19 +16,18 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition,
                        const wxSize& size = wxDefaultSize, long style = wxTR_DEFAULT_STYLE);
 
-    void SetDuplicatesTree(const std::optional<fs::path>& targetFolder);
+    void SetDuplicatesTree(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
+                           const std::string& targetFolder);
     bool IsFileItem(const wxTreeItemId& item) const;
 
   private:
     int m_uncheckedImg;
     int m_checkedImg;
-    Deduplicator::ChecksumFilesMap checksumFilesMap;
 
     void OnItemActivated(::wxTreeEvent& event);
 
-    wxTreeItemId SetupOrCleanupRootElement(const std::optional<fs::path>& targetFolder);
-    void PopulateTree(const wxTreeItemId& rootId);
-    bool ScanTargetFolder(const std::optional<fs::path>& targetFolder);
+    void Populate(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
+                  const std::string& targetFolder);
 };
 
 } // namespace Deduplicator::Ui

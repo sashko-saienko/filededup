@@ -2,7 +2,6 @@
 // Created by sashko on 29.07.26.
 //
 #include <Poco/Logger.h>
-#include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
 #include <main_frame.h>
@@ -38,65 +37,22 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
     Bind(wxEVT_TREE_ITEM_ACTIVATED, &DuplicatesTreeCtrl::OnItemActivated, this);
 }
 
-void DuplicatesTreeCtrl::SetDuplicatesTree(const std::optional<fs::path>& targetFolder)
+void DuplicatesTreeCtrl::SetDuplicatesTree(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
+                                           const std::string& targetFolder)
 {
-    wxTreeItemId rootId = SetupOrCleanupRootElement(targetFolder);
-
-    if (ScanTargetFolder(targetFolder))
-    {
-        PopulateTree(rootId);
-    }
+    Populate(checksumFilesMap, targetFolder);
 }
 
-bool DuplicatesTreeCtrl::ScanTargetFolder(const std::optional<fs::path>& targetFolder)
+void DuplicatesTreeCtrl::Populate(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
+                                  const std::string& targetFolder)
 {
-    if (!targetFolder.has_value())
+    if (!IsEmpty())
     {
-        return false;
+        DeleteAllItems();
     }
 
-    try
-    {
-        Deduplicator::DuplicatesFinder df{targetFolder.value().string()};
-        checksumFilesMap = df.scan();
-    }
-    catch (const std::exception& e)
-    {
-        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
-                                     targetFolder.value().string(), e.what());
-        Logger::get(LOGGER_NAME).error(msg);
-        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
-        return false;
-    }
+    wxTreeItemId rootId = AddRoot(targetFolder.c_str());
 
-    return checksumFilesMap.size() > 0;
-}
-
-wxTreeItemId DuplicatesTreeCtrl::SetupOrCleanupRootElement(
-    const std::optional<fs::path>& targetFolder)
-{
-    // Delete all children but preserve the root item
-    wxTreeItemId rootId = GetRootItem();
-    if (rootId.IsOk())
-    {
-        DeleteChildren(rootId);
-    }
-    else
-    {
-        if (targetFolder.has_value())
-        {
-            rootId = AddRoot(targetFolder.value().c_str());
-        }
-        else
-        {
-            rootId = AddRoot("Duplicates");
-        }
-    }
-    return rootId;
-}
-
-void DuplicatesTreeCtrl::PopulateTree(const wxTreeItemId& rootId)
-{
     for (const auto& [checksum, files] : checksumFilesMap)
     {
         if (files.empty())

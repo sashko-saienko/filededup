@@ -121,6 +121,30 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
+bool MainFrame::ScanTargetFolder()
+{
+    if (!_targetFolder.has_value())
+    {
+        return false;
+    }
+
+    try
+    {
+        Deduplicator::DuplicatesFinder df{_targetFolder.value()};
+        checksumFilesMap = df.scan();
+    }
+    catch (const std::exception& e)
+    {
+        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
+                                     _targetFolder.value().string(), e.what());
+        Logger::get(LOGGER_NAME).error(msg);
+        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
+        return false;
+    }
+
+    return checksumFilesMap.size() > 0;
+}
+
 void MainFrame::SearchDuplicates()
 {
     if (_targetFolder.has_value() != true)
@@ -129,9 +153,12 @@ void MainFrame::SearchDuplicates()
                      wxOK | wxICON_ERROR);
         return;
     }
-    
-    m_treeCtrl->SetDuplicatesTree(_targetFolder);
-    m_treeCtrl->ExpandAll();
+
+    if (ScanTargetFolder())
+    {
+        m_treeCtrl->SetDuplicatesTree(checksumFilesMap, _targetFolder.value().string());
+        m_treeCtrl->ExpandAll();
+    }
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
@@ -215,7 +242,7 @@ void MainFrame::UpdateRefreshButtonState()
 {
     if (m_toolBar)
     {
-        bool enableRefresh = _targetFolder.has_value();
+        bool enableRefresh = !_targetFolder.has_value();
         m_toolBar->EnableTool(ID_REFRESH, enableRefresh);
     }
 }
