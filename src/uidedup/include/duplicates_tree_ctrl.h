@@ -18,13 +18,15 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
 
     void SetDuplicatesTree(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
                            const std::string& targetFolder);
-    bool IsFileItem(const wxTreeItemId& item) const;
 
   private:
     int m_uncheckedImg;
     int m_checkedImg;
 
     void OnItemActivated(::wxTreeEvent& event);
+    void OnSelectionChanged(::wxTreeEvent& event);
+
+    bool IsFileItem(const wxTreeItemId& item) const;
 
     void Populate(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
                   const std::string& targetFolder);

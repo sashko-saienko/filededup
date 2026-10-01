@@ -35,6 +35,7 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
     AssignImageList(imageList);
 
     Bind(wxEVT_TREE_ITEM_ACTIVATED, &DuplicatesTreeCtrl::OnItemActivated, this);
+    Bind(wxEVT_TREE_SEL_CHANGED, &DuplicatesTreeCtrl::OnSelectionChanged, this);
 }
 
 void DuplicatesTreeCtrl::SetDuplicatesTree(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
@@ -99,6 +100,16 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
         {
             SetItemImage(item, m_checkedImg);
         }
+    }
+}
+
+void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
+{
+    wxTreeItemId selectedItem = event.GetItem();
+
+    if (IsFileItem(selectedItem))
+    {
+        event.Skip();
     }
 }
 

@@ -40,7 +40,7 @@ MainFrame::MainFrame()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this);
+    Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
 
@@ -94,8 +94,8 @@ void MainFrame::SetupMainLayout()
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
     leftPanel->SetSizer(leftSizer);
 
-    m_treeCtrl = new DuplicatesTreeCtrl(leftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                        wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
+    m_treeCtrl = new DuplicatesTreeCtrl(leftPanel, ID_DUPLICATES_TREE, wxDefaultPosition, wxDefaultSize,
+        wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
@@ -195,16 +195,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     // Update the preview panel based on the selected item from the tree
     wxTreeItemId selectedItem = event.GetItem();
     wxString itemText = m_treeCtrl->GetItemText(selectedItem);
-
-    // Only allow preview for actual file items (not root or checksum items)
-    if (m_treeCtrl->IsFileItem(selectedItem))
-    {
-        previewImage(itemText);
-    }
-    else
-    {
-        SetStatusText("Click on an image file to preview it.");
-    }
+    previewImage(itemText);
 }
 
 void MainFrame::previewImage(const wxString& imagePath)
