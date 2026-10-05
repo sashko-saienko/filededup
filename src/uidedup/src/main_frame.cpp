@@ -94,8 +94,9 @@ void MainFrame::SetupMainLayout()
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
     leftPanel->SetSizer(leftSizer);
 
-    m_treeCtrl = new DuplicatesTreeCtrl(leftPanel, ID_DUPLICATES_TREE, wxDefaultPosition, wxDefaultSize,
-        wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
+    m_treeCtrl =
+        new DuplicatesTreeCtrl(leftPanel, ID_DUPLICATES_TREE, wxDefaultPosition, wxDefaultSize,
+                               wxTR_DEFAULT_STYLE | wxTR_SINGLE | wxTR_FULL_ROW_HIGHLIGHT);
 
     leftSizer->Add(m_treeCtrl, 1, wxEXPAND | wxALL, 5);
 
@@ -107,7 +108,7 @@ void MainFrame::SetupMainLayout()
     // Split the window
     splitter->SplitVertically(leftPanel, m_previewPanel, 300);
 
-    m_previewImage = new wxGenericStaticBitmap(m_previewPanel, wxID_ANY, wxBitmap());
+    m_previewImage = new ImageFilePreview(m_previewPanel, wxID_ANY, wxBitmap());
     m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     m_previewImage->Hide();
 
@@ -200,30 +201,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::previewImage(const wxString& imagePath)
 {
-    // Load and display the image
-    if (wxFileExists(imagePath) == false)
-    {
-        auto errorMessage = wxString::Format("Image file does not exist: %s", imagePath);
-        SetStatusText(errorMessage);
-        wxMessageBox(errorMessage, "Error finding image to open it for preview", wxOK | wxCENTER,
-                     this);
-        return;
-    }
-
-    wxImage image;
-    if (image.LoadFile(imagePath) == false)
-    {
-        auto errorMessage = wxString::Format("Image file not supported: %s", imagePath);
-        SetStatusText(errorMessage);
-        wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTER, this);
-        return;
-    }
-
-    wxBitmap bitmap(image);
-    m_previewImage->SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
-    m_previewImage->SetBitmap(bitmap);
-    m_previewImage->Show();
-
+    m_previewImage->LoadImage(imagePath);
     SetStatusText(wxString::Format("Previewing: %s", imagePath));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();

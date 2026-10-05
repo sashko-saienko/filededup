@@ -14,6 +14,7 @@
 #include <wx/wx.h>
 
 #include <duplicates_tree_ctrl.h>
+#include <image_file_preview.h>
 
 namespace Deduplicator::Ui
 {
@@ -49,7 +50,7 @@ class MainFrame : public ::wxFrame
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
-    wxGenericStaticBitmap* m_previewImage;
+    ImageFilePreview* m_previewImage;
     wxPanel* m_previewPanel;
     wxBoxSizer* m_previewSizer;
 
