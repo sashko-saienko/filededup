@@ -196,13 +196,8 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     // Update the preview panel based on the selected item from the tree
     wxTreeItemId selectedItem = event.GetItem();
     wxString itemText = m_treeCtrl->GetItemText(selectedItem);
-    previewImage(itemText);
-}
-
-void MainFrame::previewImage(const wxString& imagePath)
-{
-    m_previewImage->LoadImage(imagePath);
-    SetStatusText(wxString::Format("Previewing: %s", imagePath));
+    m_previewImage->LoadImage(itemText);
+    SetStatusText(wxString::Format("Previewing: %s", itemText));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
 }

@@ -44,7 +44,6 @@ class MainFrame : public ::wxFrame
     void SetupToolBar();
     void SetupMainLayout();
     void SearchDuplicates();
-    void previewImage(const wxString& imagePath);
     void UpdateRefreshButtonState();
     bool ScanTargetFolder();
 
