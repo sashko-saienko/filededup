@@ -2,7 +2,6 @@
 // Created by sashko on 14.03.26.
 //
 #include <Poco/Logger.h>
-#include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
 #include <main_frame.h>
@@ -122,30 +121,6 @@ void MainFrame::SetupMainLayout()
     SetSizer(mainSizer);
 }
 
-bool MainFrame::ScanTargetFolder()
-{
-    if (!_targetFolder.has_value())
-    {
-        return false;
-    }
-
-    try
-    {
-        Deduplicator::DuplicatesFinder df{_targetFolder.value()};
-        checksumFilesMap = df.scan();
-    }
-    catch (const std::exception& e)
-    {
-        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
-                                     _targetFolder.value().string(), e.what());
-        Logger::get(LOGGER_NAME).error(msg);
-        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
-        return false;
-    }
-
-    return checksumFilesMap.size() > 0;
-}
-
 void MainFrame::SearchDuplicates()
 {
     if (_targetFolder.has_value() != true)
@@ -155,11 +130,8 @@ void MainFrame::SearchDuplicates()
         return;
     }
 
-    if (ScanTargetFolder())
-    {
-        m_treeCtrl->SetDuplicatesTree(checksumFilesMap, _targetFolder.value().string());
-        m_treeCtrl->ExpandAll();
-    }
+    m_treeCtrl->SetDuplicatesTree(_targetFolder.value().string());
+    m_treeCtrl->ExpandAll();
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
@@ -193,7 +165,6 @@ void MainFrame::OnRefresh(::wxCommandEvent& event)
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
-    // Update the preview panel based on the selected item from the tree
     wxTreeItemId selectedItem = event.GetItem();
     wxString itemText = m_treeCtrl->GetItemText(selectedItem);
     m_previewImage->LoadImage(itemText);

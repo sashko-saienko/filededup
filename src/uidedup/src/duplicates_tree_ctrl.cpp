@@ -2,9 +2,9 @@
 // Created by sashko on 29.07.26.
 //
 #include <Poco/Logger.h>
+#include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
-#include <main_frame.h>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
@@ -38,14 +38,29 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
     Bind(wxEVT_TREE_SEL_CHANGED, &DuplicatesTreeCtrl::OnSelectionChanged, this);
 }
 
-void DuplicatesTreeCtrl::SetDuplicatesTree(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
-                                           const std::string& targetFolder)
+void DuplicatesTreeCtrl::SetDuplicatesTree(const std::string& targetFolder)
 {
-    Populate(checksumFilesMap, targetFolder);
+    try
+    {
+        Deduplicator::DuplicatesFinder df{targetFolder};
+        checksumFilesMap = df.scan();
+    }
+    catch (const std::exception& e)
+    {
+        const auto msg = std::format("Scanning a target folder \"{}\" for duplicates: {}",
+                                     targetFolder, e.what());
+        Logger::get(LOGGER_NAME).error(msg);
+        wxMessageBox("Error scanning for duplicates", msg, wxOK | wxICON_ERROR);
+        return;
+    }
+
+    if (checksumFilesMap.size() > 0)
+    {
+        Populate(targetFolder);
+    }
 }
 
-void DuplicatesTreeCtrl::Populate(const Deduplicator::ChecksumFilesMap& checksumFilesMap,
-                                  const std::string& targetFolder)
+void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
 {
     if (!IsEmpty())
     {

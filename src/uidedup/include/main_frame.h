@@ -1,7 +1,6 @@
 #ifndef __UIDEDUP_MAIN_FRAME_H__
 #define __UIDEDUP_MAIN_FRAME_H__
 
-#include <deduplib/files_map.h>
 #include <filesystem>
 #include <optional>
 #include <unordered_set>
@@ -45,7 +44,6 @@ class MainFrame : public ::wxFrame
     void SetupMainLayout();
     void SearchDuplicates();
     void UpdateRefreshButtonState();
-    bool ScanTargetFolder();
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
@@ -54,7 +52,6 @@ class MainFrame : public ::wxFrame
     wxBoxSizer* m_previewSizer;
 
     std::optional<fs::path> _targetFolder;
-    Deduplicator::ChecksumFilesMap checksumFilesMap;
 };
 
 } // namespace Deduplicator::Ui
