@@ -167,7 +167,12 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
     wxTreeItemId selectedItem = event.GetItem();
     wxString itemText = m_treeCtrl->GetItemText(selectedItem);
-    m_previewImage->LoadImage(itemText);
+    if (m_previewImage->LoadImage(itemText) == false)
+    {
+        wxMessageBox(wxString::Format("File could not be previewed: %s", itemText), "Preview Error",
+                     wxOK | wxICON_INFORMATION);
+        return;
+    }
     SetStatusText(wxString::Format("Previewing: %s", itemText));
     m_previewPanel->Layout();
     m_previewPanel->Refresh();

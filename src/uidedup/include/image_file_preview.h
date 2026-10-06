@@ -15,7 +15,7 @@ class ImageFilePreview : public wxGenericStaticBitmap
     {
     }
 
-    void LoadImage(const wxString& imagePath);
+    bool LoadImage(const wxString& imagePath);
 };
 
 } // namespace Deduplicator::Ui

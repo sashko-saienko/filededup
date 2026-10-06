@@ -12,15 +12,14 @@
 namespace Deduplicator::Ui
 {
 
-void ImageFilePreview::LoadImage(const wxString& imagePath)
+bool ImageFilePreview::LoadImage(const wxString& imagePath)
 {
-    // Load and display the image
     if (wxFileExists(imagePath) == false)
     {
         auto errorMessage = wxString::Format("Image file does not exist: %s", imagePath);
         wxMessageBox(errorMessage, "Error finding image to open it for preview", wxOK | wxCENTER,
                      wxTheApp->GetTopWindow());
-        return;
+        return false;
     }
 
     wxImage image;
@@ -29,13 +28,14 @@ void ImageFilePreview::LoadImage(const wxString& imagePath)
         auto errorMessage = wxString::Format("Image file not supported: %s", imagePath);
         wxMessageBox(errorMessage, "Error opening image for preview", wxOK | wxCENTER,
                      wxTheApp->GetTopWindow());
-        return;
+        return false;
     }
 
     wxBitmap bitmap(image);
     SetScaleMode(wxStaticBitmapBase::Scale_AspectFit);
     SetBitmap(bitmap);
     Show();
+    return true;
 }
 
 } // namespace Deduplicator::Ui

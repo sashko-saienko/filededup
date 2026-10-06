@@ -76,12 +76,6 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
             continue;
         }
 
-        if (auto& path = files.front().path(); wxImage::CanRead(path) == false)
-        {
-            Logger::get(LOGGER_NAME).warning(std::format("{} file format is not supported", path));
-            continue;
-        }
-
         wxTreeItemId parent = AppendItem(rootId, wxString::Format("%d", checksum));
         for (const auto& file : files)
         {
