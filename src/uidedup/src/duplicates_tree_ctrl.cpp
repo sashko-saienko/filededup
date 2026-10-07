@@ -96,6 +96,36 @@ bool DuplicatesTreeCtrl::IsFileItem(const wxTreeItemId& item) const
     return !ItemHasChildren(item);
 }
 
+bool DuplicatesTreeCtrl::IsCheckable(const wxTreeItemId& item) const
+{
+    if (!IsFileItem(item))
+    {
+        return false;
+    }
+
+    wxTreeItemId parent = GetItemParent(item);
+
+    if (!parent.IsOk())
+    {
+        return false;
+    }
+
+    int uncheckedCount = 0;
+    wxTreeItemIdValue cookie;
+    wxTreeItemId child = GetFirstChild(parent, cookie);
+
+    while (child.IsOk())
+    {
+        if (GetItemImage(child) != m_checkedImg)
+        {
+            uncheckedCount++;
+        }
+        child = GetNextChild(parent, cookie);
+    }
+
+    return uncheckedCount > 1;
+}
+
 void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
 {
     wxTreeItemId item = event.GetItem();
@@ -103,13 +133,13 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
     if (IsFileItem(item))
     {
         int currentImage = GetItemImage(item);
-        if (currentImage == m_checkedImg)
-        {
-            SetItemImage(item, m_uncheckedImg);
-        }
-        else
+        if (currentImage != m_checkedImg && IsCheckable(item))
         {
             SetItemImage(item, m_checkedImg);
+        }
+        else if (currentImage == m_checkedImg)
+        {
+            SetItemImage(item, m_uncheckedImg);
         }
     }
 }

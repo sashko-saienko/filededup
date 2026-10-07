@@ -26,6 +26,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void OnItemActivated(::wxTreeEvent& event);
     void OnSelectionChanged(::wxTreeEvent& event);
     bool IsFileItem(const wxTreeItemId& item) const;
+    bool IsCheckable(const wxTreeItemId& item) const;
     void Populate(const std::string& targetFolder);
 };
 
