@@ -73,10 +73,12 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
     {
         if (files.empty())
         {
+            Logger::get(LOGGER_NAME).error("Checksum without any files.");
             continue;
         }
 
         wxTreeItemId parent = AppendItem(rootId, wxString::Format("%d", checksum));
+
         for (const auto& file : files)
         {
             wxTreeItemId fileItem = AppendItem(parent, file.path(), m_uncheckedImg);
