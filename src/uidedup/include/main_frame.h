@@ -24,7 +24,8 @@ enum
 {
     ID_SELECTFOLDER = wxID_HIGHEST + 1,
     ID_REFRESH = wxID_HIGHEST + 2,
-    ID_DUPLICATES_TREE = wxID_HIGHEST + 3
+    ID_DUPLICATES_TREE = wxID_HIGHEST + 3,
+    ID_DELETE_SELECTED = wxID_HIGHEST + 4
 };
 
 class MainFrame : public ::wxFrame
@@ -38,6 +39,7 @@ class MainFrame : public ::wxFrame
     void OnItemSelected(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
+    void OnDeleteSelected(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();

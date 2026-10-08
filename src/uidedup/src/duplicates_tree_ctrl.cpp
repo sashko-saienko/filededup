@@ -154,4 +154,100 @@ void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
     }
 }
 
+void DuplicatesTreeCtrl::DeleteSelected()
+{
+    wxArrayTreeItemIds checkedItems;
+    GetCheckedTreeItemsWhileTrue([&](wxTreeItemId item) {
+        checkedItems.Add(item);
+        return true;
+    });
+
+    if (checkedItems.IsEmpty())
+    {
+        return;
+    }
+
+    DeleteCheckedTreeItems(checkedItems);
+}
+
+void DuplicatesTreeCtrl::GetCheckedTreeItemsWhileTrue(ItemHandler handleItem) const
+{
+    if (GetCount() == 0)
+    {
+        return;
+    }
+
+    wxTreeItemIdValue checksumIdValue;
+    wxTreeItemId root = GetRootItem();
+    wxTreeItemId checksumItem = GetFirstChild(root, checksumIdValue);
+
+    while (checksumItem.IsOk())
+    {
+        wxTreeItemIdValue fileIdValue;
+        wxTreeItemId fileItem = GetFirstChild(checksumItem, fileIdValue);
+        while (fileItem.IsOk())
+        {
+            if (GetItemImage(fileItem) == m_checkedImg)
+            {
+                if (!handleItem(fileItem))
+                {
+                    return;
+                }
+            }
+            fileItem = GetNextChild(checksumItem, fileIdValue);
+        }
+        checksumItem = GetNextChild(root, checksumIdValue);
+    }
+}
+
+void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems)
+{
+    // Process items in reverse order to avoid iterator invalidation
+    for (int i = checkedItems.GetCount() - 1; i >= 0; i--)
+    {
+        wxTreeItemId item = checkedItems[i];
+
+        if (!IsFileItem(item))
+        {
+            continue;
+        }
+
+        wxTreeItemId parent = GetItemParent(item);
+
+        if (!parent.IsOk() || parent == GetRootItem())
+        {
+            continue; // Skip if no valid parent
+        }
+
+        wxString checksumStr = GetItemText(parent);
+        unsigned checksum;
+
+        if (!checksumStr.ToUInt(&checksum))
+        {
+            continue; // Skip if checksum is not valid
+        }
+
+        wxString filePath = GetItemText(item);
+        RemoveFileFromChecksumMap(checksum, filePath.ToStdString());
+
+        Delete(item);
+    }
+}
+
+void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath)
+{
+    auto it = checksumFilesMap.find(checksum);
+    if (it != checksumFilesMap.end())
+    {
+        auto& filesList = it->second;
+        filesList.remove_if(
+            [&filePath](const Poco::File& file) { return file.path() == filePath; });
+
+        if (filesList.empty())
+        {
+            checksumFilesMap.erase(it);
+        }
+    }
+}
+
 } // namespace Deduplicator::Ui

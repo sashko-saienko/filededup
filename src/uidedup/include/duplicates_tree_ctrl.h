@@ -3,6 +3,7 @@
 
 #include <deduplib/files_map.h>
 #include <filesystem>
+#include <functional>
 #include <wx/treectrl.h>
 
 namespace Deduplicator::Ui
@@ -17,6 +18,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
                        const wxSize& size = wxDefaultSize, long style = wxTR_DEFAULT_STYLE);
 
     void SetDuplicatesTree(const std::string& targetFolder);
+    void DeleteSelected();
 
   private:
     int m_uncheckedImg;
@@ -28,6 +30,10 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     bool IsFileItem(const wxTreeItemId& item) const;
     bool IsCheckable(const wxTreeItemId& item) const;
     void Populate(const std::string& targetFolder);
+    using ItemHandler = std::function<bool(wxTreeItemId)>;
+    void GetCheckedTreeItemsWhileTrue(ItemHandler handleItem) const;
+    void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
+    void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
 };
 
 } // namespace Deduplicator::Ui

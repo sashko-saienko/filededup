@@ -39,9 +39,11 @@ MainFrame::MainFrame()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
+    Bind(wxEVT_MENU, &MainFrame::OnDeleteSelected, this, ID_DELETE_SELECTED);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
+    Bind(wxEVT_TOOL, &MainFrame::OnDeleteSelected, this, ID_DELETE_SELECTED);
 
     UpdateRefreshButtonState();
 }
@@ -52,6 +54,8 @@ void MainFrame::SetupMenuBar()
     menuFile->Append(ID_SELECTFOLDER, "&Select Folder\tCtrl-O",
                      "Select target folder for deduplication");
     menuFile->Append(ID_REFRESH, "&Refresh\tF5", "Refresh duplicates list");
+    menuFile->Append(ID_DELETE_SELECTED, "&Delete Selected\tDel",
+                     "Delete selected duplicate files");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -69,15 +73,20 @@ void MainFrame::SetupToolBar()
 {
     m_toolBar = CreateToolBar(wxTB_HORIZONTAL | wxNO_BORDER);
 
-    // Add folder selection tool
+    // Add folder selection
     wxBitmap folderBitmap =
         wxArtProvider::GetBitmap(wxART_FOLDER_OPEN, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_SELECTFOLDER, "Select Folder", folderBitmap,
                        "Select target folder for deduplication");
 
-    // Add refresh tool
+    // Add refresh
     wxBitmap refreshBitmap = wxArtProvider::GetBitmap(wxART_REFRESH, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_REFRESH, "Refresh", refreshBitmap, "Refresh duplicates list");
+
+    // Add delete selected
+    wxBitmap deleteBitmap = wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_DELETE_SELECTED, "Delete Selected", deleteBitmap,
+                       "Delete selected items");
 
     m_toolBar->Realize();
 }
@@ -161,6 +170,11 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
 void MainFrame::OnRefresh(::wxCommandEvent& event)
 {
     SearchDuplicates();
+}
+
+void MainFrame::OnDeleteSelected(::wxCommandEvent& event)
+{
+    m_treeCtrl->DeleteSelected();
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
