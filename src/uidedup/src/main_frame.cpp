@@ -194,11 +194,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::UpdateRefreshButtonState()
 {
-    if (m_toolBar)
-    {
-        bool enableRefresh = !_targetFolder.has_value();
-        m_toolBar->EnableTool(ID_REFRESH, enableRefresh);
-    }
+    m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
 }
 
 } // namespace Deduplicator::Ui
