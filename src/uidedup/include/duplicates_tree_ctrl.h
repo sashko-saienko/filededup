@@ -18,7 +18,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
                        const wxSize& size = wxDefaultSize, long style = wxTR_DEFAULT_STYLE);
 
     void SetDuplicatesTree(const std::string& targetFolder);
-    void DeleteSelected();
+    void DeleteChecked();
 
   private:
     int m_uncheckedImg;

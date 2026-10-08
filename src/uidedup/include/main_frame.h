@@ -39,7 +39,7 @@ class MainFrame : public ::wxFrame
     void OnItemSelected(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
-    void OnDeleteSelected(wxCommandEvent& event);
+    void OnDeleteChecked(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();

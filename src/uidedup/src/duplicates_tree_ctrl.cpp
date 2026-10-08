@@ -154,7 +154,7 @@ void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
     }
 }
 
-void DuplicatesTreeCtrl::DeleteSelected()
+void DuplicatesTreeCtrl::DeleteChecked()
 {
     wxArrayTreeItemIds checkedItems;
     GetCheckedTreeItemsWhileTrue([&](wxTreeItemId item) {

@@ -39,11 +39,11 @@ MainFrame::MainFrame()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_MENU, &MainFrame::OnDeleteSelected, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_MENU, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_TOOL, &MainFrame::OnDeleteSelected, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
 
     UpdateRefreshButtonState();
 }
@@ -172,9 +172,9 @@ void MainFrame::OnRefresh(::wxCommandEvent& event)
     SearchDuplicates();
 }
 
-void MainFrame::OnDeleteSelected(::wxCommandEvent& event)
+void MainFrame::OnDeleteChecked(::wxCommandEvent& event)
 {
-    m_treeCtrl->DeleteSelected();
+    m_treeCtrl->DeleteChecked();
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
