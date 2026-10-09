@@ -17,9 +17,12 @@ class Application : public ::wxApp
 {
   public:
     bool OnInit() override;
+    static wxImage GetCheckedImage();
+    static wxImage GetUncheckedImage();
 
   protected:
     static void ConfigureLogging(const fs::path&);
+    static wxString GetResourcesPath();
 };
 
 wxDECLARE_APP(Application);

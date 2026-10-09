@@ -7,6 +7,8 @@
 #include <Poco/Util/PropertyFileConfiguration.h>
 #include <application.h>
 #include <main_frame.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 namespace Deduplicator::Ui
 {
@@ -14,6 +16,26 @@ namespace Deduplicator::Ui
 using Poco::makeAuto;
 using Poco::Util::LoggingConfigurator;
 using Poco::Util::PropertyFileConfiguration;
+
+wxString Application::GetResourcesPath()
+{
+    wxFileName execFileName{wxStandardPaths::Get().GetExecutablePath()};
+    return wxString::Format("%s/resources/", execFileName.GetPath());
+}
+
+wxImage Application::GetCheckedImage()
+{
+    wxImage checkedImg;
+    checkedImg.LoadFile(GetResourcesPath() + "checked.png", wxBITMAP_TYPE_PNG);
+    return checkedImg;
+}
+
+wxImage Application::GetUncheckedImage()
+{
+    wxImage uncheckedImg;
+    uncheckedImg.LoadFile(GetResourcesPath() + "unchecked.png", wxBITMAP_TYPE_PNG);
+    return uncheckedImg;
+}
 
 bool Application::OnInit()
 {

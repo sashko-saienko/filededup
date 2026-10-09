@@ -2,6 +2,7 @@
 // Created by sashko on 29.07.26.
 //
 #include <Poco/Logger.h>
+#include <application.h>
 #include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
@@ -21,15 +22,10 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
 {
     wxImageList* imageList = new wxImageList(16, 16);
 
-    wxFileName execFileName{wxStandardPaths::Get().GetExecutablePath()};
-    wxString resourcesPath = wxString::Format("%s/resources/", execFileName.GetPath());
-
-    wxImage uncheckedImg;
-    uncheckedImg.LoadFile(resourcesPath + "unchecked.png", wxBITMAP_TYPE_PNG);
+    wxImage uncheckedImg = Application::GetUncheckedImage();
     m_uncheckedImg = imageList->Add(uncheckedImg);
 
-    wxImage checkedImg;
-    checkedImg.LoadFile(resourcesPath + "checked.png", wxBITMAP_TYPE_PNG);
+    wxImage checkedImg = Application::GetCheckedImage();
     m_checkedImg = imageList->Add(checkedImg);
 
     AssignImageList(imageList);
