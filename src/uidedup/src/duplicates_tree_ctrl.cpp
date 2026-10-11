@@ -74,7 +74,7 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
             continue;
         }
 
-        wxTreeItemId parent = AppendItem(rootId, wxString::Format("%d", checksum));
+        wxTreeItemId parent = AppendItem(rootId, wxString::Format("%u", checksum));
 
         for (const auto& file : files)
         {
