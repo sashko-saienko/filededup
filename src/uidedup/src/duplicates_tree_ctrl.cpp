@@ -167,11 +167,7 @@ void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
 
 void DuplicatesTreeCtrl::DeleteChecked()
 {
-    wxArrayTreeItemIds checkedItems;
-    GetCheckedTreeItemsWhileTrue([&](wxTreeItemId item) {
-        checkedItems.Add(item);
-        return true;
-    });
+    wxArrayTreeItemIds checkedItems = GetCheckedTreeItemIds();
 
     if (checkedItems.IsEmpty())
     {
@@ -181,11 +177,13 @@ void DuplicatesTreeCtrl::DeleteChecked()
     DeleteCheckedTreeItems(checkedItems);
 }
 
-void DuplicatesTreeCtrl::GetCheckedTreeItemsWhileTrue(ItemHandler handleItem) const
+wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
 {
+    wxArrayTreeItemIds checkedItems;
+
     if (GetCount() == 0)
     {
-        return;
+        return checkedItems;
     }
 
     wxTreeItemIdValue checksumIdValue;
@@ -200,15 +198,15 @@ void DuplicatesTreeCtrl::GetCheckedTreeItemsWhileTrue(ItemHandler handleItem) co
         {
             if (GetItemImage(fileItem) == m_checkedImg)
             {
-                if (!handleItem(fileItem))
-                {
-                    return;
-                }
+                checkedItems.Add(fileItem);
             }
+
             fileItem = GetNextChild(checksumItem, fileIdValue);
         }
         checksumItem = GetNextChild(root, checksumIdValue);
     }
+
+    return checkedItems;
 }
 
 void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems)

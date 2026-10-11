@@ -22,8 +22,6 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     bool HasAnythingToDelete() const;
 
   private:
-    using ItemHandler = std::function<bool(wxTreeItemId)>;
-
     int m_uncheckedImg;
     int m_checkedImg;
     size_t checked;
@@ -34,7 +32,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     bool IsFileItem(const wxTreeItemId& item) const;
     bool IsCheckable(const wxTreeItemId& item) const;
     void Populate(const std::string& targetFolder);
-    void GetCheckedTreeItemsWhileTrue(ItemHandler handleItem) const;
+    wxArrayTreeItemIds GetCheckedTreeItemIds() const;
     void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
 };
