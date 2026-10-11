@@ -2,6 +2,7 @@
 // Created by sashko on 29.07.26.
 //
 #include <Poco/Logger.h>
+#include <algorithm>
 #include <application.h>
 #include <custom_events.h>
 #include <deduplib/duplicates_finder.h>
@@ -250,11 +251,15 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
     auto it = checksumFilesMap.find(checksum);
     if (it != checksumFilesMap.end())
     {
-        auto& filesList = it->second;
-        filesList.remove_if(
-            [&filePath](const Poco::File& file) { return file.path() == filePath; });
+        auto& files = it->second;
+        auto it_f = find_if(files.begin(), files.end(), [&filePath](const Poco::File& file) {
+            return file.path() == filePath;
+        });
 
-        if (filesList.empty())
+        Logger::get(LOGGER_NAME)
+            .debug("Deleting file %s (checksum: %u).", it_f->absolutePath(), it->first);
+
+        if (files.empty())
         {
             checksumFilesMap.erase(it);
         }
