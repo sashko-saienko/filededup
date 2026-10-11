@@ -2,14 +2,10 @@
 #define __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 
 #include <deduplib/files_map.h>
-#include <filesystem>
-#include <functional>
 #include <wx/treectrl.h>
 
 namespace Deduplicator::Ui
 {
-
-namespace fs = std::filesystem;
 
 class DuplicatesTreeCtrl : public wxTreeCtrl
 {
