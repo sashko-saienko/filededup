@@ -45,8 +45,9 @@ MainFrame::MainFrame()
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
-    Bind(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE,
-         &MainFrame::OnCheckStateChanged, this);
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::OnCheckedDuplicatesAvailable,
+         this);
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
 
     UpdateRefreshButtonState();
     UpdateDeleteButtonState();
@@ -211,9 +212,22 @@ void MainFrame::UpdateDeleteButtonState()
     }
 }
 
-void MainFrame::OnCheckStateChanged(wxCommandEvent& event)
+void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
 {
-    UpdateDeleteButtonState();
+    m_toolBar->EnableTool(ID_DELETE_SELECTED, true);
+    if (GetMenuBar())
+    {
+        GetMenuBar()->Enable(ID_DELETE_SELECTED, true);
+    }
+}
+
+void MainFrame::OnCheckedDuplicatesAbsent(wxCommandEvent& event)
+{
+    m_toolBar->EnableTool(ID_DELETE_SELECTED, false);
+    if (GetMenuBar())
+    {
+        GetMenuBar()->Enable(ID_DELETE_SELECTED, false);
+    }
 }
 
 } // namespace Deduplicator::Ui

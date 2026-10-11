@@ -6,4 +6,5 @@
 namespace Deduplicator::Ui::Events
 {
 wxDEFINE_EVENT(wxEVT_CHECKED_DUPLICATES_AVAILABLE, wxCommandEvent);
-}
+wxDEFINE_EVENT(wxEVT_CHECKED_DUPLICATES_ABSENT, wxCommandEvent);
+} // namespace Deduplicator::Ui::Events

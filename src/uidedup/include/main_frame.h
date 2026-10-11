@@ -40,7 +40,8 @@ class MainFrame : public ::wxFrame
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
     void OnDeleteChecked(wxCommandEvent& event);
-    void OnCheckStateChanged(wxCommandEvent& event);
+    void OnCheckedDuplicatesAvailable(wxCommandEvent& event);
+    void OnCheckedDuplicatesAbsent(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();

@@ -145,6 +145,12 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
         {
             SetItemImage(item, m_uncheckedImg);
             checked--;
+            if (checked == 0)
+            {
+                wxCommandEvent evt(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT,
+                                   GetId());
+                GetEventHandler()->ProcessEvent(evt);
+            }
         }
     }
 }
