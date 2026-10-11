@@ -2,6 +2,7 @@
 // Created by sashko on 14.03.26.
 //
 #include <Poco/Logger.h>
+#include <custom_events.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
 #include <main_frame.h>
@@ -44,8 +45,11 @@ MainFrame::MainFrame()
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
+    Bind(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE,
+         &MainFrame::OnCheckStateChanged, this);
 
     UpdateRefreshButtonState();
+    UpdateDeleteButtonState();
 }
 
 void MainFrame::SetupMenuBar()
@@ -195,6 +199,21 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 void MainFrame::UpdateRefreshButtonState()
 {
     m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
+}
+
+void MainFrame::UpdateDeleteButtonState()
+{
+    bool canDelete = m_treeCtrl && m_treeCtrl->HasAnythingToDelete();
+    m_toolBar->EnableTool(ID_DELETE_SELECTED, canDelete);
+    if (GetMenuBar())
+    {
+        GetMenuBar()->Enable(ID_DELETE_SELECTED, canDelete);
+    }
+}
+
+void MainFrame::OnCheckStateChanged(wxCommandEvent& event)
+{
+    UpdateDeleteButtonState();
 }
 
 } // namespace Deduplicator::Ui

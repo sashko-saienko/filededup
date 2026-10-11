@@ -15,10 +15,12 @@ add_executable(
         src/main_frame.cpp
         src/duplicates_tree_ctrl.cpp
         src/image_file_preview.cpp
+        src/custom_events.cpp
         include/application.h
         include/main_frame.h
         include/duplicates_tree_ctrl.h
         include/image_file_preview.h
+        include/custom_events.h
 )
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LOGGER_NAME="${PROJECT_NAME}")

@@ -40,12 +40,14 @@ class MainFrame : public ::wxFrame
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
     void OnDeleteChecked(wxCommandEvent& event);
+    void OnCheckStateChanged(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();
     void SetupMainLayout();
     void SearchDuplicates();
     void UpdateRefreshButtonState();
+    void UpdateDeleteButtonState();
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;

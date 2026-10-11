@@ -3,6 +3,7 @@
 //
 #include <Poco/Logger.h>
 #include <application.h>
+#include <custom_events.h>
 #include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
@@ -18,7 +19,7 @@ namespace Deduplicator::Ui
 
 DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos,
                                        const wxSize& size, long style)
-    : wxTreeCtrl(parent, id, pos, size, style), m_uncheckedImg(-1), m_checkedImg(-1)
+    : wxTreeCtrl(parent, id, pos, size, style), m_uncheckedImg(-1), m_checkedImg(-1), checked{}
 {
     wxImageList* imageList = new wxImageList(16, 16);
 
@@ -132,10 +133,18 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
         if (currentImage != m_checkedImg && IsCheckable(item))
         {
             SetItemImage(item, m_checkedImg);
+            checked++;
+            if (checked == 1)
+            {
+                wxCommandEvent evt(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE,
+                                   GetId());
+                GetEventHandler()->ProcessEvent(evt);
+            }
         }
         else if (currentImage == m_checkedImg)
         {
             SetItemImage(item, m_uncheckedImg);
+            checked--;
         }
     }
 }
@@ -244,6 +253,11 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
             checksumFilesMap.erase(it);
         }
     }
+}
+
+bool DuplicatesTreeCtrl::HasAnythingToDelete() const
+{
+    return checked > 0;
 }
 
 } // namespace Deduplicator::Ui
