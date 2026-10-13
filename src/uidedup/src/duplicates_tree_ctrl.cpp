@@ -273,9 +273,4 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
     }
 }
 
-bool DuplicatesTreeCtrl::HasAnythingToDelete() const
-{
-    return checked > 0;
-}
-
 } // namespace Deduplicator::Ui

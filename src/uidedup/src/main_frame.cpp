@@ -4,10 +4,8 @@
 #include <Poco/Logger.h>
 #include <custom_events.h>
 #include <duplicates_tree_ctrl.h>
-#include <format>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
-#include <string>
 #include <wx/artprov.h>
 #include <wx/dirdlg.h>
 #include <wx/filefn.h>
@@ -21,8 +19,6 @@
 
 namespace Deduplicator::Ui
 {
-using Poco::Logger;
-
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "File Deduplicator", wxDefaultPosition, wxSize(800, 600)),
       m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
@@ -50,7 +46,7 @@ MainFrame::MainFrame()
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
 
     UpdateRefreshButtonState();
-    UpdateDeleteButtonState();
+    SetDeleteSelected(false);
 }
 
 void MainFrame::SetupMenuBar()
@@ -202,31 +198,22 @@ void MainFrame::UpdateRefreshButtonState()
     m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
 }
 
-void MainFrame::UpdateDeleteButtonState()
-{
-    bool canDelete = m_treeCtrl && m_treeCtrl->HasAnythingToDelete();
-    m_toolBar->EnableTool(ID_DELETE_SELECTED, canDelete);
-    if (GetMenuBar())
-    {
-        GetMenuBar()->Enable(ID_DELETE_SELECTED, canDelete);
-    }
-}
-
 void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
 {
-    m_toolBar->EnableTool(ID_DELETE_SELECTED, true);
-    if (GetMenuBar())
-    {
-        GetMenuBar()->Enable(ID_DELETE_SELECTED, true);
-    }
+    SetDeleteSelected(true);
 }
 
 void MainFrame::OnCheckedDuplicatesAbsent(wxCommandEvent& event)
 {
-    m_toolBar->EnableTool(ID_DELETE_SELECTED, false);
+    SetDeleteSelected(false);
+}
+
+void MainFrame::SetDeleteSelected(bool isEnabled)
+{
+    m_toolBar->EnableTool(ID_DELETE_SELECTED, isEnabled);
     if (GetMenuBar())
     {
-        GetMenuBar()->Enable(ID_DELETE_SELECTED, false);
+        GetMenuBar()->Enable(ID_DELETE_SELECTED, isEnabled);
     }
 }
 

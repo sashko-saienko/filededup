@@ -15,7 +15,6 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
 
     void SetDuplicatesTree(const std::string& targetFolder);
     void DeleteChecked();
-    bool HasAnythingToDelete() const;
 
   private:
     int m_uncheckedImg;
