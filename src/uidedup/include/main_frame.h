@@ -46,6 +46,7 @@ class MainFrame : public ::wxFrame
     void SetupMenuBar();
     void SetupToolBar();
     void SetupMainLayout();
+    void SetupEventBinds();
     void SearchDuplicates();
     void UpdateRefreshButtonState();
     void SetDeleteSelected(bool);

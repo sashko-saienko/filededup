@@ -31,19 +31,7 @@ MainFrame::MainFrame()
     CreateStatusBar();
     SetStatusText("Start by selecting a folder where to serch duplicates for.");
 
-    // Bind events
-    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
-    Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_MENU, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
-    Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
-    Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
-    Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
-    Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::OnCheckedDuplicatesAvailable,
-         this);
-    Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
+    SetupEventBinds();
 
     UpdateRefreshButtonState();
     SetDeleteSelected(false);
@@ -129,6 +117,22 @@ void MainFrame::SetupMainLayout()
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
     mainSizer->Add(splitter, 1, wxEXPAND);
     SetSizer(mainSizer);
+}
+
+void MainFrame::SetupEventBinds()
+{
+    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
+    Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
+    Bind(wxEVT_MENU, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
+    Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
+    Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
+    Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::OnCheckedDuplicatesAvailable,
+         this);
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
 }
 
 void MainFrame::SearchDuplicates()
