@@ -25,13 +25,15 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
 
     void OnItemActivated(::wxTreeEvent& event);
     void OnSelectionChanged(::wxTreeEvent& event);
+
     bool IsFileItem(const wxTreeItemId& item) const;
     bool IsCheckable(const wxTreeItemId& item) const;
+
     void Populate(const std::string& targetFolder);
     wxArrayTreeItemIds GetCheckedTreeItemIds() const;
     void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
-
+    void ActivateItem(wxTreeItemId& item);
     void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
 };
 

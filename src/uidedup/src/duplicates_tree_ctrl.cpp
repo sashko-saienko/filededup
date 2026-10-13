@@ -127,27 +127,34 @@ bool DuplicatesTreeCtrl::IsCheckable(const wxTreeItemId& item) const
 void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
 {
     wxTreeItemId item = event.GetItem();
+    ActivateItem(item);
+}
 
-    if (IsCheckable(item))
+void DuplicatesTreeCtrl::ActivateItem(wxTreeItemId& item)
+{
+    if (!IsCheckable(item))
     {
-        int currentImage = GetItemImage(item);
-        if (currentImage != m_checkedImg)
+        return;
+    }
+
+    int currentImage = GetItemImage(item);
+
+    if (currentImage != m_checkedImg)
+    {
+        SetItemImage(item, m_checkedImg);
+        checked++;
+        if (checked == 1)
         {
-            SetItemImage(item, m_checkedImg);
-            checked++;
-            if (checked == 1)
-            {
-                SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
-            }
+            SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
         }
-        else if (currentImage == m_checkedImg)
+    }
+    else if (currentImage == m_checkedImg)
+    {
+        SetItemImage(item, m_uncheckedImg);
+        checked--;
+        if (checked == 0)
         {
-            SetItemImage(item, m_uncheckedImg);
-            checked--;
-            if (checked == 0)
-            {
-                SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
-            }
+            SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
         }
     }
 }
