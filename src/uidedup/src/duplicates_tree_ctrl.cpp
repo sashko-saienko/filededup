@@ -127,18 +127,16 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
 {
     wxTreeItemId item = event.GetItem();
 
-    if (IsFileItem(item))
+    if (IsCheckable(item))
     {
         int currentImage = GetItemImage(item);
-        if (currentImage != m_checkedImg && IsCheckable(item))
+        if (currentImage != m_checkedImg)
         {
             SetItemImage(item, m_checkedImg);
             checked++;
             if (checked == 1)
             {
-                wxCommandEvent evt(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE,
-                                   GetId());
-                GetEventHandler()->ProcessEvent(evt);
+                SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
             }
         }
         else if (currentImage == m_checkedImg)
@@ -147,12 +145,16 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
             checked--;
             if (checked == 0)
             {
-                wxCommandEvent evt(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT,
-                                   GetId());
-                GetEventHandler()->ProcessEvent(evt);
+                SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
             }
         }
     }
+}
+
+void DuplicatesTreeCtrl::SendEvent(wxEventTypeTag<wxCommandEvent> event) const
+{
+    wxCommandEvent evt(event, GetId());
+    GetEventHandler()->ProcessEvent(evt);
 }
 
 void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)

@@ -35,6 +35,8 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     wxArrayTreeItemIds GetCheckedTreeItemIds() const;
     void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
+
+    void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
 };
 
 } // namespace Deduplicator::Ui
