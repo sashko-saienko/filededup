@@ -34,6 +34,9 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
     void ActivateItem(wxTreeItemId& item);
     void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
+
+    using TreeItemCallback = std::function<void(wxTreeItemId)>;
+    void EnumerateItems(wxTreeItemId parent, TreeItemCallback treeItemCallback) const;
 };
 
 } // namespace Deduplicator::Ui

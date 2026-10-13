@@ -196,27 +196,35 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
         return checkedItems;
     }
 
-    wxTreeItemIdValue checksumIdValue;
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId checksumItem = GetFirstChild(root, checksumIdValue);
-
-    while (checksumItem.IsOk())
-    {
-        wxTreeItemIdValue fileIdValue;
-        wxTreeItemId fileItem = GetFirstChild(checksumItem, fileIdValue);
-        while (fileItem.IsOk())
-        {
+    EnumerateItems(root, [this, &checkedItems](wxTreeItemId checksum) -> void {
+        EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId fileItem) -> void {
             if (GetItemImage(fileItem) == m_checkedImg)
             {
                 checkedItems.Add(fileItem);
             }
-
-            fileItem = GetNextChild(checksumItem, fileIdValue);
-        }
-        checksumItem = GetNextChild(root, checksumIdValue);
-    }
+        });
+    });
 
     return checkedItems;
+}
+
+void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent,
+                                        TreeItemCallback treeItemCallback) const
+{
+    if (GetCount() == 0)
+    {
+        return;
+    }
+
+    wxTreeItemIdValue cookie;
+    wxTreeItemId childItemId = GetFirstChild(parent, cookie);
+
+    while (childItemId.IsOk())
+    {
+        treeItemCallback(childItemId);
+        childItemId = GetNextChild(parent, cookie);
+    }
 }
 
 void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems)
