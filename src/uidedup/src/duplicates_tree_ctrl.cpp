@@ -197,14 +197,19 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
     }
 
     wxTreeItemId root = GetRootItem();
-    EnumerateItems(root, [this, &checkedItems](wxTreeItemId checksum) -> void {
-        EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId fileItem) -> void {
-            if (GetItemImage(fileItem) == m_checkedImg)
+
+    auto checkedItemsAccumulator
+ = [this, &checkedItems](wxTreeItemId checksum) -> void {
+        EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId file) -> void {
+            if (GetItemImage(file) == m_checkedImg)
             {
-                checkedItems.Add(fileItem);
+                checkedItems.Add(file);
             }
         });
-    });
+    };
+
+    EnumerateItems(root, checkedItemsAccumulator
+);
 
     return checkedItems;
 }
