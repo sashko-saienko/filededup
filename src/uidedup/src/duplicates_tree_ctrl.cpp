@@ -198,8 +198,7 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
 
     wxTreeItemId root = GetRootItem();
 
-    auto checkedItemsAccumulator
- = [this, &checkedItems](wxTreeItemId checksum) -> void {
+    auto checkedItemsAccumulator = [this, &checkedItems](wxTreeItemId checksum) -> void {
         EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId file) -> void {
             if (GetItemImage(file) == m_checkedImg)
             {
@@ -208,8 +207,7 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
         });
     };
 
-    EnumerateItems(root, checkedItemsAccumulator
-);
+    EnumerateItems(root, checkedItemsAccumulator);
 
     return checkedItems;
 }
@@ -276,8 +274,7 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
             return file.path() == filePath;
         });
 
-        Logger::get(LOGGER_NAME)
-            .debug("Deleting file %s (checksum: %u).", it_f->path(), it->first);
+        Logger::get(LOGGER_NAME).debug("Deleting file %s (checksum: %u).", it_f->path(), it->first);
 
         if (files.empty())
         {

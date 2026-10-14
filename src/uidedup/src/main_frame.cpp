@@ -167,8 +167,8 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     if (dialog.ShowModal() == wxID_OK)
     {
         _targetFolder = dialog.GetPath().ToStdString();
-        UpdateRefreshButtonState();
         SearchDuplicates();
+        UpdateRefreshButtonState();
     }
 }
 
@@ -199,7 +199,8 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::UpdateRefreshButtonState()
 {
-    m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
+    auto hasAnythingToRefresh = _targetFolder.has_value() && m_treeCtrl->GetCount() > 0;
+    m_toolBar->EnableTool(ID_REFRESH, hasAnythingToRefresh);
 }
 
 void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
