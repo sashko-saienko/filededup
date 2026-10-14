@@ -135,7 +135,7 @@ void MainFrame::SetupEventBinds()
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
 }
 
-void MainFrame::SearchDuplicates()
+void MainFrame::SetDuplicatesTree()
 {
     if (_targetFolder.has_value() != true)
     {
@@ -167,14 +167,14 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     if (dialog.ShowModal() == wxID_OK)
     {
         _targetFolder = dialog.GetPath().ToStdString();
-        SearchDuplicates();
+        SetDuplicatesTree();
         UpdateRefreshButtonState();
     }
 }
 
 void MainFrame::OnRefresh(::wxCommandEvent& event)
 {
-    SearchDuplicates();
+    SetDuplicatesTree();
 }
 
 void MainFrame::OnDeleteChecked(::wxCommandEvent& event)
