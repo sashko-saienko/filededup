@@ -277,7 +277,7 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
         });
 
         Logger::get(LOGGER_NAME)
-            .debug("Deleting file %s (checksum: %u).", it_f->absolutePath(), it->first);
+            .debug("Deleting file %s (checksum: %u).", it_f->path(), it->first);
 
         if (files.empty())
         {
