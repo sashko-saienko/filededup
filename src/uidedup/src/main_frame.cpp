@@ -6,6 +6,7 @@
 #include <duplicates_tree_ctrl.h>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
+#include <thread>
 #include <wx/artprov.h>
 #include <wx/dirdlg.h>
 #include <wx/filefn.h>
@@ -13,6 +14,7 @@
 #include <wx/generic/statbmpg.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
+#include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/wx.h>
@@ -135,6 +137,27 @@ void MainFrame::SetupEventBinds()
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
 }
 
+void MainFrame::ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource)
+{
+    wxProgressDialog progressDialog("Searching for duplicates", "Scanning files...", 100, this,
+                                    wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_SMOOTH);
+    progressDialog.Show();
+
+    while (!stopSource.stop_requested())
+    {
+        if (progressDialog.WasCancelled())
+        {
+            stopSource.request_stop();
+            progressDialog.Update(100, "Operation cancelled");
+            wxMilliSleep(500);
+            break;
+        }
+        wxMilliSleep(100);
+        progressDialog.Pulse();
+    }
+    progressDialog.Destroy();
+}
+
 void MainFrame::SetDuplicatesTree()
 {
     if (_targetFolder.has_value() != true)
@@ -144,8 +167,19 @@ void MainFrame::SetDuplicatesTree()
         return;
     }
 
-    m_treeCtrl->SetDuplicatesTree(std::stop_token{}, _targetFolder.value().string());
-    m_treeCtrl->ExpandAll();
+    std::stop_source stopSource;
+
+    std::jthread worker([this, folder = _targetFolder.value().string(),
+                         stopToken = stopSource.get_token()]() mutable {
+        m_treeCtrl->SetDuplicatesTree(stopToken, folder);
+        if (!stopToken.stop_requested())
+        {
+            m_treeCtrl->ExpandAll();
+        }
+    });
+
+    ShowDuplicatesSearchProgressDialog(stopSource);
+    worker.join();
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)
@@ -199,8 +233,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::UpdateRefreshButtonState()
 {
-    auto hasAnythingToRefresh = _targetFolder.has_value() && m_treeCtrl->GetCount() > 0;
-    m_toolBar->EnableTool(ID_REFRESH, hasAnythingToRefresh);
+    m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
 }
 
 void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
