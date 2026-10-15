@@ -18,6 +18,7 @@
 #include <iostream>
 #include <reusablelib/time_helpers.h>
 #include <string>
+#include <thread>
 
 namespace Deduplicator::Console
 {
@@ -120,7 +121,7 @@ int Application::main(const ArgVec& argv)
 
     try
     {
-        DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(), _keepPolicy);
+        DuplicatesDeleter duplicatesDeleter(directoryScanner.scan(std::stop_token{}), _keepPolicy);
         duplicatesDeleter.remove(_deleteDuplicates);
     }
     catch (std::exception& e)

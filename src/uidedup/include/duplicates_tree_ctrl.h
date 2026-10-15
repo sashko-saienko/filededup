@@ -2,6 +2,7 @@
 #define __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 
 #include <deduplib/files_map.h>
+#include <thread>
 #include <wx/treectrl.h>
 
 namespace Deduplicator::Ui
@@ -13,7 +14,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition,
                        const wxSize& size = wxDefaultSize, long style = wxTR_DEFAULT_STYLE);
 
-    void SetDuplicatesTree(const std::string& targetFolder);
+    void SetDuplicatesTree(std::stop_token st, const std::string& targetFolder);
     void DeleteChecked();
 
   private:

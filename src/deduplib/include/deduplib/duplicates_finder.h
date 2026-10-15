@@ -4,6 +4,7 @@
 #include "files_map.h"
 #include <Poco/Logger.h>
 #include <filesystem>
+#include <thread>
 
 namespace Deduplicator
 {
@@ -16,7 +17,7 @@ class DuplicatesFinder
     {
     }
 
-    [[nodiscard]] ChecksumFilesMap scan() const;
+    [[nodiscard]] ChecksumFilesMap scan(std::stop_token) const;
 
   private:
     std::filesystem::path path_;

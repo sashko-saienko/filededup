@@ -8,6 +8,7 @@
 #include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
 #include <format>
+#include <thread>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
@@ -36,12 +37,12 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
     Bind(wxEVT_TREE_SEL_CHANGED, &DuplicatesTreeCtrl::OnSelectionChanged, this);
 }
 
-void DuplicatesTreeCtrl::SetDuplicatesTree(const std::string& targetFolder)
+void DuplicatesTreeCtrl::SetDuplicatesTree(std::stop_token st, const std::string& targetFolder)
 {
     try
     {
         Deduplicator::DuplicatesFinder df{targetFolder};
-        checksumFilesMap = df.scan();
+        checksumFilesMap = df.scan(st);
     }
     catch (const std::exception& e)
     {
@@ -52,9 +53,15 @@ void DuplicatesTreeCtrl::SetDuplicatesTree(const std::string& targetFolder)
         return;
     }
 
-    if (checksumFilesMap.size() > 0)
+    if (!st.stop_requested() && checksumFilesMap.size() > 0)
     {
         Populate(targetFolder);
+    }
+
+    if (st.stop_requested())
+    {
+        DeleteAllItems();
+        checksumFilesMap.clear();
     }
 }
 

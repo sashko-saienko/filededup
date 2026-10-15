@@ -6,6 +6,7 @@
 #include <fstream>
 #include <list>
 #include <ranges>
+#include <thread>
 
 namespace Deduplicator
 {
@@ -15,7 +16,7 @@ namespace fs = std::filesystem;
 using Poco::Logger;
 using std::filesystem::path;
 
-auto DuplicatesFinder::scan() const -> ChecksumFilesMap
+auto DuplicatesFinder::scan(std::stop_token st) const -> ChecksumFilesMap
 {
     ChecksumFilesMap filesMap;
     for (std::list dirs{path_}; !dirs.empty(); dirs.pop_front())
@@ -42,7 +43,20 @@ auto DuplicatesFinder::scan() const -> ChecksumFilesMap
 
             filesMap[checksum].emplace_back(p);
             Logger::get(LOGGER_NAME).information("%s has been processed", p.string());
+            if (st.stop_requested())
+            {
+                break;
+            }
         }
+        if (st.stop_requested())
+        {
+            break;
+        }
+    }
+
+    if (st.stop_requested())
+    {
+        return filesMap;
     }
 
     return removeNonDuplicates(filesMap);

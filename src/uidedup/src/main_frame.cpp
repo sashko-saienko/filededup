@@ -144,7 +144,7 @@ void MainFrame::SetDuplicatesTree()
         return;
     }
 
-    m_treeCtrl->SetDuplicatesTree(_targetFolder.value().string());
+    m_treeCtrl->SetDuplicatesTree(std::stop_token{}, _targetFolder.value().string());
     m_treeCtrl->ExpandAll();
 }
 
