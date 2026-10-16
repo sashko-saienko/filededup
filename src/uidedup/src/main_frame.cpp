@@ -242,6 +242,10 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 void MainFrame::UpdateRefreshButtonState()
 {
     m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
+    if (GetMenuBar())
+    {
+        GetMenuBar()->Enable(ID_REFRESH, _targetFolder.has_value());
+    }
 }
 
 void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
