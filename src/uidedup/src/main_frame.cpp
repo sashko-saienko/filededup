@@ -36,7 +36,7 @@ MainFrame::MainFrame()
     SetupEventBinds();
 
     UpdateRefreshButtonState();
-    SetDeleteSelected(false);
+    ToggleActionsOverSelectedItems(false);
 }
 
 void MainFrame::SetupMenuBar()
@@ -47,6 +47,7 @@ void MainFrame::SetupMenuBar()
     menuFile->Append(ID_REFRESH, "&Refresh\tF5", "Refresh duplicates list");
     menuFile->Append(ID_DELETE_SELECTED, "&Delete Selected\tDel",
                      "Delete selected duplicate files");
+    menuFile->Append(ID_CLEAR_SELECTED, "&Clear Selected", "Clear selected items");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -64,20 +65,21 @@ void MainFrame::SetupToolBar()
 {
     m_toolBar = CreateToolBar(wxTB_HORIZONTAL | wxNO_BORDER);
 
-    // Add folder selection
     wxBitmap folderBitmap =
         wxArtProvider::GetBitmap(wxART_FOLDER_OPEN, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_SELECTFOLDER, "Select Folder", folderBitmap,
                        "Select target folder for deduplication");
 
-    // Add refresh
     wxBitmap refreshBitmap = wxArtProvider::GetBitmap(wxART_REFRESH, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_REFRESH, "Refresh", refreshBitmap, "Refresh duplicates list");
 
-    // Add delete selected
     wxBitmap deleteBitmap = wxArtProvider::GetBitmap(wxART_DELETE, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_DELETE_SELECTED, "Delete Selected", deleteBitmap,
                        "Delete selected items");
+
+    wxBitmap clearBitmap =
+        wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_CLEAR_SELECTED, "Clear Selected", clearBitmap, "Clear selected items");
 
     m_toolBar->Realize();
 }
@@ -128,10 +130,12 @@ void MainFrame::SetupEventBinds()
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_MENU, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_MENU, &MainFrame::OnClearSelected, this, ID_CLEAR_SELECTED);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_TOOL, &MainFrame::OnClearSelected, this, ID_CLEAR_SELECTED);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::OnCheckedDuplicatesAvailable,
          this);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
@@ -216,6 +220,10 @@ void MainFrame::OnDeleteChecked(::wxCommandEvent& event)
     m_treeCtrl->DeleteChecked();
 }
 
+void MainFrame::OnClearSelected(::wxCommandEvent& event)
+{
+}
+
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
     wxTreeItemId selectedItem = event.GetItem();
@@ -238,20 +246,22 @@ void MainFrame::UpdateRefreshButtonState()
 
 void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
 {
-    SetDeleteSelected(true);
+    ToggleActionsOverSelectedItems(true);
 }
 
 void MainFrame::OnCheckedDuplicatesAbsent(wxCommandEvent& event)
 {
-    SetDeleteSelected(false);
+    ToggleActionsOverSelectedItems(false);
 }
 
-void MainFrame::SetDeleteSelected(bool isEnabled)
+void MainFrame::ToggleActionsOverSelectedItems(bool isEnabled)
 {
     m_toolBar->EnableTool(ID_DELETE_SELECTED, isEnabled);
+    m_toolBar->EnableTool(ID_CLEAR_SELECTED, isEnabled);
     if (GetMenuBar())
     {
         GetMenuBar()->Enable(ID_DELETE_SELECTED, isEnabled);
+        GetMenuBar()->Enable(ID_CLEAR_SELECTED, isEnabled);
     }
 }
 

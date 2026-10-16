@@ -25,7 +25,8 @@ enum
     ID_SELECTFOLDER = wxID_HIGHEST + 1,
     ID_REFRESH = wxID_HIGHEST + 2,
     ID_DUPLICATES_TREE = wxID_HIGHEST + 3,
-    ID_DELETE_SELECTED = wxID_HIGHEST + 4
+    ID_DELETE_SELECTED = wxID_HIGHEST + 4,
+    ID_CLEAR_SELECTED = wxID_HIGHEST + 5
 };
 
 class MainFrame : public ::wxFrame
@@ -42,6 +43,7 @@ class MainFrame : public ::wxFrame
     void OnDeleteChecked(wxCommandEvent& event);
     void OnCheckedDuplicatesAvailable(wxCommandEvent& event);
     void OnCheckedDuplicatesAbsent(wxCommandEvent& event);
+    void OnClearSelected(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();
@@ -50,7 +52,7 @@ class MainFrame : public ::wxFrame
     void SetDuplicatesTree();
     void ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource);
     void UpdateRefreshButtonState();
-    void SetDeleteSelected(bool);
+    void ToggleActionsOverSelectedItems(bool);
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;
