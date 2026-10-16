@@ -41,9 +41,8 @@ class MainFrame : public ::wxFrame
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
     void OnDeleteChecked(wxCommandEvent& event);
-    void OnCheckedDuplicatesAvailable(wxCommandEvent& event);
-    void OnCheckedDuplicatesAbsent(wxCommandEvent& event);
     void OnClearSelected(wxCommandEvent& event);
+    void ToggleActionsOverSelectedItems(wxCommandEvent& event);
 
     void SetupMenuBar();
     void SetupToolBar();
@@ -51,8 +50,8 @@ class MainFrame : public ::wxFrame
     void SetupEventBinds();
     void SetDuplicatesTree();
     void ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource);
-    void UpdateRefreshButtonState();
-    void ToggleActionsOverSelectedItems(bool);
+    void SetRefreshOptionState();
+    void SetActionsOverSelectedOptionsState(bool isEnabled);
 
     DuplicatesTreeCtrl* m_treeCtrl;
     wxToolBar* m_toolBar;

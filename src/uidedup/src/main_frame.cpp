@@ -35,8 +35,8 @@ MainFrame::MainFrame()
 
     SetupEventBinds();
 
-    UpdateRefreshButtonState();
-    ToggleActionsOverSelectedItems(false);
+    SetRefreshOptionState();
+    SetActionsOverSelectedOptionsState(false);
 }
 
 void MainFrame::SetupMenuBar()
@@ -136,9 +136,9 @@ void MainFrame::SetupEventBinds()
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
     Bind(wxEVT_TOOL, &MainFrame::OnClearSelected, this, ID_CLEAR_SELECTED);
-    Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::OnCheckedDuplicatesAvailable,
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::ToggleActionsOverSelectedItems,
          this);
-    Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::OnCheckedDuplicatesAbsent, this);
+    Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::ToggleActionsOverSelectedItems, this);
 }
 
 void MainFrame::ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource)
@@ -206,7 +206,7 @@ void MainFrame::OnSelectFolder(::wxCommandEvent& event)
     {
         _targetFolder = dialog.GetPath().ToStdString();
         SetDuplicatesTree();
-        UpdateRefreshButtonState();
+        SetRefreshOptionState();
     }
 }
 
@@ -239,7 +239,7 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
     m_previewPanel->Refresh();
 }
 
-void MainFrame::UpdateRefreshButtonState()
+void MainFrame::SetRefreshOptionState()
 {
     m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
     if (GetMenuBar())
@@ -248,17 +248,12 @@ void MainFrame::UpdateRefreshButtonState()
     }
 }
 
-void MainFrame::OnCheckedDuplicatesAvailable(wxCommandEvent& event)
+void MainFrame::ToggleActionsOverSelectedItems(wxCommandEvent& event)
 {
-    ToggleActionsOverSelectedItems(true);
+    SetActionsOverSelectedOptionsState(m_treeCtrl->HasSelectedItems());
 }
 
-void MainFrame::OnCheckedDuplicatesAbsent(wxCommandEvent& event)
-{
-    ToggleActionsOverSelectedItems(false);
-}
-
-void MainFrame::ToggleActionsOverSelectedItems(bool isEnabled)
+void MainFrame::SetActionsOverSelectedOptionsState(bool isEnabled)
 {
     m_toolBar->EnableTool(ID_DELETE_SELECTED, isEnabled);
     m_toolBar->EnableTool(ID_CLEAR_SELECTED, isEnabled);
