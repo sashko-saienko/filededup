@@ -141,27 +141,6 @@ void MainFrame::SetupEventBinds()
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::ToggleActionsOverSelectedItems, this);
 }
 
-void MainFrame::ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource)
-{
-    wxProgressDialog progressDialog("Searching for duplicates", "Scanning files...", 100, this,
-                                    wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_SMOOTH);
-    progressDialog.Show();
-
-    while (!stopSource.stop_requested())
-    {
-        if (progressDialog.WasCancelled())
-        {
-            stopSource.request_stop();
-            progressDialog.Update(100, "Operation cancelled");
-            wxMilliSleep(500);
-            break;
-        }
-        wxMilliSleep(100);
-        progressDialog.Pulse();
-    }
-    progressDialog.Destroy();
-}
-
 void MainFrame::SetDuplicatesTree()
 {
     if (_targetFolder.has_value() != true)
@@ -182,8 +161,22 @@ void MainFrame::SetDuplicatesTree()
         }
     });
 
-    ShowDuplicatesSearchProgressDialog(stopSource);
-    worker.join();
+    wxProgressDialog progressDialog("Searching for duplicates", "Scanning files...", 100, this,
+                                    wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_SMOOTH);
+    progressDialog.Show();
+
+    while (!worker.joinable())
+    {
+        if (!stopSource.stop_requested() && progressDialog.WasCancelled())
+        {
+            stopSource.request_stop();
+            progressDialog.Update(100, "Operation cancelled");
+            wxMilliSleep(500);
+        }
+        wxMilliSleep(100);
+        progressDialog.Pulse();
+    }
+    progressDialog.Destroy();
 }
 
 void MainFrame::OnExit(::wxCommandEvent& _)

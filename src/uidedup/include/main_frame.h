@@ -49,7 +49,6 @@ class MainFrame : public ::wxFrame
     void SetupMainLayout();
     void SetupEventBinds();
     void SetDuplicatesTree();
-    void ShowDuplicatesSearchProgressDialog(std::stop_source& stopSource);
     void SetRefreshOptionState();
     void SetActionsOverSelectedOptionsState(bool isEnabled);
 
