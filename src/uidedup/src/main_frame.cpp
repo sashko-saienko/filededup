@@ -157,7 +157,7 @@ void MainFrame::SetDuplicatesTree()
         m_treeCtrl->SetDuplicatesTree(stopToken, folder);
         if (!stopToken.stop_requested())
         {
-            m_treeCtrl->ExpandAll();
+            CallAfter([this]() { m_treeCtrl->ExpandAll(); });
         }
     });
 
