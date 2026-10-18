@@ -101,13 +101,8 @@ bool DuplicatesTreeCtrl::IsFileItem(const wxTreeItemId& item) const
     return !ItemHasChildren(item);
 }
 
-bool DuplicatesTreeCtrl::IsCheckable(const wxTreeItemId& item) const
+bool DuplicatesTreeCtrl::canSelectWithinChecksumGroup(const wxTreeItemId& item) const
 {
-    if (!IsFileItem(item))
-    {
-        return false;
-    }
-
     wxTreeItemId parent = GetItemParent(item);
 
     if (!parent.IsOk())
@@ -137,16 +132,16 @@ void DuplicatesTreeCtrl::OnItemActivated(::wxTreeEvent& event)
     ActivateItem(item);
 }
 
-void DuplicatesTreeCtrl::ActivateItem(wxTreeItemId& item)
+void DuplicatesTreeCtrl::ActivateItem(const wxTreeItemId& item)
 {
-    if (!IsCheckable(item))
+    if (!IsFileItem(item))
     {
         return;
     }
 
     int currentImage = GetItemImage(item);
 
-    if (currentImage != m_checkedImg)
+    if (currentImage != m_checkedImg && canSelectWithinChecksumGroup(item))
     {
         SetItemImage(item, m_checkedImg);
         checked++;
@@ -185,20 +180,21 @@ void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
 void DuplicatesTreeCtrl::DeleteChecked()
 {
     wxArrayTreeItemIds checkedItems = GetCheckedTreeItemIds();
-
-    if (checkedItems.IsEmpty())
-    {
-        return;
-    }
-
     DeleteCheckedTreeItems(checkedItems);
+}
+
+void DuplicatesTreeCtrl::ClearChecked()
+{
+    wxArrayTreeItemIds checkedItems = GetCheckedTreeItemIds();
+    std::for_each(checkedItems.begin(), checkedItems.end(),
+                  [this](const wxTreeItemId& item) { ActivateItem(item); });
 }
 
 wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
 {
     wxArrayTreeItemIds checkedItems;
 
-    if (GetCount() == 0)
+    if (!HasCheckedItems())
     {
         return checkedItems;
     }
@@ -220,7 +216,7 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
 }
 
 void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent,
-                                        TreeItemCallback treeItemCallback) const
+                                        TreeItemIdCallback treeItemCallback) const
 {
     if (GetCount() == 0)
     {

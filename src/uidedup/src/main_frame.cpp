@@ -215,6 +215,7 @@ void MainFrame::OnDeleteCheckedItems(::wxCommandEvent& event)
 
 void MainFrame::OnClearCheckedItems(::wxCommandEvent& event)
 {
+    m_treeCtrl->ClearChecked();
 }
 
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
@@ -243,7 +244,7 @@ void MainFrame::SetRefreshOptionState()
 
 void MainFrame::ToggleActionsOverSelectedItems(wxCommandEvent& event)
 {
-    SetActionsOverSelectedOptionsState(m_treeCtrl->HasSelectedItems());
+    SetActionsOverSelectedOptionsState(m_treeCtrl->HasCheckedItems());
 }
 
 void MainFrame::SetActionsOverSelectedOptionsState(bool isEnabled)
