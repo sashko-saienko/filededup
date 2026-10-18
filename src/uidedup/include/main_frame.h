@@ -40,8 +40,8 @@ class MainFrame : public ::wxFrame
     void OnItemSelected(::wxTreeEvent& event);
     void OnSelectFolder(wxCommandEvent& event);
     void OnRefresh(wxCommandEvent& event);
-    void OnDeleteChecked(wxCommandEvent& event);
-    void OnClearSelected(wxCommandEvent& event);
+    void OnDeleteCheckedItems(wxCommandEvent& event);
+    void OnClearCheckedItems(wxCommandEvent& event);
     void ToggleActionsOverSelectedItems(wxCommandEvent& event);
 
     void SetupMenuBar();

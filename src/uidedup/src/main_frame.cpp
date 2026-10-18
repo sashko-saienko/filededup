@@ -129,13 +129,13 @@ void MainFrame::SetupEventBinds()
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_MENU, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
-    Bind(wxEVT_MENU, &MainFrame::OnClearSelected, this, ID_CLEAR_SELECTED);
+    Bind(wxEVT_MENU, &MainFrame::OnDeleteCheckedItems, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_MENU, &MainFrame::OnClearCheckedItems, this, ID_CLEAR_SELECTED);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
-    Bind(wxEVT_TOOL, &MainFrame::OnDeleteChecked, this, ID_DELETE_SELECTED);
-    Bind(wxEVT_TOOL, &MainFrame::OnClearSelected, this, ID_CLEAR_SELECTED);
+    Bind(wxEVT_TOOL, &MainFrame::OnDeleteCheckedItems, this, ID_DELETE_SELECTED);
+    Bind(wxEVT_TOOL, &MainFrame::OnClearCheckedItems, this, ID_CLEAR_SELECTED);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::ToggleActionsOverSelectedItems,
          this);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::ToggleActionsOverSelectedItems, this);
@@ -208,12 +208,12 @@ void MainFrame::OnRefresh(::wxCommandEvent& event)
     SetDuplicatesTree();
 }
 
-void MainFrame::OnDeleteChecked(::wxCommandEvent& event)
+void MainFrame::OnDeleteCheckedItems(::wxCommandEvent& event)
 {
     m_treeCtrl->DeleteChecked();
 }
 
-void MainFrame::OnClearSelected(::wxCommandEvent& event)
+void MainFrame::OnClearCheckedItems(::wxCommandEvent& event)
 {
 }
 
