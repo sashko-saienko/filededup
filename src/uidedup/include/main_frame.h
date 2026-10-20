@@ -26,7 +26,9 @@ enum
     ID_REFRESH = wxID_HIGHEST + 2,
     ID_DUPLICATES_TREE = wxID_HIGHEST + 3,
     ID_DELETE_SELECTED = wxID_HIGHEST + 4,
-    ID_CLEAR_SELECTED = wxID_HIGHEST + 5
+    ID_CLEAR_SELECTED = wxID_HIGHEST + 5,
+    ID_SELECT_OLDEST = wxID_HIGHEST + 6,
+    ID_SELECT_NEWEST = wxID_HIGHEST + 7
 };
 
 class MainFrame : public ::wxFrame
@@ -42,6 +44,8 @@ class MainFrame : public ::wxFrame
     void OnRefresh(wxCommandEvent& event);
     void OnDeleteCheckedItems(wxCommandEvent& event);
     void OnClearCheckedItems(wxCommandEvent& event);
+    void OnCheckOldestFiles(wxCommandEvent& event);
+    void OnCheckNewestFiles(wxCommandEvent& event);
     void ToggleActionsOverSelectedItems(wxCommandEvent& event);
 
     void SetupMenuBar();

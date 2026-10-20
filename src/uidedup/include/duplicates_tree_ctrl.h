@@ -1,7 +1,9 @@
 #ifndef __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 #define __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 
+#include <Poco/File.h>
 #include <deduplib/files_map.h>
+#include <optional>
 #include <thread>
 #include <wx/treectrl.h>
 
@@ -17,6 +19,8 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void SetDuplicatesTree(std::stop_token st, const std::string& targetFolder);
     void DeleteChecked();
     void ClearChecked();
+    void CheckOldest();
+    void CheckNewest();
 
     bool HasCheckedItems() const
     {
@@ -36,14 +40,20 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     bool canSelectWithinChecksumGroup(const wxTreeItemId& item) const;
 
     void Populate(const std::string& targetFolder);
-    wxArrayTreeItemIds GetCheckedTreeItemIds() const;
+    wxArrayTreeItemIds GetCheckedTreeItemIds();
     void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
     void ActivateItem(const wxTreeItemId& item);
     void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
+    std::optional<unsigned> GetChecksumFromItem(const wxTreeItemId& item) const;
+    void CheckItem(const wxTreeItemId& item);
+    void UncheckItem(const wxTreeItemId& item);
 
-    using TreeItemIdCallback = std::function<void(wxTreeItemId)>;
-    void EnumerateItems(wxTreeItemId parent, TreeItemIdCallback treeItemCallback) const;
+    using TreeItemIdCallback = std::function<void(const wxTreeItemId&)>;
+    void EnumerateItems(wxTreeItemId parent, TreeItemIdCallback treeItemCallback);
+
+    using FilesComparisonCallback = std::function<bool(const Poco::File* l, const Poco::File* r)>;
+    void EnumerateChecksumFilesSortedGroups(FilesComparisonCallback callback);
 };
 
 } // namespace Deduplicator::Ui

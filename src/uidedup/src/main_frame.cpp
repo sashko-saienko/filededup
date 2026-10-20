@@ -48,6 +48,8 @@ void MainFrame::SetupMenuBar()
     menuFile->Append(ID_DELETE_SELECTED, "&Delete Selected\tDel",
                      "Delete selected duplicate files");
     menuFile->Append(ID_CLEAR_SELECTED, "&Clear Selected", "Clear selected items");
+    menuFile->Append(ID_SELECT_OLDEST, "Select &Oldest Files", "Select the oldest files");
+    menuFile->Append(ID_SELECT_NEWEST, "Select &Newest Files", "Select the newest files");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -80,6 +82,12 @@ void MainFrame::SetupToolBar()
     wxBitmap clearBitmap =
         wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_TOOLBAR, wxSize(16, 16));
     m_toolBar->AddTool(ID_CLEAR_SELECTED, "Clear Selected", clearBitmap, "Clear selected items");
+
+    wxBitmap oldestBitmap = wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_SELECT_OLDEST, "Select Oldest", oldestBitmap, "Select the oldest files");
+
+    wxBitmap newestBitmap = wxArtProvider::GetBitmap(wxART_GO_UP, wxART_TOOLBAR, wxSize(16, 16));
+    m_toolBar->AddTool(ID_SELECT_NEWEST, "Select Newest", newestBitmap, "Select the newest files");
 
     m_toolBar->Realize();
 }
@@ -131,11 +139,15 @@ void MainFrame::SetupEventBinds()
     Bind(wxEVT_MENU, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_MENU, &MainFrame::OnDeleteCheckedItems, this, ID_DELETE_SELECTED);
     Bind(wxEVT_MENU, &MainFrame::OnClearCheckedItems, this, ID_CLEAR_SELECTED);
+    Bind(wxEVT_MENU, &MainFrame::OnCheckOldestFiles, this, ID_SELECT_OLDEST);
+    Bind(wxEVT_MENU, &MainFrame::OnCheckNewestFiles, this, ID_SELECT_NEWEST);
     Bind(wxEVT_TREE_SEL_CHANGED, &MainFrame::OnItemSelected, this, ID_DUPLICATES_TREE);
     Bind(wxEVT_TOOL, &MainFrame::OnSelectFolder, this, ID_SELECTFOLDER);
     Bind(wxEVT_TOOL, &MainFrame::OnRefresh, this, ID_REFRESH);
     Bind(wxEVT_TOOL, &MainFrame::OnDeleteCheckedItems, this, ID_DELETE_SELECTED);
     Bind(wxEVT_TOOL, &MainFrame::OnClearCheckedItems, this, ID_CLEAR_SELECTED);
+    Bind(wxEVT_TOOL, &MainFrame::OnCheckOldestFiles, this, ID_SELECT_OLDEST);
+    Bind(wxEVT_TOOL, &MainFrame::OnCheckNewestFiles, this, ID_SELECT_NEWEST);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE, &MainFrame::ToggleActionsOverSelectedItems,
          this);
     Bind(Events::wxEVT_CHECKED_DUPLICATES_ABSENT, &MainFrame::ToggleActionsOverSelectedItems, this);
@@ -218,6 +230,16 @@ void MainFrame::OnClearCheckedItems(::wxCommandEvent& event)
     m_treeCtrl->ClearChecked();
 }
 
+void MainFrame::OnCheckOldestFiles(::wxCommandEvent& event)
+{
+    m_treeCtrl->CheckOldest();
+}
+
+void MainFrame::OnCheckNewestFiles(::wxCommandEvent& event)
+{
+    m_treeCtrl->CheckNewest();
+}
+
 void MainFrame::OnItemSelected(::wxTreeEvent& event)
 {
     wxTreeItemId selectedItem = event.GetItem();
@@ -235,10 +257,15 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
 
 void MainFrame::SetRefreshOptionState()
 {
-    m_toolBar->EnableTool(ID_REFRESH, _targetFolder.has_value());
+    auto isEnabled = _targetFolder.has_value();
+    m_toolBar->EnableTool(ID_REFRESH, isEnabled);
+    m_toolBar->EnableTool(ID_SELECT_OLDEST, isEnabled);
+    m_toolBar->EnableTool(ID_SELECT_NEWEST, isEnabled);
     if (GetMenuBar())
     {
-        GetMenuBar()->Enable(ID_REFRESH, _targetFolder.has_value());
+        GetMenuBar()->Enable(ID_REFRESH, isEnabled);
+        GetMenuBar()->Enable(ID_SELECT_OLDEST, isEnabled);
+        GetMenuBar()->Enable(ID_SELECT_NEWEST, isEnabled);
     }
 }
 

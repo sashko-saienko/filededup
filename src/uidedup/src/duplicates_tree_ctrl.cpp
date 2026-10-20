@@ -1,6 +1,7 @@
 //
 // Created by sashko on 29.07.26.
 //
+#include <Poco/File.h>
 #include <Poco/Logger.h>
 #include <algorithm>
 #include <application.h>
@@ -9,6 +10,7 @@
 #include <duplicates_tree_ctrl.h>
 #include <format>
 #include <thread>
+#include <vector>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
@@ -140,25 +142,36 @@ void DuplicatesTreeCtrl::ActivateItem(const wxTreeItemId& item)
     }
 
     int currentImage = GetItemImage(item);
+    bool hadChecked = HasCheckedItems();
 
     if (currentImage != m_checkedImg && canSelectWithinChecksumGroup(item))
     {
-        SetItemImage(item, m_checkedImg);
-        checked++;
-        if (checked == 1)
+        CheckItem(item);
+        if (!hadChecked)
         {
             SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
         }
     }
     else if (currentImage == m_checkedImg)
     {
-        SetItemImage(item, m_uncheckedImg);
-        checked--;
-        if (checked == 0)
+        UncheckItem(item);
+        if (hadChecked && !HasCheckedItems())
         {
             SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
         }
     }
+}
+
+void DuplicatesTreeCtrl::CheckItem(const wxTreeItemId& item)
+{
+    SetItemImage(item, m_checkedImg);
+    checked++;
+}
+
+void DuplicatesTreeCtrl::UncheckItem(const wxTreeItemId& item)
+{
+    SetItemImage(item, m_uncheckedImg);
+    checked--;
 }
 
 void DuplicatesTreeCtrl::SendEvent(wxEventTypeTag<wxCommandEvent> event) const
@@ -190,7 +203,61 @@ void DuplicatesTreeCtrl::ClearChecked()
                   [this](const wxTreeItemId& item) { ActivateItem(item); });
 }
 
-wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
+void DuplicatesTreeCtrl::CheckOldest()
+{
+    EnumerateChecksumFilesSortedGroups([](const Poco::File* l, const Poco::File* r) -> bool {
+        return l->created() > r->created();
+    });
+}
+
+void DuplicatesTreeCtrl::CheckNewest()
+{
+    EnumerateChecksumFilesSortedGroups([](const Poco::File* l, const Poco::File* r) -> bool {
+        return l->getLastModified() < r->getLastModified();
+    });
+}
+
+void DuplicatesTreeCtrl::EnumerateChecksumFilesSortedGroups(FilesComparisonCallback cmpCallback)
+{
+    wxTreeItemId root = GetRootItem();
+
+    auto fileGroupEnumerator = [this, &cmpCallback](const wxTreeItemId& checksumItem) -> void {
+        auto checksum = GetChecksumFromItem(checksumItem);
+
+        if (!checksum.has_value())
+        {
+            return;
+        }
+
+        auto checksumValue = checksum.value();
+        auto files = checksumFilesMap.at(checksumValue);
+
+        std::vector<const Poco::File*> filePtrs{};
+        std::transform(files.begin(), files.end(), std::back_inserter(filePtrs),
+                       [](const Poco::File& file) -> const Poco::File* { return &file; });
+
+        std::sort(filePtrs.begin(), filePtrs.end(), cmpCallback);
+
+        EnumerateItems(checksumItem, [this, &filePtrs](const wxTreeItemId& fileItem) -> void {
+            auto fileItemPath = GetItemText(fileItem).ToStdString();
+            auto it = std::find_if(
+                filePtrs.begin(), filePtrs.end(),
+                [&fileItemPath](const Poco::File* f) { return fileItemPath == f->path(); });
+            if (it == filePtrs.begin())
+            {
+                UncheckItem(fileItem);
+            }
+            else if (it != filePtrs.end())
+            {
+                CheckItem(fileItem);
+            }
+        });
+    };
+
+    EnumerateItems(root, fileGroupEnumerator);
+}
+
+wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds()
 {
     wxArrayTreeItemIds checkedItems;
 
@@ -215,8 +282,7 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds() const
     return checkedItems;
 }
 
-void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent,
-                                        TreeItemIdCallback treeItemCallback) const
+void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent, TreeItemIdCallback treeItemCallback)
 {
     if (GetCount() == 0)
     {
@@ -252,16 +318,15 @@ void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems
             continue; // Skip if no valid parent
         }
 
-        wxString checksumStr = GetItemText(parent);
-        unsigned checksum;
+        auto checksum = GetChecksumFromItem(parent);
 
-        if (!checksumStr.ToUInt(&checksum))
+        if (!checksum.has_value())
         {
             continue; // Skip if checksum is not valid
         }
 
         wxString filePath = GetItemText(item);
-        RemoveFileFromChecksumMap(checksum, filePath.ToStdString());
+        RemoveFileFromChecksumMap(checksum.value(), filePath.ToStdString());
 
         Delete(item);
     }
@@ -284,6 +349,18 @@ void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std:
             checksumFilesMap.erase(it);
         }
     }
+}
+
+std::optional<unsigned> DuplicatesTreeCtrl::GetChecksumFromItem(const wxTreeItemId& item) const
+{
+    wxString checksumStr = GetItemText(item);
+
+    if (unsigned value{}; checksumStr.ToUInt(&value))
+    {
+        return std::optional<unsigned>{value};
+    }
+
+    return std::optional<unsigned>{};
 }
 
 } // namespace Deduplicator::Ui
