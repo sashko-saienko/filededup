@@ -1,11 +1,14 @@
 //
 // Created by sashko on 14.03.26.
 //
+#include <Poco/DateTimeFormatter.h>
 #include <Poco/Logger.h>
 #include <custom_events.h>
 #include <duplicates_tree_ctrl.h>
+#include <file_tree_item_data.h>
 #include <main_frame.h>
 #include <reusablelib/time_helpers.h>
+#include <string>
 #include <thread>
 #include <wx/artprov.h>
 #include <wx/dirdlg.h>
@@ -250,7 +253,18 @@ void MainFrame::OnItemSelected(::wxTreeEvent& event)
                      wxOK | wxICON_INFORMATION);
         return;
     }
-    SetStatusText(wxString::Format("Previewing: %s", itemText));
+
+    std::string createdOn = "n/a";
+
+    if (wxTreeItemData* itemData = m_treeCtrl->GetItemData(selectedItem))
+    {
+        FileTreeItemData* fileData = static_cast<FileTreeItemData*>(itemData);
+        const auto& file = fileData->GetFile();
+        createdOn = Poco::DateTimeFormatter::format(file.created(), "%Y-%m-%d %H:%M:%S");
+    }
+
+    wxString statusText = wxString::Format("Previewing: %s | Created on: %s", itemText, createdOn);
+    SetStatusText(statusText);
     m_previewPanel->Layout();
     m_previewPanel->Refresh();
 }

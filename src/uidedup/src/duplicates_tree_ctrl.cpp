@@ -89,6 +89,7 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
         for (const auto& file : files)
         {
             wxTreeItemId fileItem = AppendItem(parent, file.path(), m_uncheckedImg);
+            SetItemData(fileItem, new FileTreeItemData(Poco::File(file)));
         }
     }
 }

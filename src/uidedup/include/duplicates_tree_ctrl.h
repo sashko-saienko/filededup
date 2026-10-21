@@ -3,6 +3,7 @@
 
 #include <Poco/File.h>
 #include <deduplib/files_map.h>
+#include <file_tree_item_data.h>
 #include <optional>
 #include <thread>
 #include <wx/treectrl.h>

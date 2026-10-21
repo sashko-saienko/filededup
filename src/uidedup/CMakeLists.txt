@@ -14,11 +14,13 @@ add_executable(
         src/application.cpp
         src/main_frame.cpp
         src/duplicates_tree_ctrl.cpp
+        src/file_tree_item_data.cpp
         src/image_file_preview.cpp
         src/custom_events.cpp
         include/application.h
         include/main_frame.h
         include/duplicates_tree_ctrl.h
+        include/file_tree_item_data.h
         include/image_file_preview.h
         include/custom_events.h
 )
