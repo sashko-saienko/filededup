@@ -325,8 +325,8 @@ void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent, TreeItemIdCallback 
 
 void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds&& checkedItems)
 {
-    for (wxArrayTreeItemIds::const_iterator itemIt = checkedItems.begin();
-         itemIt != checkedItems.end(); itemIt++)
+    for (wxArrayTreeItemIds::const_iterator itemIt = checkedItems.end() - 1;
+         itemIt != checkedItems.begin(); itemIt++)
     {
         const wxTreeItemId& item = *itemIt;
 
