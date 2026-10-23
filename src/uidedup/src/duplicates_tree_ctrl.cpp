@@ -150,31 +150,37 @@ void DuplicatesTreeCtrl::ActivateItem(const wxTreeItemId& item)
     if (currentImage != m_checkedImg && canSelectWithinChecksumGroup(item))
     {
         CheckItem(item);
-        if (!hadChecked)
-        {
-            SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
-        }
     }
     else if (currentImage == m_checkedImg)
     {
         UncheckItem(item);
-        if (hadChecked && !HasCheckedItems())
-        {
-            SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
-        }
     }
 }
 
 void DuplicatesTreeCtrl::CheckItem(const wxTreeItemId& item)
 {
+    bool hadChecked = HasCheckedItems();
     SetItemImage(item, m_checkedImg);
     checked++;
+    if (!hadChecked)
+    {
+        SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_AVAILABLE);
+    }
 }
 
 void DuplicatesTreeCtrl::UncheckItem(const wxTreeItemId& item)
 {
+    if (checked == 0)
+    {
+        return;
+    }
+    bool hadChecked = HasCheckedItems();
     SetItemImage(item, m_uncheckedImg);
     checked--;
+    if (hadChecked && !HasCheckedItems())
+    {
+        SendEvent(Deduplicator::Ui::Events::wxEVT_CHECKED_DUPLICATES_ABSENT);
+    }
 }
 
 void DuplicatesTreeCtrl::SendEvent(wxEventTypeTag<wxCommandEvent> event) const
