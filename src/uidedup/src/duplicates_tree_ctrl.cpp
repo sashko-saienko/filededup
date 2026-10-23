@@ -196,7 +196,7 @@ void DuplicatesTreeCtrl::OnSelectionChanged(::wxTreeEvent& event)
 void DuplicatesTreeCtrl::DeleteChecked()
 {
     wxArrayTreeItemIds checkedItems = GetCheckedTreeItemIds();
-    DeleteCheckedTreeItems(checkedItems);
+    DeleteCheckedTreeItems(std::move(checkedItems));
 }
 
 void DuplicatesTreeCtrl::ClearChecked()
@@ -317,12 +317,12 @@ void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent, TreeItemIdCallback 
     }
 }
 
-void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems)
+void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds&& checkedItems)
 {
-    // Process items in reverse order to avoid iterator invalidation
-    for (int i = checkedItems.GetCount() - 1; i >= 0; i--)
+    for (wxArrayTreeItemIds::const_iterator itemIt = checkedItems.begin();
+         itemIt != checkedItems.end(); itemIt++)
     {
-        wxTreeItemId item = checkedItems[i];
+        const wxTreeItemId& item = *itemIt;
 
         if (!IsFileItem(item))
         {

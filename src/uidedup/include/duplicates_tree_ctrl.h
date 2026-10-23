@@ -40,7 +40,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
 
     void Populate(const std::string& targetFolder, ChecksumFilesMap&& cfm);
     wxArrayTreeItemIds GetCheckedTreeItemIds();
-    void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
+    void DeleteCheckedTreeItems(wxArrayTreeItemIds&& checkedItems);
     void ActivateItem(const wxTreeItemId& item);
     void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
     std::optional<unsigned> GetChecksumFromItem(const wxTreeItemId& item) const;
