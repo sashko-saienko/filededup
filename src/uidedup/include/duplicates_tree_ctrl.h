@@ -22,7 +22,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void CheckOldest();
     void CheckNewest();
 
-    bool HasCheckedItems() const
+    inline bool HasCheckedItems() const
     {
         return checked > 0;
     }
