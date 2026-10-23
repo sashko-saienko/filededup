@@ -201,7 +201,8 @@ void MainFrame::OnExit(::wxCommandEvent& _)
 
 void MainFrame::OnAbout(::wxCommandEvent& _)
 {
-    wxMessageBox("File Deduplicator\nwxWidgets application for file deduplication",
+    wxMessageBox("File Deduplicator\n\nFinds duplicate image files in selected folders. Allows you "
+                 "to identify and remove redundant copies to free up disk space.",
                  "About File Deduplicator", wxOK | wxICON_INFORMATION);
 }
 
