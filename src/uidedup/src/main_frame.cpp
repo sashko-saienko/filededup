@@ -3,6 +3,7 @@
 //
 #include <Poco/DateTimeFormatter.h>
 #include <Poco/Logger.h>
+#include <application.h>
 #include <custom_events.h>
 #include <duplicates_tree_ctrl.h>
 #include <file_tree_item_data.h>
@@ -29,6 +30,13 @@ MainFrame::MainFrame()
       m_treeCtrl(nullptr), m_previewImage(nullptr), m_previewPanel(nullptr),
       m_previewSizer(nullptr), m_toolBar(nullptr)
 {
+    // Set application icon
+    wxIcon appIcon = Application::GetApplicationIcon();
+    if (appIcon.IsOk())
+    {
+        SetIcon(appIcon);
+    }
+
     SetupMenuBar();
     SetupToolBar();
     SetupMainLayout();

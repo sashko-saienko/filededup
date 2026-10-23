@@ -37,6 +37,25 @@ wxImage Application::GetUncheckedImage()
     return uncheckedImg;
 }
 
+wxIcon Application::GetApplicationIcon()
+{
+    wxIcon icon;
+    wxString resourcesPath = GetResourcesPath();
+
+#ifdef __WXMSW__
+    icon.LoadFile(resourcesPath + "appicon.ico", wxBITMAP_TYPE_ICO);
+#elif __WXMAC__
+    icon.LoadFile(resourcesPath + "appicon.icns", wxBITMAP_TYPE_ICNS);
+#else
+    wxImage img;
+    if (img.LoadFile(resourcesPath + "appicon.png", wxBITMAP_TYPE_PNG))
+    {
+        icon.CopyFromBitmap(wxBitmap(img));
+    }
+#endif
+    return icon;
+}
+
 bool Application::OnInit()
 {
     fs::path props = fs::path{argv[0].ToStdString()}.parent_path() / "logging.properties";
