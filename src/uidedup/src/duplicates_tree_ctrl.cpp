@@ -8,6 +8,7 @@
 #include <custom_events.h>
 #include <deduplib/duplicates_finder.h>
 #include <duplicates_tree_ctrl.h>
+#include <file_tree_item_data.h>
 #include <format>
 #include <thread>
 #include <vector>
@@ -41,10 +42,12 @@ DuplicatesTreeCtrl::DuplicatesTreeCtrl(wxWindow* parent, wxWindowID id, const wx
 
 void DuplicatesTreeCtrl::SetDuplicatesTree(std::stop_token st, const std::string& targetFolder)
 {
+    ChecksumFilesMap cfm;
+
     try
     {
         Deduplicator::DuplicatesFinder df{targetFolder};
-        checksumFilesMap = df.scan(st);
+        cfm = df.scan(st);
     }
     catch (const std::exception& e)
     {
@@ -55,19 +58,18 @@ void DuplicatesTreeCtrl::SetDuplicatesTree(std::stop_token st, const std::string
         return;
     }
 
-    if (!st.stop_requested() && checksumFilesMap.size() > 0)
+    if (!st.stop_requested() && cfm.size() > 0)
     {
-        Populate(targetFolder);
+        Populate(targetFolder, std::move(cfm));
     }
 
     if (st.stop_requested())
     {
         DeleteAllItems();
-        checksumFilesMap.clear();
     }
 }
 
-void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
+void DuplicatesTreeCtrl::Populate(const std::string& targetFolder, ChecksumFilesMap&& cfm)
 {
     if (!IsEmpty())
     {
@@ -76,7 +78,7 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
 
     wxTreeItemId rootId = AddRoot(targetFolder.c_str());
 
-    for (const auto& [checksum, files] : checksumFilesMap)
+    for (auto& [checksum, files] : cfm)
     {
         if (files.empty())
         {
@@ -86,10 +88,10 @@ void DuplicatesTreeCtrl::Populate(const std::string& targetFolder)
 
         wxTreeItemId parent = AppendItem(rootId, wxString::Format("%u", checksum));
 
-        for (const auto& file : files)
+        for (auto& file : files)
         {
             wxTreeItemId fileItem = AppendItem(parent, file.path(), m_uncheckedImg);
-            SetItemData(fileItem, new FileTreeItemData(Poco::File(file)));
+            SetItemData(fileItem, new FileTreeItemData(std::move(file)));
         }
     }
 }
@@ -206,56 +208,72 @@ void DuplicatesTreeCtrl::ClearChecked()
 
 void DuplicatesTreeCtrl::CheckOldest()
 {
-    EnumerateChecksumFilesSortedGroups([](const Poco::File* l, const Poco::File* r) -> bool {
-        return l->created() > r->created();
-    });
+    EnumerateChecksumFilesSortedGroups(
+        [this](const wxTreeItemId& l, const wxTreeItemId& r) -> bool {
+            if (l == r)
+            {
+                return false;
+            }
+
+            auto lFile = static_cast<FileTreeItemData*>(GetItemData(l));
+            auto rFile = static_cast<FileTreeItemData*>(GetItemData(r));
+
+            if (!lFile || !rFile)
+            {
+                return false;
+            }
+
+            return lFile->GetFile().created() > rFile->GetFile().created();
+        });
 }
 
 void DuplicatesTreeCtrl::CheckNewest()
 {
-    EnumerateChecksumFilesSortedGroups([](const Poco::File* l, const Poco::File* r) -> bool {
-        return l->getLastModified() < r->getLastModified();
-    });
+    EnumerateChecksumFilesSortedGroups(
+        [this](const wxTreeItemId& l, const wxTreeItemId& r) -> bool {
+            if (l == r)
+            {
+                return false;
+            }
+
+            auto lFile = static_cast<FileTreeItemData*>(GetItemData(l));
+            auto rFile = static_cast<FileTreeItemData*>(GetItemData(r));
+
+            if (!lFile || !rFile)
+            {
+                return false;
+            }
+
+            return lFile->GetFile().created() < rFile->GetFile().created();
+        });
 }
 
 void DuplicatesTreeCtrl::EnumerateChecksumFilesSortedGroups(FilesComparisonCallback cmpCallback)
 {
     wxTreeItemId root = GetRootItem();
 
-    auto fileGroupEnumerator = [this, &cmpCallback](const wxTreeItemId& checksumItem) -> void {
-        auto checksum = GetChecksumFromItem(checksumItem);
+    auto checksumEnumerator = [this, &cmpCallback](const wxTreeItemId& checksumItem) -> void {
+        std::vector<wxTreeItemId> checksumTreeItemIds{};
+        EnumerateItems(checksumItem,
+                       [this, &checksumTreeItemIds](const wxTreeItemId& fileItem) -> void {
+                           checksumTreeItemIds.push_back(fileItem);
+                       });
+        std::sort(checksumTreeItemIds.begin(), checksumTreeItemIds.end(), cmpCallback);
 
-        if (!checksum.has_value())
+        for (size_t i = 0; i < checksumTreeItemIds.size(); i++)
         {
-            return;
+            if (i == 0)
+            {
+                UncheckItem(checksumTreeItemIds[i]);
+            }
+            else
+            {
+                CheckItem(checksumTreeItemIds[i]);
+            }
         }
-
-        auto checksumValue = checksum.value();
-        auto files = checksumFilesMap.at(checksumValue);
-
-        std::vector<const Poco::File*> filePtrs{};
-        std::transform(files.begin(), files.end(), std::back_inserter(filePtrs),
-                       [](const Poco::File& file) -> const Poco::File* { return &file; });
-
-        std::sort(filePtrs.begin(), filePtrs.end(), cmpCallback);
-
-        EnumerateItems(checksumItem, [this, &filePtrs](const wxTreeItemId& fileItem) -> void {
-            auto fileItemPath = GetItemText(fileItem).ToStdString();
-            auto it = std::find_if(
-                filePtrs.begin(), filePtrs.end(),
-                [&fileItemPath](const Poco::File* f) { return fileItemPath == f->path(); });
-            if (it == filePtrs.begin())
-            {
-                UncheckItem(fileItem);
-            }
-            else if (it != filePtrs.end())
-            {
-                CheckItem(fileItem);
-            }
-        });
     };
 
-    EnumerateItems(root, fileGroupEnumerator);
+    EnumerateItems(root, checksumEnumerator);
 }
 
 wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds()
@@ -327,28 +345,8 @@ void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems
         }
 
         wxString filePath = GetItemText(item);
-        RemoveFileFromChecksumMap(checksum.value(), filePath.ToStdString());
 
         Delete(item);
-    }
-}
-
-void DuplicatesTreeCtrl::RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath)
-{
-    auto it = checksumFilesMap.find(checksum);
-    if (it != checksumFilesMap.end())
-    {
-        auto& files = it->second;
-        auto it_f = find_if(files.begin(), files.end(), [&filePath](const Poco::File& file) {
-            return file.path() == filePath;
-        });
-
-        Logger::get(LOGGER_NAME).debug("Deleting file %s (checksum: %u).", it_f->path(), it->first);
-
-        if (files.empty())
-        {
-            checksumFilesMap.erase(it);
-        }
     }
 }
 

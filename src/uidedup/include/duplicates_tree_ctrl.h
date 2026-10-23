@@ -1,7 +1,6 @@
 #ifndef __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 #define __UIDEDUP_DUPLICATES_TREE_CTRL_H__
 
-#include <Poco/File.h>
 #include <deduplib/files_map.h>
 #include <file_tree_item_data.h>
 #include <optional>
@@ -32,7 +31,6 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     int m_uncheckedImg;
     int m_checkedImg;
     size_t checked;
-    Deduplicator::ChecksumFilesMap checksumFilesMap;
 
     void OnItemActivated(::wxTreeEvent& event);
     void OnSelectionChanged(::wxTreeEvent& event);
@@ -40,9 +38,8 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     bool IsFileItem(const wxTreeItemId& item) const;
     bool canSelectWithinChecksumGroup(const wxTreeItemId& item) const;
 
-    void Populate(const std::string& targetFolder);
+    void Populate(const std::string& targetFolder, ChecksumFilesMap&& cfm);
     wxArrayTreeItemIds GetCheckedTreeItemIds();
-    void RemoveFileFromChecksumMap(unsigned checksum, const std::string& filePath);
     void DeleteCheckedTreeItems(wxArrayTreeItemIds& checkedItems);
     void ActivateItem(const wxTreeItemId& item);
     void SendEvent(wxEventTypeTag<wxCommandEvent> event) const;
@@ -53,7 +50,8 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     using TreeItemIdCallback = std::function<void(const wxTreeItemId&)>;
     void EnumerateItems(wxTreeItemId parent, TreeItemIdCallback treeItemCallback);
 
-    using FilesComparisonCallback = std::function<bool(const Poco::File* l, const Poco::File* r)>;
+    using FilesComparisonCallback =
+        std::function<bool(const wxTreeItemId& l, const wxTreeItemId& r)>;
     void EnumerateChecksumFilesSortedGroups(FilesComparisonCallback callback);
 };
 
