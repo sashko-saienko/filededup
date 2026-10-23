@@ -252,12 +252,11 @@ void DuplicatesTreeCtrl::EnumerateChecksumFilesSortedGroups(FilesComparisonCallb
 {
     wxTreeItemId root = GetRootItem();
 
-    auto checksumEnumerator = [this, &cmpCallback](const wxTreeItemId& checksumItem) -> void {
+    auto checksumEnumerator = [this, &cmpCallback](wxTreeItemId&& checksumItem) -> void {
         std::vector<wxTreeItemId> checksumTreeItemIds{};
-        EnumerateItems(checksumItem,
-                       [this, &checksumTreeItemIds](const wxTreeItemId& fileItem) -> void {
-                           checksumTreeItemIds.push_back(fileItem);
-                       });
+        EnumerateItems(checksumItem, [this, &checksumTreeItemIds](wxTreeItemId&& fileItem) -> void {
+            checksumTreeItemIds.push_back(std::move(fileItem));
+        });
         std::sort(checksumTreeItemIds.begin(), checksumTreeItemIds.end(), cmpCallback);
 
         for (size_t i = 0; i < checksumTreeItemIds.size(); i++)
@@ -287,11 +286,11 @@ wxArrayTreeItemIds DuplicatesTreeCtrl::GetCheckedTreeItemIds()
 
     wxTreeItemId root = GetRootItem();
 
-    auto checkedItemsAccumulator = [this, &checkedItems](wxTreeItemId checksum) -> void {
-        EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId file) -> void {
+    auto checkedItemsAccumulator = [this, &checkedItems](wxTreeItemId&& checksum) -> void {
+        EnumerateItems(checksum, [this, &checkedItems](wxTreeItemId&& file) -> void {
             if (GetItemImage(file) == m_checkedImg)
             {
-                checkedItems.Add(file);
+                checkedItems.Add(std::move(file));
             }
         });
     };
@@ -313,7 +312,7 @@ void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent, TreeItemIdCallback 
 
     while (childItemId.IsOk())
     {
-        treeItemCallback(childItemId);
+        treeItemCallback(std::move(childItemId));
         childItemId = GetNextChild(parent, cookie);
     }
 }

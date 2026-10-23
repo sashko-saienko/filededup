@@ -47,7 +47,7 @@ class DuplicatesTreeCtrl : public wxTreeCtrl
     void CheckItem(const wxTreeItemId& item);
     void UncheckItem(const wxTreeItemId& item);
 
-    using TreeItemIdCallback = std::function<void(const wxTreeItemId&)>;
+    using TreeItemIdCallback = std::function<void(wxTreeItemId&&)>;
     void EnumerateItems(wxTreeItemId parent, TreeItemIdCallback treeItemCallback);
 
     using FilesComparisonCallback =
