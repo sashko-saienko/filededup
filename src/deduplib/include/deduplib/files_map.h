@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
+
 #ifndef FILES_MAP_H
 #define FILES_MAP_H
 

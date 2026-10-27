@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
+
 #ifndef __UIDEDUP_CUSTOM_EVENTS_H__
 #define __UIDEDUP_CUSTOM_EVENTS_H__
 

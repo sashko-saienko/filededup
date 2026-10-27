@@ -52,7 +52,11 @@ condedup --help
 - **macOS**: Full support (wxWidgets, Poco)
 - **Linux**: Full support (wxWidgets, Poco)
 
-## License & Metadata
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## Metadata
 - **Version**: 0.0.1
 - **Namespace**: Deduplicator (Console), Deduplicator::Ui (GUI), Deduplicator::Console (Console)
 - **Logger**: Poco logging with per-module logger names

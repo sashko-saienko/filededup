@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
+
 #include "reusablelib/time_helpers.h"
 #include <Poco/DateTimeFormatter.h>
 #include <Poco/LocalDateTime.h>

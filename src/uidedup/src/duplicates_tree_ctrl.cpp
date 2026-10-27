@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created by sashko on 29.07.26.
-//
+
 #include <Poco/File.h>
 #include <Poco/Logger.h>
 #include <algorithm>

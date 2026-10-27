@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created by sashko on 21.10.26.
-//
+
 #include <file_tree_item_data.h>
 
 namespace Deduplicator::Ui

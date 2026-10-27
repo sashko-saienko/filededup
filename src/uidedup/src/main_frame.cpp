@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created by sashko on 14.03.26.
-//
+
 #include <Poco/DateTimeFormatter.h>
 #include <Poco/Logger.h>
 #include <application.h>

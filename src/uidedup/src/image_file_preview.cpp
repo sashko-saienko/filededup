@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created by sashko on 05.10.26.
-//
+
 #include <wx/filefn.h>
 #include <wx/generic/statbmpg.h>
 #include <wx/image.h>

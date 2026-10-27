@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
+
 #ifndef __UIDEDUP_FILE_TREE_ITEM_DATA_H__
 #define __UIDEDUP_FILE_TREE_ITEM_DATA_H__
 

@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created for custom events in Deduplicator::Ui::Events namespace
-//
+
 #include <custom_events.h>
 
 namespace Deduplicator::Ui::Events

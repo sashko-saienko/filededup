@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
 //
 // Created by sashko on 01.03.26.
-//
 
 #ifndef APPLICATION_H
 #define APPLICATION_H

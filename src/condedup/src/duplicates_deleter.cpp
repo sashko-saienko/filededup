@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Sashko
+
 #include "duplicates_deleter.h"
 #include "deleter_keep_policy.h"
 #include <Poco/File.h>
