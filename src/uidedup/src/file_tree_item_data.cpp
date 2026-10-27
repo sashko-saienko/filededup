@@ -15,4 +15,9 @@ const Poco::File& FileTreeItemData::GetFile() const
     return m_file;
 }
 
+void FileTreeItemData::DeleteFile()
+{
+    m_file.remove();
+}
+
 } // namespace Deduplicator::Ui

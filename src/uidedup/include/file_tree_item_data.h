@@ -12,6 +12,7 @@ class FileTreeItemData : public wxTreeItemData
   public:
     FileTreeItemData(Poco::File&& file);
     const Poco::File& GetFile() const;
+    void DeleteFile();
 
   private:
     Poco::File m_file;

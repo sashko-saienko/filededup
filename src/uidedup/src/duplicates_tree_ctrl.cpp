@@ -325,10 +325,9 @@ void DuplicatesTreeCtrl::EnumerateItems(wxTreeItemId parent, TreeItemIdCallback 
 
 void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds&& checkedItems)
 {
-    for (wxArrayTreeItemIds::const_iterator itemIt = checkedItems.end() - 1;
-         itemIt != checkedItems.begin(); itemIt++)
+    for (long idx = checkedItems.GetCount() - 1; idx >= 0; idx--)
     {
-        const wxTreeItemId& item = *itemIt;
+        const wxTreeItemId& item = checkedItems[idx];
 
         if (!IsFileItem(item))
         {
@@ -349,7 +348,10 @@ void DuplicatesTreeCtrl::DeleteCheckedTreeItems(wxArrayTreeItemIds&& checkedItem
             continue; // Skip if checksum is not valid
         }
 
-        wxString filePath = GetItemText(item);
+        if (auto* itemData = static_cast<FileTreeItemData*>(GetItemData(item)))
+        {
+            itemData->DeleteFile();
+        }
 
         Delete(item);
     }
